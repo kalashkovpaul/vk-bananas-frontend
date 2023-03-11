@@ -1,0 +1,72 @@
+.quizEditor {
+    width: calc(100% - 900px);
+    background-color: white;
+}
+
+.questionWrapper {
+    padding: 12px;
+}
+
+.questionTitle {
+    text-align: left;
+    font-weight: bold;
+    padding: 4px;
+    font-size: 18px;
+}
+
+.questionInput {
+    width: 97%;
+    height: 30px;
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.optionsWrapper {
+    padding: 0 12px 12px 12px;
+}
+
+.optionsTitle {
+    text-align: left;
+    font-weight: bold;
+    padding: 4px;
+    font-size: 18px;
+}
+
+.optionInput {
+    width: 90%;
+    height: 30px;
+    font-size: 20px;
+    line-height: 30px;
+    margin-left: 2px;
+}
+
+.singleOption {
+    display: flex;
+    align-items: center;
+    margin: 8px;
+}
+
+.cross {
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-image: url("./cross.png");
+}
+
+.addVariant {
+    margin-top: 12px;
+    width: 100%;
+    height: 44px;
+    background-color: #708D81;
+    border: none;
+    border-radius: 8px;
+}
+
+.addVariant:hover {
+    background-color: #70AD81;
+}
+
+.addVariantText {
+    font-size: 20px;
+    color: white;
+}

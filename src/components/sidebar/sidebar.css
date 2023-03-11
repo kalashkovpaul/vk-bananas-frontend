@@ -1,0 +1,41 @@
+.sidebar {
+    width: 230px;
+    height: 100%;
+    background-color: white;
+    overflow-y: scroll;
+}
+
+.miniSlide {
+    width: 100%;
+    height: 100px;
+    position: relative;
+}
+
+.miniSlideNumber {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+}
+
+.miniSlideImage {
+    position: absolute;
+    display: block;
+    top: 6px;
+    left: 30px;
+    width: 80%;
+    height: 80px;
+    background-color: #9A8873;
+    border-radius: 8px;
+    box-sizing: border-box;
+    /* border: solid transparent 2px; */
+}
+
+.miniSlideImage:hover {
+    /* border: solid #708D81 2px; */
+}
+
+.miniSlideImageImg {
+    width: auto;
+    height: 80px;
+    border-radius: 8px;
+}
