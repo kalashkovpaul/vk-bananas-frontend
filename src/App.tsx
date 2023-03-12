@@ -1,48 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import {Navbar} from './components/navbar/Navbar';
-import {Sidebar} from './components/sidebar/Sidebar';
-import {Page} from './components/page/Page';
-import {Presentation} from './components/presentation/Presentation';
-import {QuizEditor} from './components/quizEditor/QuizEditor';
-import './App.css';
+import Layout from './Layout';
+import type { FunctionComponent } from 'react';
+import { routes } from './config/routes.config';
+import { MetaInfo, NotFound404 } from './components';
+import { useScrollToTop } from './hooks';
+import { useLocation, Route, Routes } from 'react-router-dom';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
-function App() {
-  const [maxIndex, setMaxIndex] = React.useState(1);
-  const [question, setQuestion] = React.useState("");
-  const [options, setOptions] = React.useState(new Map);
+const App: FunctionComponent = () => {
+  useScrollToTop();
+  const location = useLocation();
 
-  const onQuestionChange = (q: string) => {
-    setQuestion(q);
-
-  }
-
-  // let options: Map<number, string> = new Map();
   return (
-    <div className="App">
-      {/* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> */}
-      <Navbar/>
-      <Page>
-        <Sidebar/>
-        <Presentation/>
-        <QuizEditor/>
-      </Page>
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout>
+      <MetaInfo />
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          timeout={250}
+          classNames="fade"
+          key={location.key}
         >
-          Learn React
-        </a>
-      </header> */}
-    </div>
+          <Routes location={location}>
+            {routes.map(({ path, Component }) => (
+              <Route
+                key={path}
+                path={path}
+                element={<Component />}
+              />
+            ))}
+            <Route
+              path="*"
+              element={<NotFound404 />}
+            />
+          </Routes>
+        </CSSTransition>
+      </SwitchTransition>
+    </Layout>
   );
-}
+};
 
 export default App;

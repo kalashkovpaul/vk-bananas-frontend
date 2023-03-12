@@ -1,22 +1,27 @@
 import React from 'react';
 import './quizEditor.css';
+import type { OptionProps, SingleSlideData,  } from '../../types';
 
 let options: Map<number, string> = new Map();
 
-type OptionProps = {
-    index: number;
-    key: number;
+type QuizEditorProps = {
+    currentSlide: SingleSlideData;
+    setCurrentSlide: Function;
 }
 
-export const QuizEditor = () => {
+const QuizEditor = (props: QuizEditorProps) => {
+    // console.log(props);
+    const {currentSlide, setCurrentSlide} = props;
     const [maxIndex, setMaxIndex] = React.useState(1);
-    const [question, setQuestion] = React.useState("");
 
     const optionsVariantsRef = React.useRef<HTMLDivElement>(null);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value);
-        setQuestion(event.target.value);
+        // console.log(event.target.value);
+        setCurrentSlide({
+            ...currentSlide,
+            question: event.target.value
+        });
     }
 
     const OptionInput = (props: OptionProps) => {
@@ -28,9 +33,9 @@ export const QuizEditor = () => {
                     type="text"
                     name="option"
                     onChange={(e) => {
-                        console.log(index, e.target.value);
+                        // console.log(index, e.target.value);
                         options.set(index, e.target.value);
-                        console.log(options);
+                        // console.log(options);
                     }}
                     placeholder="Прекрасное!"
                 />
@@ -54,7 +59,7 @@ export const QuizEditor = () => {
         <div
             className="quizEditor"
         >
-            <div className="questionWrapper">
+            {currentSlide?.kind === "question" && <div className="questionWrapper">
                 <div className="questionTitle">
                     Ваш вопрос:
                 </div>
@@ -64,9 +69,10 @@ export const QuizEditor = () => {
                     name="question"
                     onChange={handleNameChange}
                     placeholder="Как настроение?"
+                    value={currentSlide?.question}
                 />
-            </div>
-            <div className="optionsWrapper">
+            </div>}
+            {currentSlide?.kind === "question" && <div className="optionsWrapper">
                 <div className="optionsTitle">
                     Варианты ответа:
                 </div>
@@ -78,8 +84,9 @@ export const QuizEditor = () => {
                         Добавить
                     </div>
                 </button>
-            </div>
-
+            </div>}
         </div>
     );
 };
+
+export default QuizEditor;

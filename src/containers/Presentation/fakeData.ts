@@ -1,0 +1,128 @@
+import type { PresData } from "../../types"
+
+// const slid
+
+export const presData: PresData = {
+    slides: [
+        {
+            index: 0,
+            src: "green.png",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 1,
+            src: "example.png",
+            kind: "question",
+            questionKind: "",
+            question: "Как настроение?",
+            options: [
+                {
+                    option: "Хорошее",
+                    votes: 2,
+                    color: "red",
+                },
+                {
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+            ],
+            background: "white",
+        },
+        {
+            index: 2,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 3,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 4,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 5,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 6,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 7,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 8,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 9,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 10,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+        {
+            index: 11,
+            src: "",
+            kind: "slide",
+            questionKind: "",
+            question: "",
+            options: [],
+            background: "",
+        },
+
+    ]
+}

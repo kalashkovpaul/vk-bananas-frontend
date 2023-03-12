@@ -1,32 +1,32 @@
 import React from 'react';
 import './sidebar.css';
+import type { MiniSlideData, PresData, SideBarData, SingleSlideData } from '../../types';
 
-type MiniSlideData = {
-    i: number;
-    src: string;
+type SidebarProps = {
+    setCurrentIndex: Function;
+    data: PresData
 }
 
-type SideBarData = {
-    slides: Array<MiniSlideData>;
-}
-
-const createMiniSlide = (data: MiniSlideData) => {
-    // TODO src
-    return (
-        <div key={data.i} className={`miniSlide`}>
-            <div className="miniSlideNumber">{data.i}</div>
-            <div className="miniSlideImage">
-                {data.src && <img src={data.src} className="miniSlideImageImg"/>}
-            </div>
-        </div>
-
-    );
-}
-
-export const Sidebar = () => {
-    const slideData: SideBarData = { slides: [{i: 1, src: ""},{i: 2, src: "./example.png"},{i: 3, src: ""},{i: 4, src: ""},{i: 5, src: ""},{i: 6, src: ""},{i: 7, src: ""},{i: 8, src: ""},{i: 9, src: ""},{i: 10, src: ""},]};
+const Sidebar = (props: SidebarProps) => {
+    const {data, setCurrentIndex} = props;
     let slides: Array<React.ReactElement> = [];
-    slideData.slides.forEach((slide) => {
+
+    const createMiniSlide = (data: SingleSlideData) => {
+        // TODO src
+        return (
+            <div key={data.index} className={`miniSlide `} onClick={() => {
+                setCurrentIndex(data.index);
+            }}>
+                <div className="miniSlideNumber">{(data.index + 1)}</div>
+                <div className="miniSlideImage">
+                    {data.src && <img src={data.src} className="miniSlideImageImg"/>}
+                </div>
+            </div>
+
+        );
+    }
+
+    data.slides.forEach((slide) => {
         slides.push(createMiniSlide(slide))
     });
 
@@ -38,3 +38,5 @@ export const Sidebar = () => {
         </div>
     );
 };
+
+export default Sidebar;

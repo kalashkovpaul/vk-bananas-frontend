@@ -22,20 +22,20 @@
     display: block;
     top: 6px;
     left: 30px;
-    width: 80%;
+    width: 76%;
     height: 80px;
     background-color: #9A8873;
     border-radius: 8px;
     box-sizing: border-box;
-    /* border: solid transparent 2px; */
+    border: solid white 4px;
 }
 
 .miniSlideImage:hover {
-    /* border: solid #708D81 2px; */
+    border: solid #708D81 4px;
 }
 
 .miniSlideImageImg {
     width: auto;
-    height: 80px;
-    border-radius: 8px;
+    height: 72px;
+    border-radius: 3px;
 }

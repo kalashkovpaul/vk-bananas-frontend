@@ -1,0 +1,12 @@
+﻿// overrides + custom variables/mixins
+@use 'base/variables';
+
+// node_module imports
+@use 'bulma/bulma';
+
+// custom modules
+@use 'base/generic';
+@use 'base/animation';
+@use 'components/home';
+@use 'components/navbar';
+@use 'components/footer';
