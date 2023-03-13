@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Layout from './Layout';
+import type { FunctionComponent } from 'react';
+import { routes } from './config/routes.config';
+import { MetaInfo, NotFound404 } from './components';
+import { useScrollToTop } from './hooks';
+import { useLocation, Route, Routes } from 'react-router-dom';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
-function App() {
+const App: FunctionComponent = () => {
+  useScrollToTop();
+  const location = useLocation();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Layout>
+      <MetaInfo />
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          timeout={250}
+          classNames="fade"
+          key={location.key}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Routes location={location}>
+            {routes.map(({ path, Component }) => (
+              <Route
+                key={path}
+                path={path}
+                element={<Component />}
+              />
+            ))}
+            <Route
+              path="*"
+              element={<NotFound404 />}
+            />
+          </Routes>
+        </CSSTransition>
+      </SwitchTransition>
+    </Layout>
   );
-}
+};
 
 export default App;

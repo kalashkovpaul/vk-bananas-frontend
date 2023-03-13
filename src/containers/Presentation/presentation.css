@@ -1,0 +1,29 @@
+.presentation {
+    display: flex;
+    height: 764px;
+}
+
+.slide {
+    position: relative;
+    margin: 20px;
+    width: 700px;
+    height: 400px;
+    background-color: #9A8873;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+.slideQuestion {
+    position: absolute;
+    font-size: 40px;
+    top: 20px;
+    left: 20px;
+}
+
+.chart {
+    width: 600px !important;
+    height: 300px !important;
+    position: absolute;
+    top: 80px;
+    left: 40px;
+}
