@@ -12,6 +12,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 1,
@@ -23,7 +25,7 @@ export const presData: PresData = {
                 {
                     option: "Хорошее",
                     votes: 2,
-                    color: "red",
+                    color: "#bbb",
                 },
                 {
                     option: "Отличное",
@@ -32,6 +34,8 @@ export const presData: PresData = {
                 },
             ],
             background: "white",
+            fontColor: "#000000",
+            graphColor: "#000000",
         },
         {
             index: 2,
@@ -41,6 +45,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 3,
@@ -50,6 +56,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 4,
@@ -59,6 +67,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 5,
@@ -68,6 +78,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 6,
@@ -77,6 +89,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 7,
@@ -86,6 +100,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 8,
@@ -95,6 +111,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 9,
@@ -104,6 +122,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 10,
@@ -113,6 +133,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
         {
             index: 11,
@@ -122,6 +144,8 @@ export const presData: PresData = {
             question: "",
             options: [],
             background: "",
+            fontColor: "",
+            graphColor: "",
         },
 
     ]

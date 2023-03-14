@@ -1,0 +1,27 @@
+.colorPicker {
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+.preview {
+    width: 30px;
+    height: 30px;
+    border: solid 2px;
+    border-radius: 8px;
+}
+
+.sketchPicker {
+    position: absolute;
+    top: 0px;
+    left: -190px;
+    z-index: 1;
+    margin-right: 4px;
+}
+
+.sketchPickerRight {
+    position: absolute;
+    top: 2px;
+    z-index: 1;
+    margin-right: 4px;
+}

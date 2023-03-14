@@ -10,6 +10,9 @@ export type SideBarData = {
 export type OptionProps = {
     index: number;
     key: number;
+    value?: string;
+    color?: string;
+    onChange: Function;
 }
 
 export type OptionData = {
@@ -26,9 +29,22 @@ export type SingleSlideData = {
     question: string;
     options: Array<OptionData>;
     background: string;
+    fontColor: string;
+    graphColor: string;
 }
 
 export type PresData = {
     slides: Array<SingleSlideData>;
-
 };
+
+type ColorPickerProps = {
+    background: string;
+    onChange: Function;
+    position?: "left" | "right";
+}
+
+type ColorPickerState = {
+    background: string;
+    visibility: boolean;
+    isShown: boolean;
+}

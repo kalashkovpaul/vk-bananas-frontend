@@ -1,67 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import type { FunctionComponent, ReactElement } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FunctionComponent } from "react";
 import './presentation.css';
 import Sidebar from "../../components/sidebar/Sidebar";
-import SlideBox from "../../components/slideBox/SlideBox";
 import QuizEditor from "../../components/quizEditor/QuizEditor";
 import { presData } from "./fakeData";
-import type { PresData, SingleSlideData } from "../../types";
+import type { OptionData, PresData, SingleSlideData } from "../../types";
 import { getRouteMetaInfo } from '../../config/routes.config';
 import { MetaInfo } from "../../components";
 
-import Chart from 'chart.js/auto';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { createBar } from "./createBar";
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
-
-export const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-    //   title: {
-    //     display: true,
-    //     text: 'Chart.js Bar Chart',
-    //   },
-    },
-  };
-
-const labels = [''];
-
-export const barData = {
-    labels,
-    datasets: [
-      {
-        label: 'Хорошее',
-        data: [3],
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Отличное',
-        data: [5],
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
-  };
-
+import { CustomBar } from "./CustomBar";
 
 const Presentation: FunctionComponent = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -73,20 +20,47 @@ const Presentation: FunctionComponent = () => {
         question: "",
         options: [],
         background: "",
+        fontColor: "",
+        graphColor: "",
     });
     const [data, setPresData] = useState<PresData>({
         slides: []
     });
     const slideRef = useRef<HTMLDivElement>(null);
+    const cur = useRef<SingleSlideData>();
 
-    let onQuestionChange: Function;
+    const onOptionChange = (index: number, value: string, color: string) => {
+        console.log("Z", cur.current);
+        let newoptions;
+        if (value && color) {
+            newoptions = JSON.parse(JSON.stringify(cur.current?.options));
+            if (newoptions[index]) {
+                newoptions[index].option = value;
+                newoptions[index].color = color;
+            } else if (value) {
+                newoptions[index] = {
+                    option: value,
+                    votes: 2,
+                    color: color,
+                }
+            }
+        } else {
+            newoptions = [];
+            cur.current?.options.forEach((option, i) => {
+                if (i !== index) {
+                    newoptions.push(option);
+                }
+            });
+        }
 
-    const setOnQuestionChange = (f: Function) => {
-        onQuestionChange = f;
-    }
+        setCurrentSlide({
+            ...(cur.current as SingleSlideData),
+            options: newoptions,
+        });
+    };
 
     useEffect(() => {
-        console.log(currentIndex, currentSlide, data);
+        cur.current = currentSlide;
         if (currentSlide) {
             setPresData({
                 slides: data.slides.map((slide, i) => {
@@ -133,12 +107,14 @@ const Presentation: FunctionComponent = () => {
             <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
             <div className="slideBox">
                 <div className="slide" ref={slideRef}>
-                    {currentSlide?.kind === "question" ? createBar(currentSlide) : null}
-                    {/* <div className="slideQuestion">Как настроение?</div>
-                    <Bar className="chart" options={options} data={barData} /> */}
+                    {currentSlide?.kind === "question" ? <CustomBar slide={currentSlide}/> : null}
                 </div>
             </div>
-            <QuizEditor setCurrentSlide={setCurrentSlide} currentSlide={currentSlide}/>
+            <QuizEditor
+                setCurrentSlide={setCurrentSlide}
+                currentSlide={currentSlide}
+                changeOption={onOptionChange}
+            />
         </div>
     );
 }
