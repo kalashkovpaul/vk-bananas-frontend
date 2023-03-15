@@ -10,7 +10,7 @@
 }
 
 .slideBox {
-    background-color: #CECECE;
+    background-color: transparent;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
@@ -22,7 +22,7 @@
     background-color: #9A8873;
     flex-direction: column;
     border-radius: 20px;
-    box-shadow: rgba(0, 0, 0, 0.56) 0px 20px 700px 4px;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 20px 70px 4px;
 }
 
 .slideQuestion {

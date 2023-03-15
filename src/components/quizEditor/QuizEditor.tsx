@@ -84,7 +84,6 @@ const QuizEditor = (props: QuizEditorProps) => {
     const previousQKind = usePreviousQKind(currentSlide?.questionKind);
 
     useEffect(() => {
-        console.log(previousQKind, currentSlide?.questionKind);
         if (currentSlide?.index === previousIndex
             && currentSlide?.questionKind === previousQKind)
             return;

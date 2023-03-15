@@ -11,27 +11,41 @@ import { MetaInfo } from "../../components";
 import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 
+const emptySlide: SingleSlideData = {
+    index: -1,
+    src: "",
+    kind: "slide",
+    questionKind: "",
+    question: "",
+    options: [],
+    background: "",
+    fontColor: "",
+    graphColor: "",
+}
+
 const Presentation: FunctionComponent = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [currentSlide, setCurrentSlide] = useState<SingleSlideData>({
-        index: 0,
-        src: "",
-        kind: "slide",
-        questionKind: "",
-        question: "",
-        options: [],
-        background: "",
-        fontColor: "",
-        graphColor: "",
-    });
+    const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
         slides: []
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
 
+    // Надо ли?
+    // const onUndo = (e: KeyboardEvent) => {
+    //     console.log(e);
+    //     if (e.keyCode === 90 && e.metaKey) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+    //         console.log("UNDO");
+    //     }
+    // }
+    // document.addEventListener("keydown", onUndo);
+
+
     const onOptionChange = (index: number, value: string, color: string) => {
-        console.log(index, value, color);
+        // console.log(index, value, color);
         let newoptions;
         if (value && color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.options));
@@ -62,22 +76,15 @@ const Presentation: FunctionComponent = () => {
 
     useEffect(() => {
         cur.current = currentSlide;
-        console.log("OOPS");
-        if (currentSlide) {
-            setPresData({
-                slides: data.slides.map((slide, i) => {
-                    if (i === currentIndex) {
-                        return currentSlide;
-                    }
-                    return slide;
-                })
-            });
-        }
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.src) {
+                // TODO show image
                 slideRef.current.style.backgroundColor = "green";
+            } else if (currentSlide.index >=0) {
+                slideRef.current.style.backgroundColor = "#CECECE";
             } else {
-                slideRef.current.style.backgroundColor = "#9A8873";
+                slideRef.current.style.backgroundColor = "transparent";
+                slideRef.current.style.boxShadow = "none";
             }
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
@@ -103,9 +110,42 @@ const Presentation: FunctionComponent = () => {
         }
     }, [currentIndex]);
 
+    const onSlideDelete = () => {
+        let newSlides: Array<SingleSlideData> = [];
+        // debugger;
+        data.slides.forEach((slide) => {
+            if (slide.index < currentIndex) {
+                newSlides.push(slide);
+            } else if (slide.index > currentIndex) {
+                newSlides.push({...slide, index: slide.index - 1});
+            }
+        });
+
+        console.log(newSlides, currentIndex);
+
+        setPresData({
+            slides: newSlides
+        });
+        // setCurrentIndex(currentIndex);
+        // if (currentIndex + 1 < presData.slides.length)
+        //     setCurrentIndex(currentIndex + 1);
+        // else
+        //     setCurrentIndex(currentIndex);
+    };
+
+    useEffect(() => {
+        // debugger;
+        if (currentIndex < data.slides.length) {
+            setCurrentSlide(data.slides[currentIndex]);
+        } else if (data.slides.length === 0) {
+            setCurrentSlide(emptySlide);
+        }
+    }, [data]);
+
+
     return (
         <div className="presentation view-wrapper">
-            <PresentationBar/>
+            <PresentationBar onDelete={onSlideDelete}/>
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
                 <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>

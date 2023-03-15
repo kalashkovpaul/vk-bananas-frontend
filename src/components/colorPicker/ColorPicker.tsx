@@ -20,7 +20,6 @@ class ColorPicker extends React.Component<ColorPickerProps, ColorPickerState> {
     // }
     handleChange = (color: any) => {
         this.setState({ background: color.hex });
-        console.log(this.state);
         this.props.onChange(color.hex);
     };
 

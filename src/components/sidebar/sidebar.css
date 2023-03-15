@@ -13,14 +13,14 @@
 
 .miniSlideNumber {
     position: absolute;
-    top: 6px;
+    top: 10px;
     left: 6px;
 }
 
 .miniSlideImage {
     position: absolute;
     display: block;
-    top: 6px;
+    top: 10px;
     left: 30px;
     width: 76%;
     height: 80px;
@@ -38,4 +38,8 @@
     width: auto;
     height: 72px;
     border-radius: 3px;
+}
+
+.activeSlide {
+    background-color: #E4E4EC;
 }

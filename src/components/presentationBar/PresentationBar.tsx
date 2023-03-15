@@ -1,15 +1,21 @@
 import React from "react";
 import './presentationBar.css';
 
-const PresentationBar = () => {
+type PresBarProps = {
+    onDelete: Function;
+}
 
+const PresentationBar = (props: PresBarProps) => {
+    const {onDelete} = props;
     return (
         <div className="presentationBar">
             <div className="bar-button addSlide">
                 <div className="addSlidePlus"/>
                 Добавить слайд
             </div>
-            <div className="bar-button deleteSlide">
+            <div className="bar-button deleteSlide" onClick={() => {
+                onDelete();
+            }}>
                 Удалить слайд
             </div>
             <div className="bar-button shareButton">

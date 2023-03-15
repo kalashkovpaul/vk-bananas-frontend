@@ -20,10 +20,6 @@ const OptionInput = (props: OptionProps) => {
         setTrueIndex(tIndex);
     }, [index]);
 
-    useEffect(() => {
-        console.log("Z", withColor);
-    }, [withColor]);
-
     return (
         <div className="singleOption" id={`option-${index}`}>
             <input
