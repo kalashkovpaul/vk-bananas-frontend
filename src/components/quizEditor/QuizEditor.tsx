@@ -22,31 +22,15 @@ const QuizEditor = (props: QuizEditorProps) => {
         return indexRef.current
     }
 
-    const optionsVariantsRef = React.useRef<HTMLDivElement>(null);
+    const usePreviousQKind = (value: any) => {
+        const questionKindRef = useRef<string>(currentSlide?.questionKind);
+        useEffect(() => {
+            questionKindRef.current = value;
+        })
+        return questionKindRef.current
+    }
 
-    useEffect(() => {
-        if (currentSlide?.index === previousIndex)
-            return;
-        if (currentSlide?.kind === "question") {
-            let lst: Array<JSX.Element> = [];
-            let i = 0;
-            currentSlide.options.forEach((option) => {
-                lst.push(<OptionInput
-                    key={i}
-                    index={i}
-                    value={option.option}
-                    color={option.color}
-                    onChange={changeOption}
-                />)
-                i++;
-            });
-            setMaxIndex(i);
-            setElemList(lst);
-        } else {
-            setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
-            setMaxIndex(1);
-        }
-    }, [currentSlide]);
+    const optionsVariantsRef = React.useRef<HTMLDivElement>(null);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentSlide({
@@ -86,11 +70,45 @@ const QuizEditor = (props: QuizEditorProps) => {
     const [optionElemList, setElemList] = React.useState([<OptionInput key={0} index={0} onChange={changeOption}/>]);
 
     const addVariant = () => {
-        setElemList(optionElemList.concat(<OptionInput key={maxIndex} index={maxIndex} onChange={changeOption}/>));
+        setElemList(optionElemList.concat(
+        <OptionInput
+            withColor={currentSlide.questionKind !== "cloud"}
+            key={maxIndex}
+            index={maxIndex}
+            onChange={changeOption}
+        />));
         setMaxIndex(maxIndex + 1);
     }
 
     const previousIndex = usePreviousIndex(currentSlide?.index);
+    const previousQKind = usePreviousQKind(currentSlide?.questionKind);
+
+    useEffect(() => {
+        console.log(previousQKind, currentSlide?.questionKind);
+        if (currentSlide?.index === previousIndex
+            && currentSlide?.questionKind === previousQKind)
+            return;
+        if (currentSlide?.kind === "question") {
+            let lst: Array<JSX.Element> = [];
+            let i = 0;
+            currentSlide.options.forEach((option) => {
+                lst.push(<OptionInput
+                    key={i}
+                    index={i}
+                    value={option.option}
+                    color={option.color}
+                    onChange={changeOption}
+                    withColor={currentSlide.questionKind !== "cloud"}
+                />)
+                i++;
+            });
+            setMaxIndex(i);
+            setElemList(lst);
+        } else {
+            setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
+            setMaxIndex(1);
+        }
+    }, [currentSlide]);
 
     return (
         <div
@@ -138,16 +156,6 @@ const QuizEditor = (props: QuizEditorProps) => {
                     onChange={handleThemeChange}
                 />
             </div>}
-            {currentSlide?.kind === "question" && <div className="backgroundWrapper">
-                <div className="questionTitle">
-                    Цвет надписей результата:
-                </div>
-                <ColorPicker
-                    background={currentSlide?.graphColor}
-                    position={"right"}
-                    onChange={handleGraphColorChange}
-                />
-            </div>}
             {currentSlide?.kind === "question" && <div className="chartTypeWrapper">
                 <div className="questionTitle">
                     Представить результат в виде:
@@ -166,10 +174,25 @@ const QuizEditor = (props: QuizEditorProps) => {
                         onClick={() => {handleQuestionKindChange("pie");}}
                     />
                     <div
+                        className={`chartType doughnut ${currentSlide.questionKind === "doughnut" ? "chosen" : ""}`}
+                        onClick={() => {handleQuestionKindChange("doughnut");}}
+                    />
+                    {/* <div
                         className={`chartType wordcloud ${currentSlide.questionKind === "cloud" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("cloud");}}
-                    />
+                    /> */}
                 </div>
+            </div>}
+            {currentSlide?.kind === "question" && currentSlide?.questionKind !== "cloud" &&
+            <div className="backgroundWrapper">
+                <div className="questionTitle">
+                    Цвет надписей результата:
+                </div>
+                <ColorPicker
+                    background={currentSlide?.graphColor}
+                    position={"right"}
+                    onChange={handleGraphColorChange}
+                />
             </div>}
         </div>
     );

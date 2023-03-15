@@ -36,3 +36,10 @@
     left: 40px;
 }
 
+#cloud-chart {
+    /* width: 600px !important;
+    height: 300px !important; */
+    position: absolute;
+    top: 80px;
+    left: 40px;
+}

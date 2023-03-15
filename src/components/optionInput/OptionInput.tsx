@@ -4,7 +4,7 @@ import ColorPicker from "../colorPicker/ColorPicker";
 import './optionInput.css'
 
 const OptionInput = (props: OptionProps) => {
-    const {index, value, color='#bbb', onChange} = props;
+    const {withColor=true, index, value, color='#bbb', onChange} = props;
     const [option, setOption] = useState<string>(value ? value : "");
     const [curColor, setCurColor] = useState<string>(color ? color : "");
     const [trueIndex, setTrueIndex] = useState<number>(index);
@@ -20,6 +20,10 @@ const OptionInput = (props: OptionProps) => {
         setTrueIndex(tIndex);
     }, [index]);
 
+    useEffect(() => {
+        console.log("Z", withColor);
+    }, [withColor]);
+
     return (
         <div className="singleOption" id={`option-${index}`}>
             <input
@@ -33,16 +37,20 @@ const OptionInput = (props: OptionProps) => {
                 placeholder="Прекрасное!"
                 value={option}
                 />
-            <ColorPicker
+            {withColor && <ColorPicker
                 background={color}
                 onChange={(newColor: string) => {
                     setCurColor(newColor);
                     onChange(trueIndex, option, newColor);
                 }}
-            />
+            />}
             <div className="cross" onClick={() => {
-                document.getElementById(`option-${index}`)?.remove();
-                onChange(trueIndex, undefined, undefined)
+                let child = document.getElementById(`option-${index}`);
+                let parent = child?.parentNode;
+                let tIndex = Array.prototype.indexOf.call(parent?.children, child);
+                setTrueIndex(tIndex);
+                child?.remove();
+                onChange(tIndex, undefined, undefined)
             }}/>
         </div>
     );

@@ -8,10 +8,10 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2';
-import type { CustomBarProps, SingleSlideData, UpdateModeType } from '../../types';
-import { useEffect, useRef, useState, type FunctionComponent } from 'react';
-import WordCloud from 'react-d3-cloud';
+import { Bar, Pie, Doughnut } from 'react-chartjs-2';
+import type { CustomBarProps, OptionData, UpdateModeType } from '../../types';
+import { useEffect, useRef, useState, } from 'react';
+import WordCloud from 'wordcloud';
 
 ChartJS.register(
     CategoryScale,
@@ -146,12 +146,46 @@ export const CustomBar = (props: CustomBarProps) => {
   //   chartRef.current.update();
   // }, 2000);
 
-  let cloudData = slide.options.map(option => {
-    return {
-      text: option.option,
-      value: option.votes * 100
-    };
+
+  let cloudData = slide.options.map((option: OptionData) => {
+    return [option.option, option.votes];
   });
+
+  function makeid(length: number) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
+  useEffect(() => {
+    // console.log(cloudData);
+    if (slide.questionKind === "cloud") {
+      const chart = document.getElementById("cloud-chart");
+      if (chart) {
+        WordCloud(chart, {
+          list: cloudData as any,
+          weightFactor: 10  ,
+          fontFamily: "Times, serif",
+          // rotateRatio: 0,
+          // rotationSteps: 2,
+          clearCanvas: true,
+          backgroundColor: slide.background
+        });
+      }
+    }
+
+  });
+
+  // setInterval(() => {
+  //   cloudData[1][1] = cloudData[1][1] as number + 1;
+  //   console.log(cloudData);
+  // }, 2000);
 
   const usePreviousBarData = (value: any) => {
     const barDataRef = useRef<any>(value);
@@ -194,9 +228,18 @@ export const CustomBar = (props: CustomBarProps) => {
         data={pieData}
       />}
       {kind === "cloud" &&
-      <WordCloud
-        data={cloudData}
+      <canvas
+        id="cloud-chart"
+        width="600px"
+        height="300px"
       />}
+      {kind === "doughnut" &&
+      <Doughnut
+        className="piechart"
+        ref={chartRef}
+        options={pieOptions}
+        data={pieData}
+    />}
     </div>
   );
 }

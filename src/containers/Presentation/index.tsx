@@ -30,6 +30,7 @@ const Presentation: FunctionComponent = () => {
     const cur = useRef<SingleSlideData>();
 
     const onOptionChange = (index: number, value: string, color: string) => {
+        console.log(index, value, color);
         let newoptions;
         if (value && color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.options));
@@ -60,6 +61,7 @@ const Presentation: FunctionComponent = () => {
 
     useEffect(() => {
         cur.current = currentSlide;
+        console.log("OOPS");
         if (currentSlide) {
             setPresData({
                 slides: data.slides.map((slide, i) => {
@@ -98,7 +100,7 @@ const Presentation: FunctionComponent = () => {
         } else {
             console.error("Current index error");
         }
-    }, [currentIndex, data]);
+    }, [currentIndex]);
 
     return (
         <div className="presentation view-wrapper">

@@ -10,6 +10,7 @@ export type SideBarData = {
 export type OptionProps = {
     index: number;
     key: number;
+    withColor?: boolean;
     value?: string;
     color?: string;
     onChange: Function;
@@ -49,7 +50,7 @@ type ColorPickerState = {
     isShown: boolean;
 }
 
-type BarKind = "horizontal"|"vertical"|"pie"|"cloud";
+type BarKind = "horizontal"|"vertical"|"pie"|"cloud"|"doughnut";
 
 type CustomBarProps = {
     slide: SingleSlideData,
