@@ -9,6 +9,7 @@ import { getRouteMetaInfo } from '../../config/routes.config';
 import { MetaInfo } from "../../components";
 
 import { CustomBar } from "./CustomBar";
+import PresentationBar from "../../components/presentationBar/PresentationBar";
 
 const Presentation: FunctionComponent = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -104,20 +105,23 @@ const Presentation: FunctionComponent = () => {
 
     return (
         <div className="presentation view-wrapper">
-            <MetaInfo {...getRouteMetaInfo('About')} />
-            <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
-            <div className="slideBox">
-                <div className="slide" ref={slideRef}>
-                    {currentSlide?.kind === "question" && currentSlide.questionKind ?
-                        <CustomBar kind={currentSlide.questionKind} slide={currentSlide}/>
-                        : null}
+            <PresentationBar/>
+            <div className="contents">
+                <MetaInfo {...getRouteMetaInfo('About')} />
+                <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
+                <div className="slideBox">
+                    <div className="slide" ref={slideRef}>
+                        {currentSlide?.kind === "question" && currentSlide.questionKind ?
+                            <CustomBar kind={currentSlide.questionKind} slide={currentSlide}/>
+                            : null}
+                    </div>
                 </div>
+                <QuizEditor
+                    setCurrentSlide={setCurrentSlide}
+                    currentSlide={currentSlide}
+                    changeOption={onOptionChange}
+                />
             </div>
-            <QuizEditor
-                setCurrentSlide={setCurrentSlide}
-                currentSlide={currentSlide}
-                changeOption={onOptionChange}
-            />
         </div>
     );
 }
