@@ -25,7 +25,7 @@ export type SingleSlideData = {
     index: number;
     src: string;
     kind: "slide" | "question";
-    questionKind: "" | "verticalbar";
+    questionKind: "" | BarKind;
     question: string;
     options: Array<OptionData>;
     background: string;
@@ -48,3 +48,12 @@ type ColorPickerState = {
     visibility: boolean;
     isShown: boolean;
 }
+
+type BarKind = "horizontal"|"vertical"|"pie"|"cloud";
+
+type CustomBarProps = {
+    slide: SingleSlideData,
+    kind: BarKind,
+};
+
+type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;

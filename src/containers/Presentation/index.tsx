@@ -30,7 +30,6 @@ const Presentation: FunctionComponent = () => {
     const cur = useRef<SingleSlideData>();
 
     const onOptionChange = (index: number, value: string, color: string) => {
-        console.log("Z", cur.current);
         let newoptions;
         if (value && color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.options));
@@ -107,7 +106,9 @@ const Presentation: FunctionComponent = () => {
             <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
             <div className="slideBox">
                 <div className="slide" ref={slideRef}>
-                    {currentSlide?.kind === "question" ? <CustomBar slide={currentSlide}/> : null}
+                    {currentSlide?.kind === "question" && currentSlide.questionKind ?
+                        <CustomBar kind={currentSlide.questionKind} slide={currentSlide}/>
+                        : null}
                 </div>
             </div>
             <QuizEditor

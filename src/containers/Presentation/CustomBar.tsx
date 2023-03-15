@@ -8,9 +8,10 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import type { SingleSlideData } from '../../types';
+import { Bar, Pie } from 'react-chartjs-2';
+import type { CustomBarProps, SingleSlideData, UpdateModeType } from '../../types';
 import { useEffect, useRef, useState, type FunctionComponent } from 'react';
+import WordCloud from 'react-d3-cloud';
 
 ChartJS.register(
     CategoryScale,
@@ -24,18 +25,42 @@ ChartJS.register(
 
 const labels = [''];
 
-type CustomBarProps = {
-  slide: SingleSlideData
-};
-
-type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;
-
 export const CustomBar = (props: CustomBarProps) => {
-  const {slide} = props;
+  const {slide, kind} = props;
   const [updateMode, setUpdateMode] = useState<UpdateModeType>("default");
   const chartRef = useRef<any>(null);
 
-  const options = {
+  const verticalOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+    },
+    transitions: {
+      'resize': {
+        animation: {
+          duration: 0
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          tickColor: slide.graphColor,
+          display: false
+        }
+      },
+      y: {
+        grid: {
+          tickColor: slide.graphColor
+        }
+      }
+    }
+  };
+
+  const horizontalOptions = {
+    indexAxis: 'y' as const,
     responsive: true,
     plugins: {
       legend: {
@@ -57,9 +82,10 @@ export const CustomBar = (props: CustomBarProps) => {
       },
       y: {
         grid: {
-          tickColor: slide.graphColor
+          tickColor: slide.graphColor,
+          display: false
         }
-      }
+      },
     }
   };
 
@@ -74,6 +100,58 @@ export const CustomBar = (props: CustomBarProps) => {
       }
     })
   };
+
+  let pieOptions = {
+    responsive: true,
+    interaction: {
+        mode: 'nearest' as const
+    },
+    maintainAspectRatio: false,
+    // plugins: {
+    //   legend: {
+    //     position: 'top' as const,
+    //     labels: {
+    //       font: {
+    //         size: 30
+    //       }
+    //     }
+    //   },
+    //   tooltip: {
+    //     titleFont: {
+    //       size: 30
+    //     },
+    //     bodyFont: {
+    //       size: 30
+    //     }
+    //   }
+    // },
+  }
+
+  let pieData = {
+    labels: slide.options.map(option => option.option),
+    datasets: [{
+      labels: 'Голосов: ',
+      data: slide.options.map(option => option.votes),
+      backgroundColor: slide.options.map(option => option.color),
+      borderColor: slide.options.map(option => option.color)
+
+    }]
+  }
+
+  // TODO это насчёт обновления
+  // setInterval(() => {
+  //   let newData = chartRef.current.data.datasets[0].data.map((value: any) => value+2);
+  //   // console.log(bar);
+  //   chartRef.current.data.datasets[0].data = newData;
+  //   chartRef.current.update();
+  // }, 2000);
+
+  let cloudData = slide.options.map(option => {
+    return {
+      text: option.option,
+      value: option.votes * 100
+    };
+  });
 
   const usePreviousBarData = (value: any) => {
     const barDataRef = useRef<any>(value);
@@ -91,14 +169,34 @@ export const CustomBar = (props: CustomBarProps) => {
     <div className="bar">
       <div className="slideQuestion" style={{color: slide.fontColor,}}>{slide.question}</div>
       {/* TODO change update mode */}
+      {kind === "vertical" &&
       <Bar
         className="chart"
         ref={chartRef}
-        options={options}
+        options={verticalOptions}
         data={barData}
         updateMode={updateMode}
 
-      />
+      />}
+      {kind === "horizontal" &&
+      <Bar
+        className="chart"
+        ref={chartRef}
+        options={horizontalOptions}
+        data={barData}
+        updateMode={updateMode}
+      />}
+      {kind === "pie" &&
+      <Pie
+        className="piechart"
+        ref={chartRef}
+        options={pieOptions}
+        data={pieData}
+      />}
+      {kind === "cloud" &&
+      <WordCloud
+        data={cloudData}
+      />}
     </div>
   );
 }

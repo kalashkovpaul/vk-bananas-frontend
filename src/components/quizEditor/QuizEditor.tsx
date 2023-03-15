@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import './quizEditor.css';
-import type { SingleSlideData,  } from '../../types';
+import type { BarKind, SingleSlideData,  } from '../../types';
 import ColorPicker from '../colorPicker/ColorPicker';
 import OptionInput from '../optionInput/OptionInput';
 
@@ -25,7 +25,6 @@ const QuizEditor = (props: QuizEditorProps) => {
     const optionsVariantsRef = React.useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        console.log(currentSlide);
         if (currentSlide?.index === previousIndex)
             return;
         if (currentSlide?.kind === "question") {
@@ -41,7 +40,6 @@ const QuizEditor = (props: QuizEditorProps) => {
                 />)
                 i++;
             });
-            console.log(lst);
             setMaxIndex(i);
             setElemList(lst);
         } else {
@@ -58,7 +56,6 @@ const QuizEditor = (props: QuizEditorProps) => {
     }
 
     const handleThemeChange = (color: string) => {
-        console.log(currentSlide);
         setCurrentSlide({
             ...currentSlide,
             background: color
@@ -66,7 +63,6 @@ const QuizEditor = (props: QuizEditorProps) => {
     };
 
     const handleFontColorChange = (color: string) => {
-        console.log("X", currentSlide);
         setCurrentSlide({
             ...currentSlide,
             fontColor: color
@@ -77,6 +73,13 @@ const QuizEditor = (props: QuizEditorProps) => {
         setCurrentSlide({
             ...currentSlide,
             graphColor: color
+        })
+    }
+
+    const handleQuestionKindChange = (newkind: BarKind) => {
+        setCurrentSlide({
+            ...currentSlide,
+            questionKind: newkind
         })
     }
 
@@ -144,6 +147,29 @@ const QuizEditor = (props: QuizEditorProps) => {
                     position={"right"}
                     onChange={handleGraphColorChange}
                 />
+            </div>}
+            {currentSlide?.kind === "question" && <div className="chartTypeWrapper">
+                <div className="questionTitle">
+                    Представить результат в виде:
+                </div>
+                <div className="chartTypes">
+                    <div
+                        className={`chartType vertical-bar ${currentSlide.questionKind === "vertical" ? "chosen" : ""}`}
+                        onClick={() => {handleQuestionKindChange("vertical");}}
+                    />
+                    <div
+                        className={`chartType horizontal-bar ${currentSlide.questionKind === "horizontal" ? "chosen" : ""}`}
+                        onClick={() => {handleQuestionKindChange("horizontal");}}
+                    />
+                    <div
+                        className={`chartType pie ${currentSlide.questionKind === "pie" ? "chosen" : ""}`}
+                        onClick={() => {handleQuestionKindChange("pie");}}
+                    />
+                    <div
+                        className={`chartType wordcloud ${currentSlide.questionKind === "cloud" ? "chosen" : ""}`}
+                        onClick={() => {handleQuestionKindChange("cloud");}}
+                    />
+                </div>
             </div>}
         </div>
     );

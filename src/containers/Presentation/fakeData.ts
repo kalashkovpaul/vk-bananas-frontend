@@ -19,7 +19,7 @@ export const presData: PresData = {
             index: 1,
             src: "example.png",
             kind: "question",
-            questionKind: "",
+            questionKind: "vertical",
             question: "Как настроение?",
             options: [
                 {
