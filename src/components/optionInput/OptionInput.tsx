@@ -4,11 +4,12 @@ import ColorPicker from "../colorPicker/ColorPicker";
 import './optionInput.css'
 
 const OptionInput = (props: OptionProps) => {
-    const {withColor=true, index, value, color='#bbb', onChange} = props;
+    const {withColor=true, index, value, color='#0FD400', onChange} = props;
     const [option, setOption] = useState<string>(value ? value : "");
     const [curColor, setCurColor] = useState<string>(color ? color : "");
     const [trueIndex, setTrueIndex] = useState<number>(index);
     useEffect(() => {
+        // console.log(value, color)
         setOption(value ? value : "");
         setCurColor(color ? color : color);
     }, [value, color]);
@@ -28,6 +29,7 @@ const OptionInput = (props: OptionProps) => {
                 name="option"
                 onChange={(e) => {
                     setOption(e.target.value);
+                    console.log(e.target.value, curColor);
                     onChange(trueIndex, e.target.value, curColor);
                 }}
                 placeholder="Прекрасное!"

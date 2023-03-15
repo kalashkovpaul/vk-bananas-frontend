@@ -67,7 +67,7 @@ const QuizEditor = (props: QuizEditorProps) => {
         })
     }
 
-    const [optionElemList, setElemList] = React.useState([<OptionInput key={0} index={0} onChange={changeOption}/>]);
+    const [optionElemList, setElemList] = React.useState([] as any);
 
     const addVariant = () => {
         setElemList(optionElemList.concat(
@@ -87,10 +87,12 @@ const QuizEditor = (props: QuizEditorProps) => {
         if (currentSlide?.index === previousIndex
             && currentSlide?.questionKind === previousQKind)
             return;
-        if (currentSlide?.kind === "question") {
+        if (currentSlide?.kind === "question" && currentSlide?.options.length) {
             let lst: Array<JSX.Element> = [];
+            setElemList(lst);
             let i = 0;
             currentSlide.options.forEach((option) => {
+                console.log(option);
                 lst.push(<OptionInput
                     key={i}
                     index={i}
@@ -104,8 +106,8 @@ const QuizEditor = (props: QuizEditorProps) => {
             setMaxIndex(i);
             setElemList(lst);
         } else {
-            setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
-            setMaxIndex(1);
+            // setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
+            // setMaxIndex(1);
         }
     }, [currentSlide]);
 
@@ -185,11 +187,11 @@ const QuizEditor = (props: QuizEditorProps) => {
             {currentSlide?.kind === "question" && currentSlide?.questionKind !== "cloud" &&
             <div className="backgroundWrapper">
                 <div className="questionTitle">
-                    Цвет надписей результата:
+                    Цвет текста результата:
                 </div>
                 <ColorPicker
                     background={currentSlide?.graphColor}
-                    position={"right"}
+                    position={"up"}
                     onChange={handleGraphColorChange}
                 />
             </div>}

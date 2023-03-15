@@ -49,11 +49,17 @@ export const CustomBar = (props: CustomBarProps) => {
         grid: {
           tickColor: slide.graphColor,
           display: false
+        },
+        border: {
+          color: slide.graphColor,
         }
       },
       y: {
         grid: {
           tickColor: slide.graphColor
+        },
+        border: {
+          color: slide.graphColor,
         }
       }
     }
@@ -77,13 +83,22 @@ export const CustomBar = (props: CustomBarProps) => {
     scales: {
       x: {
         grid: {
-          tickColor: slide.graphColor
+          tickColor: slide.graphColor,
+          drawOnChartArea: false,
+          color: slide.graphColor,
+        },
+        border: {
+          color: slide.graphColor,
         }
       },
       y: {
         grid: {
           tickColor: slide.graphColor,
+          drawOnChartArea: false,
           display: false
+        },
+        border: {
+          color: slide.graphColor,
         }
       },
     }

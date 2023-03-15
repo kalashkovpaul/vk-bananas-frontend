@@ -41,7 +41,7 @@ export type PresData = {
 type ColorPickerProps = {
     background: string;
     onChange: Function;
-    position?: "left" | "right";
+    position?: "left" | "right" |"up";
 }
 
 type ColorPickerState = {

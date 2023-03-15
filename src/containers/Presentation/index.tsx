@@ -23,6 +23,18 @@ const emptySlide: SingleSlideData = {
     graphColor: "",
 }
 
+const newSlide: SingleSlideData = {
+    index: -1,
+    src: "",
+    kind: "question",
+    questionKind: "vertical",
+    question: "",
+    options: [],
+    background: "white",
+    fontColor: "black",
+    graphColor: "black",
+}
+
 const Presentation: FunctionComponent = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
@@ -47,7 +59,7 @@ const Presentation: FunctionComponent = () => {
     const onOptionChange = (index: number, value: string, color: string) => {
         // console.log(index, value, color);
         let newoptions;
-        if (value && color) {
+        if (value || color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.options));
             if (newoptions[index]) {
                 newoptions[index].option = value;
@@ -121,20 +133,12 @@ const Presentation: FunctionComponent = () => {
             }
         });
 
-        console.log(newSlides, currentIndex);
-
         setPresData({
             slides: newSlides
         });
-        // setCurrentIndex(currentIndex);
-        // if (currentIndex + 1 < presData.slides.length)
-        //     setCurrentIndex(currentIndex + 1);
-        // else
-        //     setCurrentIndex(currentIndex);
     };
 
     useEffect(() => {
-        // debugger;
         if (currentIndex < data.slides.length) {
             setCurrentSlide(data.slides[currentIndex]);
         } else if (data.slides.length === 0) {
@@ -142,10 +146,31 @@ const Presentation: FunctionComponent = () => {
         }
     }, [data]);
 
+    const onCreateSlide = () => {
+        let newSlides: Array<SingleSlideData> = [];
+        data.slides.forEach((slide) => {
+            if (slide.index < currentIndex) {
+                newSlides.push(slide);
+            } else if (slide.index === currentIndex) {
+                newSlides.push(slide);
+                newSlides.push({...newSlide, index: currentIndex + 1})
+            } else {
+                newSlides.push({...slide, index: slide.index + 1});
+            }
+        });
+
+        setPresData({
+            slides: newSlides
+        });
+    }
+
 
     return (
         <div className="presentation view-wrapper">
-            <PresentationBar onDelete={onSlideDelete}/>
+            <PresentationBar
+                onDelete={onSlideDelete}
+                onCreate={onCreateSlide}
+            />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
                 <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>

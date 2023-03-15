@@ -3,13 +3,16 @@ import './presentationBar.css';
 
 type PresBarProps = {
     onDelete: Function;
+    onCreate: Function;
 }
 
 const PresentationBar = (props: PresBarProps) => {
-    const {onDelete} = props;
+    const {onDelete, onCreate} = props;
     return (
         <div className="presentationBar">
-            <div className="bar-button addSlide">
+            <div className="bar-button addSlide" onClick={() => {
+                onCreate();
+            }}>
                 <div className="addSlidePlus"/>
                 Добавить слайд
             </div>

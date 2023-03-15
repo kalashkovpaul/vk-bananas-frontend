@@ -25,3 +25,10 @@
     z-index: 1;
     margin-right: 4px;
 }
+
+.sketchPickerUp {
+    position: absolute;
+    top: -262px;
+    z-index: 1;
+    margin-right: 4px;
+}
