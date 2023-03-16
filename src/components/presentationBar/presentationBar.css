@@ -23,7 +23,8 @@
 } */
 
 .bar-button {
-    width: 200px;
+    /* width: 200px; */
+    position: relative;
     border-radius: 8px;
     margin: 4px;
     align-items: center;
@@ -39,8 +40,8 @@
     line-height: 1;
     list-style: none;
     overflow: hidden;
-    padding-left: 16px;
-    padding-right: 16px;
+    /* padding-left: 16px;
+    padding-right: 16px; */
     position: relative;
     text-align: left;
     text-decoration: none;
@@ -70,6 +71,7 @@
 
 .addSlide {
     padding-left: 0px;
+    padding-right: 16px;
 }
 
 .addSlidePlus {
@@ -80,6 +82,8 @@
 }
 
 .deleteSlide {
+    padding-left: 16px;
+    padding-right: 16px;
     color: black;
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
@@ -96,6 +100,8 @@
     color: black;
     margin-left: auto;
     padding-left: 0;
+    padding-left: 16px;
+    padding-right: 16px;
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
 
@@ -118,6 +124,7 @@
 .showButton {
     width: 240px;
     padding-left: 8px;
+    padding-right: 16px;
 }
 
 .showButtonIcon {

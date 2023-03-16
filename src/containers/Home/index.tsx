@@ -1,6 +1,6 @@
 import Feature from './Feature';
 import Package from './Package';
-import ReactIcon from './ReactIcon';
+import './home.css';
 import { MetaInfo } from '../../components';
 import type { FunctionComponent } from 'react';
 import { Features } from '../../config/features.config';
@@ -26,11 +26,10 @@ const Home: FunctionComponent = () => (
       <div className="hero-body">
         <div className="container has-text-centered">
           <div className="is-flex is-horizontal-center">
-            <figure className="image is-132x132">
-              <ReactIcon />
-            </figure>
+              <div className='rotateLogo'/>
+              {/* <ReactIcon /> */}
           </div>
-          <h1 className="title">SEO Friendly SPA</h1>
+          <h1 className="title">Бананчики</h1>
           <hr />
           {Features.map((feat, idx) => <Feature key={idx} {...feat} />)}
         </div>
@@ -38,7 +37,13 @@ const Home: FunctionComponent = () => (
     </section>
     <section className="container dashboard-content">
       <div className="columns">
-        {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)}
+      <div className="bar-button addPresentation" onClick={() => {
+
+        }}>
+            <div className="addFileIcon"/>
+            Прикрепить презентацию
+        </div>
+        {/* {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)} */}
       </div>
       <hr />
       <div className="columns">

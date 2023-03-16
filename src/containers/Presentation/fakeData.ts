@@ -25,7 +25,7 @@ export const presData: PresData = {
                 {
                     option: "Хорошее",
                     votes: 2,
-                    color: "#bbb",
+                    color: "red",
                 },
                 {
                     option: "Отличное",

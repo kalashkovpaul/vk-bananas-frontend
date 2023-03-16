@@ -5,21 +5,21 @@ export type Feature = Readonly<{
 
 export const Features: Feature[] = [
   {
-    description: 'UI styled with Bulma + SASS + Font Awesome 5 (svg-core)'
+    description: 'Собрали команду'
   },
   {
-    description: 'Configured as a (PWA) Progressive Web App'
+    description: 'Придумали классное название'
   },
   {
-    description: 'Meta tags dynamically handled per route using',
-    package_name: 'react-helmet-async'
+    description: 'Сделали первую страничку с редактированием презентации',
+    // package_name: 'react-helmet-async'
   },
   {
-    description: 'Google Analytics ready to go and easily configurable using',
-    package_name: 'react-ga'
+    description: 'Научились загружать pptx презентации',
+    // package_name: 'react-ga'
   },
   {
-    description: 'Configured to serve prerendered html using',
-    package_name: 'react-snap'
+    description: 'Научились отображать опросы',
+    // package_name: 'react-snap'
   }
 ];

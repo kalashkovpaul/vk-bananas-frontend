@@ -106,8 +106,10 @@ const QuizEditor = (props: QuizEditorProps) => {
             setMaxIndex(i);
             setElemList(lst);
         } else {
-            // setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
-            // setMaxIndex(1);
+            if (currentSlide?.kind === "question") {
+                setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
+                setMaxIndex(1);
+            }
         }
     }, [currentSlide]);
 
