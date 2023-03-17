@@ -7,6 +7,7 @@ import {
   faAngleDoubleUp,
   faExternalLinkAlt,
   faExclamationCircle,
+  faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faEtsy,
@@ -27,6 +28,7 @@ export const registerIcons = () => {
     faInfoCircle,
     faAngleDoubleUp,
     faExternalLinkAlt,
-    faExclamationCircle
+    faExclamationCircle,
+    faCircleCheck,
   );
 };

@@ -13,18 +13,3 @@
     background-size: contain;
     animation: rotation infinite 10s linear
 }
-
-.addPresentation {
-    width: 300px;
-    height: 60px;
-    padding-right: 8px;
-    left: 535px;
-}
-
-.addFileIcon {
-    background-image: url("./upload.png");
-    background-size: contain;
-    width: 30px;
-    height: 30px;
-    margin-right: 12px;
-}

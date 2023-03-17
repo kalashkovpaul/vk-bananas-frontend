@@ -6,6 +6,7 @@ import type { FunctionComponent } from 'react';
 import { Features } from '../../config/features.config';
 import { Packages } from '../../config/packages.config';
 import { getRouteMetaInfo } from '../../config/routes.config';
+import UploadFileButton from '../../components/uploadFileButton/UploadFileButton';
 
 const LOREM_IPSUM_TEXT = `
   Lorem ipsum dolor sit amet, alia appareat usu id, has legere facilis in. Nam inani malorum epicuri
@@ -37,12 +38,7 @@ const Home: FunctionComponent = () => (
     </section>
     <section className="container dashboard-content">
       <div className="columns">
-      <div className="bar-button addPresentation" onClick={() => {
-
-        }}>
-            <div className="addFileIcon"/>
-            Прикрепить презентацию
-        </div>
+      <UploadFileButton/>
         {/* {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)} */}
       </div>
       <hr />

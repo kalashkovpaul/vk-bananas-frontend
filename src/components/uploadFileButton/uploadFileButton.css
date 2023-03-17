@@ -1,0 +1,24 @@
+.addPresentation {
+    width: 300px;
+    height: 60px;
+    padding-right: 8px;
+    left: 535px;
+}
+
+.addFileIcon {
+    background-image: url("./upload.png");
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    margin-right: 12px;
+}
+
+.inputFile {
+    display: none;
+}
+
+#alertWrapper {
+    width: 0px;
+    height: 0px;
+    position: relative;
+}

@@ -18,7 +18,11 @@ type NotificationProps = Partial<AlertProps>;
 
 const TileContainer = styled.div`
   margin: 0 auto;
-  padding: 15rem 0 20rem !important;
+  position: absolute;
+  width: 500px;
+  left: 465px;
+  top: 445px;
+  z-index: 1;
 `;
 
 const Notification = styled.div<NotificationProps>`
@@ -63,30 +67,39 @@ const Alert: FunctionComponent<AlertProps> = ({
   alertAnimation = 'none',
   iconName = 'info-circle',
   alertBackgroundColor = '#4dc6e7'
-}) => (
-  <TileContainer className="tile is-parent is-vertical is-8">
-    {show && (
-      <Notification
-        alertColor={alertColor}
-        alertAnimation={alertAnimation}
-        alertBackgroundColor={alertBackgroundColor}
-        className="notification tile is-child"
-      >
-        <div>
-          <FontAwesomeIcon
-            icon={iconName}
-            size={iconSize}
-          />
-          <span className="title">
-            {title}
-          </span>
-        </div>
-        <p className="subtitle">
-          {subTitle}
-        </p>
-      </Notification>
-    )}
-  </TileContainer>
-);
+}) => {
+
+  setTimeout(() => {
+    let child = document.getElementById(`alertBlock`);
+    // let parent = child?.parentNode;
+    child?.remove();
+  }, 2000);
+
+  return (
+    <TileContainer id="alertBlock" className="is-parent is-vertical is-8">
+      {show && (
+        <Notification
+          alertColor={alertColor}
+          alertAnimation={alertAnimation}
+          alertBackgroundColor={alertBackgroundColor}
+          className="notification is-child"
+        >
+          <div>
+            <FontAwesomeIcon
+              icon={iconName}
+              size={iconSize}
+            />
+            <span className="title">
+              {title}
+            </span>
+          </div>
+          <p className="subtitle">
+            {subTitle}
+          </p>
+        </Notification>
+      )}
+    </TileContainer>
+  );
+};
 
 export default Alert;

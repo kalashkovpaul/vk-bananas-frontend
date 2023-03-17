@@ -33,3 +33,16 @@
     transform: scale3d(1, 1, 1);
   }
 }
+
+@keyframes dissapear{
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 0.5;
+  }
+  100%{
+    display: none;
+    opacity: 0;
+  }
+}
