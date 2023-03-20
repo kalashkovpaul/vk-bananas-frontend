@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import Alert from "../Alert";
 import ReactDOM from 'react-dom';
 import { createRoot } from "react-dom/client";
-import { createSuccess } from "../../utils/utils";
+import { createError, createSuccess } from "../../utils/utils";
 import {BarLoader} from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../config/api.config";
 
 const Button = styled.button`
     position: relative;
@@ -54,26 +55,32 @@ const UploadFileButton = () => {
         if (!file) {
           return;
         }
+        let fileType = (file.name.match(/\.[0-9a-z]+$/i) as any)[0];
+        if (fileType !== '.pptx') {
+            createError("Ошибка", "Файлы презентации должны иметь расширение pptx");
+            setLoading(false);
+            return;
+        }
 
-        // 👇 Uploading the file using the fetch API to the server
-        fetch('https://httpbin.org/post', {
-          method: 'POST',
-          body: file,
-          // 👇 Set headers manually for single file upload
-          headers: {
-            'content-type': file.type,
-            'content-length': `${file.size}`, // 👈 Headers need to be a string
-          },
-        })
-          .then((res) => {
+        fetch(api.presCreate, {
+            method: 'POST',
+            body: JSON.stringify({
+                file: file,
+                creatorId: 0, // TODO
+            }),
+
+            headers: {
+                // 'content-type': file.type,
+                // 'content-length': `${file.size}`,
+            },
+        }).then((res) => {
               return res.json()
             })
             .then((data) => {
-                console.log(data)
                 createSuccess("Успех", "Файл был успешно загружен");
                 setLoading(false);
                 setTimeout(() => {
-                    navigate("/presentation");
+                    navigate(`/presentation/${data?.presId}`);
                 }, 2000);
           })
           .catch((err) => console.error(err));

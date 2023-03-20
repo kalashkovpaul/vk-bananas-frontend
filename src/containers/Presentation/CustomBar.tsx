@@ -106,7 +106,7 @@ export const CustomBar = (props: CustomBarProps) => {
 
   let barData = {
     labels,
-    datasets: slide.options.map((option) => {
+    datasets: slide.vote.map((option) => {
       return {
         label: option.option,
         data: [option.votes],
@@ -143,12 +143,12 @@ export const CustomBar = (props: CustomBarProps) => {
   }
 
   let pieData = {
-    labels: slide.options.map(option => option.option),
+    labels: slide.vote.map(option => option.option),
     datasets: [{
       labels: 'Голосов: ',
-      data: slide.options.map(option => option.votes),
-      backgroundColor: slide.options.map(option => option.color),
-      borderColor: slide.options.map(option => option.color)
+      data: slide.vote.map(option => option.votes),
+      backgroundColor: slide.vote.map(option => option.color),
+      borderColor: slide.vote.map(option => option.color)
 
     }]
   }
@@ -162,7 +162,7 @@ export const CustomBar = (props: CustomBarProps) => {
   // }, 2000);
 
 
-  let cloudData = slide.options.map((option: OptionData) => {
+  let cloudData = slide.vote.map((option: OptionData) => {
     return [option.option, option.votes];
   });
 

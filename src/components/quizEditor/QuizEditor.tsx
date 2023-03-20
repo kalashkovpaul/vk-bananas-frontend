@@ -7,15 +7,16 @@ import OptionInput from '../optionInput/OptionInput';
 type QuizEditorProps = {
     currentSlide: SingleSlideData;
     setCurrentSlide: Function;
-    changeOption: Function;
+    onOptionCreate: Function;
+    onOptionUpdate: Function;
 }
 
 const QuizEditor = (props: QuizEditorProps) => {
-    const {currentSlide, setCurrentSlide, changeOption} = props;
+    const {currentSlide, setCurrentSlide, onOptionUpdate, onOptionCreate} = props;
     const [maxIndex, setMaxIndex] = React.useState(1);
 
     const usePreviousIndex = (value: any) => {
-        const indexRef = useRef<number>(currentSlide?.index);
+        const indexRef = useRef<number>(currentSlide?.idx);
         useEffect(() => {
             indexRef.current = value;
         })
@@ -70,35 +71,39 @@ const QuizEditor = (props: QuizEditorProps) => {
     const [optionElemList, setElemList] = React.useState([] as any);
 
     const addVariant = () => {
-        setElemList(optionElemList.concat(
-        <OptionInput
-            withColor={currentSlide.questionKind !== "cloud"}
-            key={maxIndex}
-            index={maxIndex}
-            onChange={changeOption}
-        />));
-        setMaxIndex(maxIndex + 1);
+        let wrapper = document.getElementById(`optionsVariants`);
+        let tIndex = wrapper?.children.length;
+        if (tIndex) {
+            setElemList(optionElemList.concat(
+            <OptionInput
+                withColor={currentSlide.questionKind !== "cloud"}
+                key={maxIndex}
+                index={maxIndex}
+                onChange={onOptionUpdate}
+            />));
+            setMaxIndex(maxIndex + 1);
+            // onOptionCreate(tIndex);
+        }
     }
 
-    const previousIndex = usePreviousIndex(currentSlide?.index);
+    const previousIndex = usePreviousIndex(currentSlide?.idx);
     const previousQKind = usePreviousQKind(currentSlide?.questionKind);
 
     useEffect(() => {
-        if (currentSlide?.index === previousIndex
+        if (currentSlide?.idx === previousIndex
             && currentSlide?.questionKind === previousQKind)
             return;
-        if (currentSlide?.kind === "question" && currentSlide?.options.length) {
+        if (currentSlide?.kind === "question" && currentSlide?.vote.length) {
             let lst: Array<JSX.Element> = [];
             setElemList(lst);
             let i = 0;
-            currentSlide.options.forEach((option) => {
-                console.log(option);
+            currentSlide.vote.forEach((option) => {
                 lst.push(<OptionInput
                     key={i}
                     index={i}
                     value={option.option}
                     color={option.color}
-                    onChange={changeOption}
+                    onChange={onOptionUpdate}
                     withColor={currentSlide.questionKind !== "cloud"}
                 />)
                 i++;
@@ -107,7 +112,7 @@ const QuizEditor = (props: QuizEditorProps) => {
             setElemList(lst);
         } else {
             if (currentSlide?.kind === "question") {
-                setElemList([<OptionInput key={0} index={0} onChange={changeOption}/>]);
+                setElemList([<OptionInput key={100} index={0} onChange={onOptionUpdate}/>]);
                 setMaxIndex(1);
             }
         }
@@ -140,7 +145,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                 <div className="optionsTitle">
                     Варианты ответа:
                 </div>
-                <div className="optionsVariants" ref={optionsVariantsRef}>
+                <div id="optionsVariants" ref={optionsVariantsRef}>
                     {optionElemList}
                 </div>
                 <button className="addVariant" onClick={addVariant}>

@@ -10,57 +10,68 @@ import { MetaInfo } from "../../components";
 
 import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
+import { api } from "../../config/api.config";
 
 const emptySlide: SingleSlideData = {
-    index: -1,
-    src: "",
+    idx: 0,
+    name: "",
     kind: "slide",
     questionKind: "",
+    quizId: 0,
+    width: 600,
+    height: 300,
+    fontSize: 16,
     question: "",
-    options: [],
+    vote: [],
     background: "",
     fontColor: "",
     graphColor: "",
 }
 
 const newSlide: SingleSlideData = {
-    index: -1,
-    src: "",
+    idx: 0,
+    name: "",
     kind: "question",
     questionKind: "vertical",
+    quizId: 0,
+    width: 600,
+    height: 300,
+    fontSize: 16,
     question: "",
-    options: [],
+    vote: [],
     background: "white",
     fontColor: "black",
     graphColor: "black",
 }
 
 const Presentation: FunctionComponent = () => {
+    const presId = 121; // TODO parse from url
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
+        url: "",
+        slideNum: 0,
+        quizNum: 0,
         slides: []
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
 
-    // Надо ли?
-    // const onUndo = (e: KeyboardEvent) => {
-    //     console.log(e);
-    //     if (e.keyCode === 90 && e.metaKey) {
-    //         e.preventDefault();
-    //         e.stopPropagation();
-    //         console.log("UNDO");
-    //     }
-    // }
-    // document.addEventListener("keydown", onUndo);
+    const usePreviousSlide = (value: any) => {
+        const prevSlideRef = useRef<any>(value);
+          useEffect(() => {
+                prevSlideRef.current = value;
+          })
+          return prevSlideRef.current
+    };
 
+    const previousSlide = usePreviousSlide(currentSlide);
 
     const onOptionChange = (index: number, value: string, color: string) => {
         // console.log(index, value, color);
         let newoptions;
         if (value || color) {
-            newoptions = JSON.parse(JSON.stringify(cur.current?.options));
+            newoptions = JSON.parse(JSON.stringify(cur.current?.vote));
             if (newoptions[index]) {
                 newoptions[index].option = value;
                 newoptions[index].color = color;
@@ -71,28 +82,30 @@ const Presentation: FunctionComponent = () => {
                     color: color,
                 }
             }
+            onOptionUpdate(newoptions);
         } else {
             newoptions = [];
-            cur.current?.options.forEach((option, i) => {
+            cur.current?.vote.forEach((option, i) => {
                 if (i !== index) {
                     newoptions.push(option);
                 }
             });
+            onOptionDelete(index);
         }
 
         setCurrentSlide({
             ...(cur.current as SingleSlideData),
-            options: newoptions,
+            vote: newoptions,
         });
     };
 
     useEffect(() => {
         cur.current = currentSlide;
         if (currentSlide?.kind === "slide" && slideRef.current) {
-            if (currentSlide?.src) {
+            if (currentSlide?.name) {
                 // TODO show image
                 slideRef.current.style.backgroundColor = "green";
-            } else if (currentSlide.index >=0) {
+            } else if (currentSlide.idx >=0) {
                 slideRef.current.style.backgroundColor = "#CECECE";
             } else {
                 slideRef.current.style.backgroundColor = "transparent";
@@ -100,18 +113,33 @@ const Presentation: FunctionComponent = () => {
             }
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
+            if (currentIndex === previousSlide.idx)
+                onSlideChange();
         }
-    }, [currentSlide])
+    }, [currentSlide]);
 
     useEffect(() => {
-        // TODO fetch data about presentation
-        const newdata = presData;
-        if (newdata) {
-            if (newdata.slides?.length) {
-                setPresData(newdata);
-                setCurrentIndex(0);
+        fetch(`${api.getPres}/${presId}`, {
+            method: 'GET',
+            // body: JSON.stringify({
+            //     creatorId: 0
+            // }),
+
+            headers: {
+
             }
-        }
+        }).then((res) => res.json())
+        .then((presdata) => {
+            // console.log("ONCE???");
+            const newdata = presdata;
+            if (newdata) {
+                if (newdata.slides?.length) {
+                    setPresData(newdata);
+                    setCurrentIndex(0);
+                }
+            }
+        });
+
     }, []);
 
     useEffect(() => {
@@ -124,19 +152,110 @@ const Presentation: FunctionComponent = () => {
 
     const onSlideDelete = () => {
         let newSlides: Array<SingleSlideData> = [];
-        // debugger;
-        data.slides.forEach((slide) => {
-            if (slide.index < currentIndex) {
+        data?.slides.forEach((slide) => {
+            if (slide.idx < currentIndex) {
                 newSlides.push(slide);
-            } else if (slide.index > currentIndex) {
-                newSlides.push({...slide, index: slide.index - 1});
+            } else if (slide.idx > currentIndex) {
+                newSlides.push({...slide, idx: slide.idx - 1});
             }
         });
 
-        setPresData({
-            slides: newSlides
-        });
+        fetch(`${api.quizDelete}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 0,
+                presId: presId,
+                quizId: data.slides[currentIndex].quizId
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            setPresData({
+                ...data,
+                slides: newSlides
+            });
+        })
     };
+
+    const onOptionCreate = (index: number) => {
+        fetch(`${api.voteCreate}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 0,
+                quizId: data.slides[currentIndex].quizId,
+                idx: index,
+                option: "",
+                votes: 0,
+                color: "#0FD400"
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            console.log(response);
+        });
+    }
+
+    const onOptionDelete = (index: number) => {
+        fetch(`${api.voteDelete}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 0,
+                quizId: data.slides[currentIndex].quizId,
+                idx: index,
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            console.log(response);
+        });
+    }
+
+    const onOptionUpdate = (newoptions: Array<OptionData>) => {
+        fetch(`${api.voteUpdate}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                creatorId: 0,
+                quizId: data.slides[currentIndex].quizId,
+                vote: newoptions,
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            console.log(response);
+        });
+    }
+
+    const onSlideChange = () => {
+        fetch(`${api.quizUpdate}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                creatorId: 0,
+                quizId: data.slides[currentIndex].quizId,
+                presId: presId,
+                idx: currentIndex,
+                type: data.slides[currentIndex].questionKind,
+                question: data.slides[currentIndex].question,
+                background: data.slides[currentIndex].background,
+                fontColor: data.slides[currentIndex].fontColor,
+                fontSize: data.slides[currentIndex].fontSize,
+                graphColor: data.slides[currentIndex].graphColor,
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            console.log(response);
+        });
+    }
 
     useEffect(() => {
         if (currentIndex < data.slides.length) {
@@ -146,22 +265,45 @@ const Presentation: FunctionComponent = () => {
         }
     }, [data]);
 
+
     const onCreateSlide = () => {
         let newSlides: Array<SingleSlideData> = [];
         data.slides.forEach((slide) => {
-            if (slide.index < currentIndex) {
+            if (slide.idx < currentIndex) {
                 newSlides.push(slide);
-            } else if (slide.index === currentIndex) {
+            } else if (slide.idx === currentIndex) {
                 newSlides.push(slide);
-                newSlides.push({...newSlide, index: currentIndex + 1})
+                newSlides.push({...newSlide, idx: currentIndex + 1})
             } else {
-                newSlides.push({...slide, index: slide.index + 1});
+                newSlides.push({...slide, idx: slide.idx + 1});
             }
         });
 
-        setPresData({
-            slides: newSlides
-        });
+        fetch(`${api.quizCreate}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 0,
+                presId: presId,
+                idx: currentIndex + 1,
+                type: newSlide.kind, // ???
+                question: newSlide.question,
+                vote: [],
+                background: newSlide.background,
+                fontColor: newSlide.fontColor,
+                fontSize: newSlide.fontSize, //???
+                graphColor: newSlide.graphColor
+            }),
+            headers: {
+
+            }
+        }).then(data => data.json())
+        .then((response) => {
+            newSlides[currentIndex + 1].quizId = response?.quizId;
+            setPresData({
+                ...data,
+                slides: newSlides
+            });
+        })
     }
 
 
@@ -184,7 +326,8 @@ const Presentation: FunctionComponent = () => {
                 <QuizEditor
                     setCurrentSlide={setCurrentSlide}
                     currentSlide={currentSlide}
-                    changeOption={onOptionChange}
+                    onOptionUpdate={onOptionChange}
+                    onOptionCreate={onOptionCreate}
                 />
             </div>
         </div>

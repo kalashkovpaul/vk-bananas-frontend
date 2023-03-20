@@ -1,7 +1,15 @@
 import { createRoot } from "react-dom/client";
 import { Alert } from "../components";
 
+let el = document.getElementById("alertWrapper");
+let root = el ? createRoot(el) : null;
+
 export function createError(title: string, subTitle: string) {
+    setTimeout(() => {
+        root?.unmount();
+        root = null;
+    }, 2000);
+
     let a =
         <Alert
             title={title}
@@ -11,13 +19,23 @@ export function createError(title: string, subTitle: string) {
             alertAnimation="rubberBand_animation 1s, 1s dissapear 1s"
         />;
     let el = document.getElementById("alertWrapper");
-    if (el) {
-        let root = createRoot(el);
+    if (root) {
         root.render(a);
+    } else {
+        el = document.getElementById("alertWrapper");
+        if (el) {
+            root = createRoot(el);
+            root.render(a);
+        }
     }
 }
 
 export function createSuccess(title: string, subTitle: string) {
+    setTimeout(() => {
+        root?.unmount();
+        root = null;
+    }, 2000);
+    
     let a =
         <Alert
             title={title}
@@ -26,9 +44,13 @@ export function createSuccess(title: string, subTitle: string) {
             alertBackgroundColor="#50C878"
             alertAnimation="rubberBand_animation 1s, 4s dissapear 1.5s"
         />;
-    let el = document.getElementById("alertWrapper");
-    if (el) {
-        let root = createRoot(el);
-        root.render(a);
-    }
+        if (root) {
+            root.render(a);
+        } else {
+            el = document.getElementById("alertWrapper");
+            if (el) {
+                root = createRoot(el);
+                root.render(a);
+            }
+        }
 }

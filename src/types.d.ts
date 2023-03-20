@@ -17,24 +17,32 @@ export type OptionProps = {
 }
 
 export type OptionData = {
+    idx: number;
     option: string;
     votes: number;
     color: string;
 }
 
 export type SingleSlideData = {
-    index: number;
-    src: string;
+    idx: number;
+    name: string;
+    quizId: number;
+    width: number;
+    height: number;
     kind: "slide" | "question";
     questionKind: "" | BarKind;
     question: string;
-    options: Array<OptionData>;
+    vote: Array<OptionData>;
     background: string;
     fontColor: string;
     graphColor: string;
+    fontSize: 16;
 }
 
 export type PresData = {
+    url: string,
+    slideNum: number,
+    quizNum: number,
     slides: Array<SingleSlideData>;
 };
 

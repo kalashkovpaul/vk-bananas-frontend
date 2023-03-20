@@ -41,7 +41,7 @@ export const routes: Route[] = [
     }
   },
   {
-    path: '/presentation',
+    path: '/presentation/*',
     name: 'Presentation',
     Component: Presentation,
     metaInfo: {

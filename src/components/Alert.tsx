@@ -69,12 +69,6 @@ const Alert: FunctionComponent<AlertProps> = ({
   alertBackgroundColor = '#4dc6e7'
 }) => {
 
-  setTimeout(() => {
-    let child = document.getElementById(`alertBlock`);
-    // let parent = child?.parentNode;
-    child?.remove();
-  }, 2000);
-
   return (
     <TileContainer id="alertBlock" className="is-parent is-vertical is-8">
       {show && (
