@@ -61,7 +61,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "postbuild": "react-snap",
     "eject": "react-scripts eject",
     "sitemap": "node sitemap-generator",
     "server": "node server/index.js"

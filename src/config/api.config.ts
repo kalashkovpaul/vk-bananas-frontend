@@ -1,5 +1,5 @@
 const local = "http://localhost:3001"
-const global = "http://"
+const global = "http://185.241.192.112"
 
 export const prefix = local;
 
