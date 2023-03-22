@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './sidebar.css';
 import type { MiniSlideData, PresData, SideBarData, SingleSlideData } from '../../types';
-import { prefix } from '../../config/api.config';
+import { domain, prefix } from '../../config/api.config';
 
 type SidebarProps = {
     setCurrentIndex: Function;
@@ -22,7 +22,7 @@ const Sidebar = (props: SidebarProps) => {
             }}>
                 <div className="miniSlideNumber">{(slideData.idx + 1)}</div>
                 <div className="miniSlideImage">
-                    {slideData.name && <img src={`${prefix}${data.url}/${slideData.name}`} className="miniSlideImageImg"/>}
+                    {slideData.name && <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/>}
                 </div>
             </div>
 

@@ -1,11 +1,11 @@
 const { v4: uuid } = require('uuid');
 const path = require('path');
 
-const presId = 121;
+const presId = 1;
 const quizId = 1;
 
 let presData = {
-    url: "/images/121",
+    url: "images/121/",
     slideNum: 12,
     quizNum: 1,
     slides: [
@@ -17,9 +17,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -33,8 +33,8 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
-            vote: [
+            fontSize: "",
+            votes: [
                 {
                     idx: 0,
                     option: "Хорошее",
@@ -60,9 +60,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -75,9 +75,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -90,9 +90,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -105,9 +105,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -120,9 +120,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -135,9 +135,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -150,9 +150,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -165,9 +165,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -180,9 +180,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -195,9 +195,9 @@ let presData = {
             quizId: 0,
             width: 600,
             height: 300,
-            fontSize: 16,
+            fontSize: "",
             question: "",
-            vote: [],
+            votes: [],
             background: "",
             fontColor: "",
             graphColor: "",
@@ -214,7 +214,7 @@ const startServer = (app) => {
   });
 
   app.get(`/presentation/${presId}`, function (req, res) {
-    res.json(presData)
+    res.json({pres: presData})
   });
 
   app.post('/quiz/create', function (req, res) {

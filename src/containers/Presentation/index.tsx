@@ -10,19 +10,19 @@ import { MetaInfo } from "../../components";
 
 import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
-import { api } from "../../config/api.config";
+import { api, domain } from "../../config/api.config";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
     name: "",
     kind: "slide",
-    questionKind: "",
+    type: "",
     quizId: 0,
     width: 600,
     height: 300,
-    fontSize: 16,
+    fontSize: "",
     question: "",
-    vote: [],
+    votes: [],
     background: "",
     fontColor: "",
     graphColor: "",
@@ -32,20 +32,20 @@ const newSlide: SingleSlideData = {
     idx: 0,
     name: "",
     kind: "question",
-    questionKind: "vertical",
+    type: "vertical",
     quizId: 0,
     width: 600,
     height: 300,
-    fontSize: 16,
+    fontSize: "",
     question: "",
-    vote: [],
+    votes: [],
     background: "white",
     fontColor: "black",
     graphColor: "black",
 }
 
 const Presentation: FunctionComponent = () => {
-    const presId = 121; // TODO parse from url
+    const presId = 1; // TODO parse from url
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
@@ -71,7 +71,7 @@ const Presentation: FunctionComponent = () => {
         // console.log(index, value, color);
         let newoptions;
         if (value || color) {
-            newoptions = JSON.parse(JSON.stringify(cur.current?.vote));
+            newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
             if (newoptions[index]) {
                 newoptions[index].option = value;
                 newoptions[index].color = color;
@@ -85,7 +85,7 @@ const Presentation: FunctionComponent = () => {
             onOptionUpdate(newoptions);
         } else {
             newoptions = [];
-            cur.current?.vote.forEach((option, i) => {
+            cur.current?.votes.forEach((option, i) => {
                 if (i !== index) {
                     newoptions.push(option);
                 }
@@ -95,16 +95,19 @@ const Presentation: FunctionComponent = () => {
 
         setCurrentSlide({
             ...(cur.current as SingleSlideData),
-            vote: newoptions,
+            votes: newoptions,
         });
     };
 
     useEffect(() => {
         cur.current = currentSlide;
+        console.log(currentSlide);
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
                 // TODO show image
-                slideRef.current.style.backgroundColor = "green";
+                slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
+                slideRef.current.style.width = `${currentSlide.width}px`;
+                slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
                 slideRef.current.style.backgroundColor = "#CECECE";
             } else {
@@ -113,6 +116,9 @@ const Presentation: FunctionComponent = () => {
             }
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
+            slideRef.current.style.backgroundImage = `none`;
+            slideRef.current.style.width = null as any;
+            slideRef.current.style.height = null as any;
             if (currentIndex === previousSlide.idx)
                 onSlideChange();
         }
@@ -122,28 +128,42 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
             // body: JSON.stringify({
-            //     creatorId: 0
+            //     creatorId: 1
             // }),
 
             headers: {
 
             }
-        }).then((res) => res.json())
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
         .then((presdata) => {
             // console.log("ONCE???");
-            const newdata = presdata;
+            const newdata = presdata?.pres;
             if (newdata) {
                 if (newdata.slides?.length) {
                     setPresData(newdata);
-                    setCurrentIndex(0);
+                    // setCurrentIndex(0);
                 }
             }
+        })
+        .catch(e => {
+            console.error(e);
         });
 
     }, []);
 
+
     useEffect(() => {
         if (currentIndex >= 0 && currentIndex <= data.slides.length) {
+            let newslides = data.slides;
+            if (newslides.length) {
+                newslides[previousSlide.idx] = currentSlide;
+                setPresData({
+                    ...data,
+                    slides: newslides,
+                })
+            }
             setCurrentSlide(data.slides[currentIndex]);
         } else {
             console.error("Current index error");
@@ -163,28 +183,24 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.quizDelete}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 0,
+                creatorId: 1,
                 presId: presId,
-                quizId: data.slides[currentIndex].quizId
+                quizId: currentSlide.quizId
             }),
             headers: {
 
             }
-        }).then(data => data.json())
-        .then((response) => {
-            setPresData({
-                ...data,
-                slides: newSlides
-            });
-        })
+        }).catch(e => {
+            console.error(e);
+        });
     };
 
-    const onOptionCreate = (index: number) => {
+    const onOptionCreate = (index: number, quizId: number = currentSlide.quizId) => {
         fetch(`${api.voteCreate}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 0,
-                quizId: data.slides[currentIndex].quizId,
+                creatorId: 1,
+                quizId: quizId,
                 idx: index,
                 option: "",
                 votes: 0,
@@ -193,9 +209,8 @@ const Presentation: FunctionComponent = () => {
             headers: {
 
             }
-        }).then(data => data.json())
-        .then((response) => {
-            console.log(response);
+        }).catch(e => {
+            console.error(e);
         });
     }
 
@@ -203,16 +218,15 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteDelete}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 0,
-                quizId: data.slides[currentIndex].quizId,
+                creatorId: 1,
+                quizId: currentSlide.quizId,
                 idx: index,
             }),
             headers: {
 
             }
-        }).then(data => data.json())
-        .then((response) => {
-            console.log(response);
+        }).catch(e => {
+            console.error(e);
         });
     }
 
@@ -220,16 +234,15 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 0,
-                quizId: data.slides[currentIndex].quizId,
-                vote: newoptions,
+                creatorId: 1,
+                quizId: currentSlide.quizId,
+                votes: newoptions,
             }),
             headers: {
 
             }
-        }).then(data => data.json())
-        .then((response) => {
-            console.log(response);
+        }).catch(e => {
+            console.error(e);
         });
     }
 
@@ -237,23 +250,22 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.quizUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 0,
-                quizId: data.slides[currentIndex].quizId,
+                creatorId: 1,
+                quizId: currentSlide.quizId,
                 presId: presId,
                 idx: currentIndex,
-                type: data.slides[currentIndex].questionKind,
-                question: data.slides[currentIndex].question,
-                background: data.slides[currentIndex].background,
-                fontColor: data.slides[currentIndex].fontColor,
-                fontSize: data.slides[currentIndex].fontSize,
-                graphColor: data.slides[currentIndex].graphColor,
+                type: currentSlide.type,
+                question: currentSlide.question,
+                background: currentSlide.background,
+                fontColor: currentSlide.fontColor,
+                fontSize: currentSlide.fontSize,
+                graphColor: currentSlide.graphColor,
             }),
             headers: {
 
             }
-        }).then(data => data.json())
-        .then((response) => {
-            console.log(response);
+        }).catch(e => {
+            console.error(e);
         });
     }
 
@@ -282,12 +294,12 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.quizCreate}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 0,
+                creatorId: 1,
                 presId: presId,
                 idx: currentIndex + 1,
-                type: newSlide.kind, // ???
+                type: newSlide.type, // ???
                 question: newSlide.question,
-                vote: [],
+                votes: [],
                 background: newSlide.background,
                 fontColor: newSlide.fontColor,
                 fontSize: newSlide.fontSize, //???
@@ -296,14 +308,19 @@ const Presentation: FunctionComponent = () => {
             headers: {
 
             }
-        }).then(data => data.json())
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
         .then((response) => {
             newSlides[currentIndex + 1].quizId = response?.quizId;
+            onOptionCreate(0, newSlides[currentIndex + 1].quizId);
             setPresData({
                 ...data,
                 slides: newSlides
             });
-        })
+        }).catch(e => {
+            console.error(e);
+        });
     }
 
 
@@ -318,8 +335,8 @@ const Presentation: FunctionComponent = () => {
                 <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
                 <div className="slideBox">
                     <div className="slide" ref={slideRef}>
-                        {currentSlide?.kind === "question" && currentSlide.questionKind ?
-                            <CustomBar kind={currentSlide.questionKind} slide={currentSlide}/>
+                        {currentSlide?.kind === "question" && currentSlide.type ?
+                            <CustomBar kind={currentSlide.type} slide={currentSlide}/>
                             : null}
                     </div>
                 </div>

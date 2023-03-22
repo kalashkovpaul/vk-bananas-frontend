@@ -30,13 +30,13 @@ export type SingleSlideData = {
     width: number;
     height: number;
     kind: "slide" | "question";
-    questionKind: "" | BarKind;
+    type: "" | BarKind;
     question: string;
-    vote: Array<OptionData>;
+    votes: Array<OptionData>;
     background: string;
     fontColor: string;
     graphColor: string;
-    fontSize: 16;
+    fontSize: string;
 }
 
 export type PresData = {
@@ -66,3 +66,24 @@ type CustomBarProps = {
 };
 
 type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;
+
+export type authInputs = {
+    emailInput: input,
+    nameInput: input,
+    passwordInput: input,
+    repeatePasswordInput: input
+}
+
+export type input = {
+    type: string,
+    name: string,
+    placeholder: string,
+    title: string,
+}
+
+export type authInputElements = {
+    emailInput: JSX.Element,
+    nameInput: JSX.Elementut,
+    passwordInput: JSX.Elementut,
+    repeatePasswordInput: JSX.Elementput
+}

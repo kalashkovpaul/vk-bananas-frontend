@@ -35,8 +35,9 @@
 }
 
 .miniSlideImageImg {
-    width: auto;
-    height: 72px;
+    height: auto;
+    width: 100%;
+    max-height: 72px;
     border-radius: 3px;
 }
 

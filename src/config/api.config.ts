@@ -1,7 +1,12 @@
 const local = "http://localhost:3001"
 const global = "http://185.241.192.112"
 
-export const prefix = local;
+
+export const domain = global;
+
+const apiVersion = "/api/v1"
+
+export const prefix = `${domain}${apiVersion}`;
 
 // API: https://docs.google.com/document/d/1R1oVDwb69a-KeR4yAI94ou5osiNYdxRdfHzFL480f8M/edit
 

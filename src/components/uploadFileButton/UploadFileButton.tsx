@@ -64,10 +64,7 @@ const UploadFileButton = () => {
 
         fetch(api.presCreate, {
             method: 'POST',
-            body: JSON.stringify({
-                file: file,
-                creatorId: 0, // TODO
-            }),
+            body: file,
 
             headers: {
                 // 'content-type': file.type,

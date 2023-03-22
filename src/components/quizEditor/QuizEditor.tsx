@@ -24,7 +24,7 @@ const QuizEditor = (props: QuizEditorProps) => {
     }
 
     const usePreviousQKind = (value: any) => {
-        const questionKindRef = useRef<string>(currentSlide?.questionKind);
+        const questionKindRef = useRef<string>(currentSlide?.type);
         useEffect(() => {
             questionKindRef.current = value;
         })
@@ -64,7 +64,7 @@ const QuizEditor = (props: QuizEditorProps) => {
     const handleQuestionKindChange = (newkind: BarKind) => {
         setCurrentSlide({
             ...currentSlide,
-            questionKind: newkind
+            type: newkind
         })
     }
 
@@ -76,7 +76,7 @@ const QuizEditor = (props: QuizEditorProps) => {
         if (tIndex) {
             setElemList(optionElemList.concat(
             <OptionInput
-                withColor={currentSlide.questionKind !== "cloud"}
+                withColor={currentSlide.type !== "cloud"}
                 key={maxIndex}
                 index={maxIndex}
                 onChange={onOptionUpdate}
@@ -87,24 +87,24 @@ const QuizEditor = (props: QuizEditorProps) => {
     }
 
     const previousIndex = usePreviousIndex(currentSlide?.idx);
-    const previousQKind = usePreviousQKind(currentSlide?.questionKind);
+    const previousQKind = usePreviousQKind(currentSlide?.type);
 
     useEffect(() => {
         if (currentSlide?.idx === previousIndex
-            && currentSlide?.questionKind === previousQKind)
+            && currentSlide?.type === previousQKind)
             return;
-        if (currentSlide?.kind === "question" && currentSlide?.vote.length) {
+        if (currentSlide?.kind === "question" && currentSlide?.votes.length) {
             let lst: Array<JSX.Element> = [];
             setElemList(lst);
             let i = 0;
-            currentSlide.vote.forEach((option) => {
+            currentSlide.votes.forEach((option) => {
                 lst.push(<OptionInput
                     key={i}
                     index={i}
                     value={option.option}
                     color={option.color}
                     onChange={onOptionUpdate}
-                    withColor={currentSlide.questionKind !== "cloud"}
+                    withColor={currentSlide.type !== "cloud"}
                 />)
                 i++;
             });
@@ -170,19 +170,19 @@ const QuizEditor = (props: QuizEditorProps) => {
                 </div>
                 <div className="chartTypes">
                     <div
-                        className={`chartType vertical-bar ${currentSlide.questionKind === "vertical" ? "chosen" : ""}`}
+                        className={`chartType vertical-bar ${currentSlide.type === "vertical" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("vertical");}}
                     />
                     <div
-                        className={`chartType horizontal-bar ${currentSlide.questionKind === "horizontal" ? "chosen" : ""}`}
+                        className={`chartType horizontal-bar ${currentSlide.type === "horizontal" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("horizontal");}}
                     />
                     <div
-                        className={`chartType pie ${currentSlide.questionKind === "pie" ? "chosen" : ""}`}
+                        className={`chartType pie ${currentSlide.type === "pie" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("pie");}}
                     />
                     <div
-                        className={`chartType doughnut ${currentSlide.questionKind === "doughnut" ? "chosen" : ""}`}
+                        className={`chartType doughnut ${currentSlide.type === "doughnut" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("doughnut");}}
                     />
                     {/* <div
@@ -191,7 +191,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                     /> */}
                 </div>
             </div>}
-            {currentSlide?.kind === "question" && currentSlide?.questionKind !== "cloud" &&
+            {currentSlide?.kind === "question" && currentSlide?.type !== "cloud" &&
             <div className="backgroundWrapper">
                 <div className="questionTitle">
                     Цвет текста результата:
