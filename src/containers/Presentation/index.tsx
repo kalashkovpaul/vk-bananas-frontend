@@ -11,6 +11,7 @@ import { MetaInfo } from "../../components";
 import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
+import { useParams } from "react-router-dom";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -45,7 +46,8 @@ const newSlide: SingleSlideData = {
 }
 
 const Presentation: FunctionComponent = () => {
-    const presId = 1; // TODO parse from url
+    const params = useParams(); // TODO parse from url
+    const presId = params.id;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
@@ -72,6 +74,9 @@ const Presentation: FunctionComponent = () => {
         let newoptions;
         if (value || color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
+            if (newoptions.length === 0) {
+                onOptionCreate(0, currentSlide.quizId);
+            }
             if (newoptions[index]) {
                 newoptions[index].option = value;
                 newoptions[index].color = color;
@@ -80,6 +85,7 @@ const Presentation: FunctionComponent = () => {
                     option: value,
                     votes: 2,
                     color: color,
+                    idx: index,
                 }
             }
             onOptionUpdate(newoptions);
@@ -105,7 +111,7 @@ const Presentation: FunctionComponent = () => {
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
                 // TODO show image
-                slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
+                slideRef.current.style.backgroundImage = `url(${domain}/${data.url}${currentSlide.name})`;
                 slideRef.current.style.width = `${currentSlide.width}px`;
                 slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
@@ -192,6 +198,11 @@ const Presentation: FunctionComponent = () => {
             }
         }).catch(e => {
             console.error(e);
+        });
+
+        setPresData({
+            ...data,
+            slides: newSlides
         });
     };
 
@@ -313,7 +324,6 @@ const Presentation: FunctionComponent = () => {
         })
         .then((response) => {
             newSlides[currentIndex + 1].quizId = response?.quizId;
-            onOptionCreate(0, newSlides[currentIndex + 1].quizId);
             setPresData({
                 ...data,
                 slides: newSlides
