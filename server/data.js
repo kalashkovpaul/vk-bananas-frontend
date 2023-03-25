@@ -206,52 +206,100 @@ let presData = {
     ]
 }
 
+const users = {
+    "a@a.ru": {
+      name: "aaaaaa",
+      email: "a@a.ru",
+      password: 'password1',
+      avatarSrc: "server/images/adventures.webp",
+    },
+};
+
+const ids = {};
+const id = uuid();
+ids[id] = "a@a.ru";
+
 const startServer = (app) => {
-  app.post("/presentation/create", function (req, res) {
-    res.json({
-        presId: presId
+
+    app.get('/api/v1/authcheck', (req, res) => {
+        res.json({
+            // "ID": "1",
+        });
     });
-  });
+    app.post("/presentation/create", function (req, res) {
+        res.json({
+            presId: presId
+        });
+    });
 
-  app.get(`/presentation/${presId}`, function (req, res) {
-    res.json({pres: presData})
-  });
+    app.get(`/presentation/${presId}`, function (req, res) {
+        res.json({pres: presData})
+    });
 
-  app.post('/quiz/create', function (req, res) {
-    res.json({
-        quizId: 1
-    })
-  });
+    app.post('/quiz/create', function (req, res) {
+        res.json({
+            quizId: 1
+        })
+    });
 
-  app.post('/quiz/delete', function (req, res) {
-    res.json({
+    app.post('/quiz/delete', function (req, res) {
+        res.json({
 
-    })
-  });
+        })
+    });
 
-  app.put('/quiz/update', function (req, res) {
-    res.json({
+    app.put('/quiz/update', function (req, res) {
+        res.json({
 
-    })
-  });
+        })
+    });
 
-  app.post('/quiz/vote/create', function (req, res) {
-    res.json({
+    app.post('/quiz/vote/create', function (req, res) {
+        res.json({
 
-    })
-  });
+        })
+    });
 
-  app.post('/quiz/vote/delete', function (req, res) {
-    res.json({
+    app.post('/quiz/vote/delete', function (req, res) {
+        res.json({
 
-    })
-  });
+        })
+    });
 
-  app.put('/quiz/vote/update', function (req, res) {
-    res.json({
+    app.put('/quiz/vote/update', function (req, res) {
+        res.json({
 
-    })
-  });
+        })
+    });
+
+    app.post("/api/v1/login", function (req, res) {
+        const password = req.body.password;
+        const email = req.body.email;
+        if (!password || !email) {
+        return res.status(400).json({ error: 'Не указан E-Mail или пароль' });
+        }
+        if (!users[email] || users[email].password !== password) {
+        return res.status(200).send('Не верный E-Mail и/или пароль');
+        }
+
+        const ID = uuid();
+        ids[ID] = email;
+
+        res.cookie('podvorot', ID, { expires: new Date(Date.now() + 1000 * 60 * 10) });
+        res.status(200).json({
+            ID: 1,
+            imgsrc: "server/images/adventures.webp",
+            username: users[email].name,
+            email: email,
+        });
+    });
+
+    app.post("/api/v1/logout", function (req, res) {
+        res.status(200).json({
+        status: 200,
+        });
+    });
+
 
 }
 

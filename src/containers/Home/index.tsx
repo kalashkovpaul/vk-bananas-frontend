@@ -37,7 +37,7 @@ const Home: FunctionComponent = () => (
       </div>
     </section>
     <section className="container dashboard-content">
-      <div className="columns">
+      <div className="columns centered">
       <UploadFileButton/>
         {/* {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)} */}
       </div>

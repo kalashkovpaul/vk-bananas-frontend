@@ -1,0 +1,281 @@
+.my_navbar {
+    width: 100%;
+    position: fixed;
+    z-index: 30;
+    height: 66px;
+    background-color: #20232a;
+    box-shadow: 0 4px 6px 0 rgb(0 0 0 / 5%);
+    display: grid;
+
+    grid-template-areas: "vert_menu logo menu login";
+    grid-template-columns: 80px 120px minmax(360px, 1440px) 120px;
+    column-gap: 20px;
+}
+
+.verticalMenu {
+    display: none;
+    grid-area: vert_menu;
+    justify-content: center;
+}
+
+.verticalMenuBtn {
+    position: relative;
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    transition-duration: 0.5s;
+}
+
+.verticalMenuBtn {
+    cursor: pointer;
+}
+
+.burgerLeft {
+    transition-duration: 0.5s;
+    position: absolute;
+    height: 3px;
+    width: 12px;
+    top: 30px;
+    background-color: white;
+}
+
+.burgerLeft:before {
+    transition-duration: 0.5s;
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    background-color: white;
+    content: "";
+    top: -12px;
+}
+
+.burgerLeft:after {
+    transition-duration: 0.5s;
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    background-color: white;
+    content: "";
+    top: 12px;
+}
+
+.burgerRight {
+    transition-duration: 0.5s;
+    position: absolute;
+    height: 3px;
+    width: 12px;
+    top: 30px;
+    background-color: white;
+    left: 12px;
+}
+
+.burgerRight:before {
+    transition-duration: 0.5s;
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    background-color: white;
+    content: "";
+    top: -12px;
+}
+
+.burgerRight:after {
+    transition-duration: 0.5s;
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    background-color: white;
+    content: "";
+    top: 12px;
+}
+
+.open.burgerLeft {
+    transition-duration: 0.5s;
+    background: transparent;
+}
+
+.open.burgerLeft:before {
+    transform: rotateZ(45deg) scaleX(1.4) translate(4px, 4px);
+}
+
+.open.burgerLeft:after {
+    transform: rotateZ(-45deg) scaleX(1.4) translate(4px, -4px);
+}
+
+.open.burgerRight {
+    transition-duration: 0.5s;
+    background: transparent;
+}
+
+.open.burgerRight:before {
+    transform: rotateZ(-45deg) scaleX(1.4) translate(-4px, 4px);
+}
+
+.open.burgerRight:after {
+    transform: rotateZ(45deg) scaleX(1.4) translate(-4px, -4px);
+}
+
+.verticalMenuContainer {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    margin-top: 64px;
+    width: 140px;
+    justify-content: center;
+    white-space: nowrap;
+    overflow-x: hidden;
+    background-color: #20232a;
+    margin-left: 100px;
+    border-radius: 0 0 10px 0;
+    padding: 8px;
+}
+
+.navbarMenu {
+    display: grid;
+    grid-area: menu;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: repeat(3, minmax(120px, 240px));
+    grid-template-areas: "collections genres premiers";
+    font-size: 20px;
+}
+
+.menuBtn {
+    text-decoration: none;
+    transition: 0.1s;
+    color: white;
+}
+
+.menuBtn:hover {
+    color: #61dafb;
+    cursor: pointer;
+}
+
+.menuBtn.hover {
+    color: red;
+    cursor: pointer;
+}
+
+.menuBtnActive {
+    color: #61dafb;
+    cursor: pointer;
+}
+
+.navbarLogin {
+    display: grid;
+    grid-area: login;
+    grid-template-areas: "A81";
+    margin: 4px;
+}
+
+.navbarLoginBtn {
+    /* width: 200px; */
+    position: relative;
+    border-radius: 8px;
+    margin: 4px;
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    /* padding-left: 16px;
+    padding-right: 16px; */
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+}
+
+.navbarLoginBtn:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  color: #fff;
+}
+
+.navbarLoginBtn:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.navbarLoginBtn:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+  color: #fff;
+}
+
+@media (max-width: 1035px) {
+    .my_navbar {
+      grid-template-areas: "vert_menu logo search login";
+      grid-template-columns: minmax(80px, 120px) 120px minmax(240px, 720px) 120px;
+    }
+    .navbarMenu {
+      display: none;
+    }
+    .verticalMenu {
+      display: flex;
+    }
+    .menuBtn {
+      font-size: 20px;
+    }
+}
+
+@media (max-width: 660px) {
+    .my_navbar {
+      grid-template-areas: "vert_menu logo search login";
+      grid-template-columns: 100px 120px minmax(240px, 720px) 120px;
+      column-gap: 0px;
+    }
+    .my_navbar .verticalMenuContainer {
+      width: 140px;
+    }
+    .navbarMenu {
+      display: none;
+    }
+    .verticalMenu {
+      display: flex;
+    }
+    .verticalMenuBtn {
+      font-size: 18px;
+    }
+  }
+
+@media (max-width: 600px) {
+    .my_navbar {
+      grid-template-areas: "vert_menu logo search login";
+      grid-template-columns: 40px 120px minmax(36px, 720px) 120px;
+      column-gap: 0px;
+    }
+
+    .navbarMenu {
+      display: none;
+    }
+    .verticalMenu {
+      display: flex;
+    }
+    .verticalMenuBtn {
+      font-size: 14px;
+    }
+}
+
+.logoImg {
+    background-image: url('./statistics.png');
+    width: 50px;
+    height: 50px;
+    margin: 8px;
+    background-size: contain;
+}
+

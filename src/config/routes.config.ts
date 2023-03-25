@@ -49,24 +49,24 @@ export const routes: Route[] = [
       description: `Presentation ${DESC_SUFFIX}`
     }
   },
-  // {
-  //   path: '/login/*',
-  //   name: 'Login',
-  //   Component: Login,
-  //   metaInfo: {
-  //     title: 'Login',
-  //     description: `Login ${DESC_SUFFIX}`
-  //   }
-  // },
-  // {
-  //   path: '/register/*',
-  //   name: 'Register',
-  //   Component: Registration,
-  //   metaInfo: {
-  //     title: 'Register',
-  //     description: `Register ${DESC_SUFFIX}`
-  //   }
-  // }
+  {
+    path: '/login',
+    name: 'Login',
+    Component: Login,
+    metaInfo: {
+      title: 'Login',
+      description: `Login ${DESC_SUFFIX}`
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    Component: Registration,
+    metaInfo: {
+      title: 'Register',
+      description: `Register ${DESC_SUFFIX}`
+    }
+  }
 ];
 
 export const getRouteMetaInfo = (name: string): MetaInfoProps => {

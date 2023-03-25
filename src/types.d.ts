@@ -87,3 +87,28 @@ export type authInputElements = {
     passwordInput: JSX.Elementut,
     repeatePasswordInput: JSX.Elementput
 }
+
+export type loginData = {
+    email: string,
+    password: string,
+}
+
+export type registerData = {
+    email: string,
+    password: string,
+    repeatpassword: string,
+    username: string,
+}
+
+export type authcheckResponse = {
+    status: string,
+    ID: string
+}
+
+export type userData = {
+    ID: string,
+    username: string,
+    email: string,
+    imgsrc: string,
+}
+

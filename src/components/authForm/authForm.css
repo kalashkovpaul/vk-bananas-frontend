@@ -161,18 +161,52 @@
 }
 
 .authBtnInput {
-    /* font-family: $main_font; */
-    font-weight: bold;
-    font-size: 18px;
-    color: white;
-    margin: 1em auto 0;
     height: 40px;
+    /* width: 200px; */
+    position: relative;
+    border-radius: 8px;
+    margin: 4px;
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
     border: 0;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
     cursor: pointer;
-    width: 220px;
-    background: #b70084;
-    border-radius: 12px;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    /* padding-left: 16px;
+    padding-right: 16px; */
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 22px;
 }
+
+.authBtnInput:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.authBtnInput:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.authBtnInput:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
 
 .authInvitation {
     width: 100%;
@@ -204,6 +238,67 @@
     border-width: 2px;
     animation-name: input-error;
     animation-duration: 1s;
+}
+
+@media (max-width: 660px) {
+    .loginWrapper {
+        width: 50%;
+    }
+
+    .loginInvitation {
+        font-size: 30px;
+    }
+
+    .signupWrapper {
+        width: 50%;
+    }
+
+    .signupInvitation {
+        font-size: 30px;
+    }
+
+    .authInputHeadError {
+        font-size: 16px;
+        line-height: 20px;
+    }
+}
+
+@media (max-width: 450px) {
+    .login {
+        width:40%;
+
+        grid-template-areas:
+        "A0 A0 A0 A0 A0 A0 A0 A0 A0 A0"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "C0 C1 C1 C1 C1 C1 C1 C1 C1 C2";
+    }
+
+    .loginInvitation {
+        font-size: 25px;
+    }
+
+    .signupWrapper {
+        width:40%;
+
+        grid-template-areas:
+        "A0 A0 A0 A0 A0 A0 A0 A0 A0 A0"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "C0 C1 C1 C1 C1 C1 C1 C1 C1 C2";
+    }
+
+    .signupInvitation {
+        font-size: 25px;
+    }
+
+    .authInputHeadError{
+        line-height: 20px;
+    }
 }
 
 
