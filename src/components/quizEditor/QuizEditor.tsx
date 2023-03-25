@@ -82,7 +82,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                 onChange={onOptionUpdate}
             />));
             setMaxIndex(maxIndex + 1);
-            // onOptionCreate(tIndex);
+            onOptionCreate(tIndex);
         }
     }
 

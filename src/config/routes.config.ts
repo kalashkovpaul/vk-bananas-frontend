@@ -31,17 +31,17 @@ export const routes: Route[] = [
       description: `Home ${DESC_SUFFIX}`
     }
   },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   Component: About,
+  //   metaInfo: {
+  //     title: 'About',
+  //     description: `About ${DESC_SUFFIX}`
+  //   }
+  // },
   {
-    path: '/about',
-    name: 'About',
-    Component: About,
-    metaInfo: {
-      title: 'About',
-      description: `About ${DESC_SUFFIX}`
-    }
-  },
-  {
-    path: '/presentation/1',
+    path: '/presentation/:id',
     name: 'Presentation',
     Component: Presentation,
     metaInfo: {

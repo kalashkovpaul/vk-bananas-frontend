@@ -12,13 +12,13 @@ const Navbar: FunctionComponent = () => (
   >
     <div className="navbar-wrapper">
       <div className="brand-wrapper">
-        <ReactSeoLogoSvg
+        {/* <ReactSeoLogoSvg
           role="img"
           height="65"
           width="162"
           aria-hidden
           title="React SEO"
-        />
+        /> */}
       </div>
       <div className="navbar-routes">
         {routes.map(({ path, name }) => (

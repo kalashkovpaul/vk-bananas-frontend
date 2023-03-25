@@ -62,12 +62,16 @@ const UploadFileButton = () => {
             return;
         }
 
+        let formData = new FormData();
+        formData.append('presentation', file);
+
         fetch(api.presCreate, {
             method: 'POST',
-            body: file,
+            body: formData,
 
             headers: {
-                // 'content-type': file.type,
+                // 'content-type': 'multipart/form-data',//file.type,
+                // // 'boundary': 'presentation',
                 // 'content-length': `${file.size}`,
             },
         }).then((res) => {
