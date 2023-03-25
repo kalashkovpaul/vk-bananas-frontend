@@ -12,6 +12,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Layout>
+      <div id="alertWrapper"/>
       <MetaInfo />
       <SwitchTransition mode="out-in">
         <CSSTransition

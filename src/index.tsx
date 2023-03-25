@@ -13,9 +13,9 @@ registerIcons();
 const appElement = (
   <BrowserRouter>
     <HelmetProvider>
-      <StrictMode>
+      {/* <StrictMode> */}
         <App />
-      </StrictMode>
+      {/* </StrictMode> */}
     </HelmetProvider>
   </BrowserRouter>
 );

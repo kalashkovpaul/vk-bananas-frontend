@@ -1,11 +1,12 @@
 import Feature from './Feature';
 import Package from './Package';
-import ReactIcon from './ReactIcon';
+import './home.css';
 import { MetaInfo } from '../../components';
 import type { FunctionComponent } from 'react';
 import { Features } from '../../config/features.config';
 import { Packages } from '../../config/packages.config';
 import { getRouteMetaInfo } from '../../config/routes.config';
+import UploadFileButton from '../../components/uploadFileButton/UploadFileButton';
 
 const LOREM_IPSUM_TEXT = `
   Lorem ipsum dolor sit amet, alia appareat usu id, has legere facilis in. Nam inani malorum epicuri
@@ -26,11 +27,10 @@ const Home: FunctionComponent = () => (
       <div className="hero-body">
         <div className="container has-text-centered">
           <div className="is-flex is-horizontal-center">
-            <figure className="image is-132x132">
-              <ReactIcon />
-            </figure>
+              <div className='rotateLogo'/>
+              {/* <ReactIcon /> */}
           </div>
-          <h1 className="title">SEO Friendly SPA</h1>
+          <h1 className="title">Бананчики</h1>
           <hr />
           {Features.map((feat, idx) => <Feature key={idx} {...feat} />)}
         </div>
@@ -38,7 +38,8 @@ const Home: FunctionComponent = () => (
     </section>
     <section className="container dashboard-content">
       <div className="columns">
-        {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)}
+      <UploadFileButton/>
+        {/* {Packages.map((pkg, idx) => <Package key={idx} {...pkg} />)} */}
       </div>
       <hr />
       <div className="columns">

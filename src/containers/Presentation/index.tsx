@@ -1,144 +1,352 @@
-import { useEffect, useRef, useState } from "react";
-import type { FunctionComponent, ReactElement } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FunctionComponent } from "react";
 import './presentation.css';
 import Sidebar from "../../components/sidebar/Sidebar";
-import SlideBox from "../../components/slideBox/SlideBox";
 import QuizEditor from "../../components/quizEditor/QuizEditor";
 import { presData } from "./fakeData";
-import type { PresData, SingleSlideData } from "../../types";
+import type { OptionData, PresData, SingleSlideData } from "../../types";
 import { getRouteMetaInfo } from '../../config/routes.config';
 import { MetaInfo } from "../../components";
 
-import Chart from 'chart.js/auto';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { createBar } from "./createBar";
+import { CustomBar } from "./CustomBar";
+import PresentationBar from "../../components/presentationBar/PresentationBar";
+import { api, domain } from "../../config/api.config";
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+const emptySlide: SingleSlideData = {
+    idx: 0,
+    name: "",
+    kind: "slide",
+    type: "",
+    quizId: 0,
+    width: 600,
+    height: 300,
+    fontSize: "",
+    question: "",
+    votes: [],
+    background: "",
+    fontColor: "",
+    graphColor: "",
+}
 
-export const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-    //   title: {
-    //     display: true,
-    //     text: 'Chart.js Bar Chart',
-    //   },
-    },
-  };
-
-const labels = [''];
-
-export const barData = {
-    labels,
-    datasets: [
-      {
-        label: 'Хорошее',
-        data: [3],
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Отличное',
-        data: [5],
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
-  };
-
+const newSlide: SingleSlideData = {
+    idx: 0,
+    name: "",
+    kind: "question",
+    type: "vertical",
+    quizId: 0,
+    width: 600,
+    height: 300,
+    fontSize: "",
+    question: "",
+    votes: [],
+    background: "white",
+    fontColor: "black",
+    graphColor: "black",
+}
 
 const Presentation: FunctionComponent = () => {
+    const presId = 1; // TODO parse from url
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const [currentSlide, setCurrentSlide] = useState<SingleSlideData>({
-        index: 0,
-        src: "",
-        kind: "slide",
-        questionKind: "",
-        question: "",
-        options: [],
-        background: "",
-    });
+    const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
+        url: "",
+        slideNum: 0,
+        quizNum: 0,
         slides: []
     });
     const slideRef = useRef<HTMLDivElement>(null);
+    const cur = useRef<SingleSlideData>();
 
-    let onQuestionChange: Function;
+    const usePreviousSlide = (value: any) => {
+        const prevSlideRef = useRef<any>(value);
+          useEffect(() => {
+                prevSlideRef.current = value;
+          })
+          return prevSlideRef.current
+    };
 
-    const setOnQuestionChange = (f: Function) => {
-        onQuestionChange = f;
-    }
+    const previousSlide = usePreviousSlide(currentSlide);
+
+    const onOptionChange = (index: number, value: string, color: string) => {
+        // console.log(index, value, color);
+        let newoptions;
+        if (value || color) {
+            newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
+            if (newoptions[index]) {
+                newoptions[index].option = value;
+                newoptions[index].color = color;
+            } else if (value) {
+                newoptions[index] = {
+                    option: value,
+                    votes: 2,
+                    color: color,
+                }
+            }
+            onOptionUpdate(newoptions);
+        } else {
+            newoptions = [];
+            cur.current?.votes.forEach((option, i) => {
+                if (i !== index) {
+                    newoptions.push(option);
+                }
+            });
+            onOptionDelete(index);
+        }
+
+        setCurrentSlide({
+            ...(cur.current as SingleSlideData),
+            votes: newoptions,
+        });
+    };
 
     useEffect(() => {
-        console.log(currentIndex, currentSlide, data);
-        if (currentSlide) {
-            setPresData({
-                slides: data.slides.map((slide, i) => {
-                    if (i === currentIndex) {
-                        return currentSlide;
-                    }
-                    return slide;
-                })
-            });
-        }
+        cur.current = currentSlide;
+        console.log(currentSlide);
         if (currentSlide?.kind === "slide" && slideRef.current) {
-            if (currentSlide?.src) {
-                slideRef.current.style.backgroundColor = "green";
+            if (currentSlide?.name) {
+                // TODO show image
+                slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
+                slideRef.current.style.width = `${currentSlide.width}px`;
+                slideRef.current.style.height = `${currentSlide.height}px`;
+            } else if (currentSlide.idx >=0) {
+                slideRef.current.style.backgroundColor = "#CECECE";
             } else {
-                slideRef.current.style.backgroundColor = "#9A8873";
+                slideRef.current.style.backgroundColor = "transparent";
+                slideRef.current.style.boxShadow = "none";
             }
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
+            slideRef.current.style.backgroundImage = `none`;
+            slideRef.current.style.width = null as any;
+            slideRef.current.style.height = null as any;
+            if (currentIndex === previousSlide.idx)
+                onSlideChange();
         }
-    }, [currentSlide])
+    }, [currentSlide]);
 
     useEffect(() => {
-        // TODO fetch data about presentation
-        const newdata = presData;
-        if (newdata) {
-            if (newdata.slides?.length) {
-                setPresData(newdata);
-                setCurrentIndex(0);
+        fetch(`${api.getPres}/${presId}`, {
+            method: 'GET',
+            // body: JSON.stringify({
+            //     creatorId: 1
+            // }),
+
+            headers: {
+
             }
-        }
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((presdata) => {
+            // console.log("ONCE???");
+            const newdata = presdata?.pres;
+            if (newdata) {
+                if (newdata.slides?.length) {
+                    setPresData(newdata);
+                    // setCurrentIndex(0);
+                }
+            }
+        })
+        .catch(e => {
+            console.error(e);
+        });
+
     }, []);
+
 
     useEffect(() => {
         if (currentIndex >= 0 && currentIndex <= data.slides.length) {
+            let newslides = data.slides;
+            if (newslides.length) {
+                newslides[previousSlide.idx] = currentSlide;
+                setPresData({
+                    ...data,
+                    slides: newslides,
+                })
+            }
             setCurrentSlide(data.slides[currentIndex]);
         } else {
             console.error("Current index error");
         }
-    }, [currentIndex, data]);
+    }, [currentIndex]);
+
+    const onSlideDelete = () => {
+        let newSlides: Array<SingleSlideData> = [];
+        data?.slides.forEach((slide) => {
+            if (slide.idx < currentIndex) {
+                newSlides.push(slide);
+            } else if (slide.idx > currentIndex) {
+                newSlides.push({...slide, idx: slide.idx - 1});
+            }
+        });
+
+        fetch(`${api.quizDelete}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 1,
+                presId: presId,
+                quizId: currentSlide.quizId
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    };
+
+    const onOptionCreate = (index: number, quizId: number = currentSlide.quizId) => {
+        fetch(`${api.voteCreate}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 1,
+                quizId: quizId,
+                idx: index,
+                option: "",
+                votes: 0,
+                color: "#0FD400"
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const onOptionDelete = (index: number) => {
+        fetch(`${api.voteDelete}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 1,
+                quizId: currentSlide.quizId,
+                idx: index,
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const onOptionUpdate = (newoptions: Array<OptionData>) => {
+        fetch(`${api.voteUpdate}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                creatorId: 1,
+                quizId: currentSlide.quizId,
+                votes: newoptions,
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const onSlideChange = () => {
+        fetch(`${api.quizUpdate}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                creatorId: 1,
+                quizId: currentSlide.quizId,
+                presId: presId,
+                idx: currentIndex,
+                type: currentSlide.type,
+                question: currentSlide.question,
+                background: currentSlide.background,
+                fontColor: currentSlide.fontColor,
+                fontSize: currentSlide.fontSize,
+                graphColor: currentSlide.graphColor,
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    useEffect(() => {
+        if (currentIndex < data.slides.length) {
+            setCurrentSlide(data.slides[currentIndex]);
+        } else if (data.slides.length === 0) {
+            setCurrentSlide(emptySlide);
+        }
+    }, [data]);
+
+
+    const onCreateSlide = () => {
+        let newSlides: Array<SingleSlideData> = [];
+        data.slides.forEach((slide) => {
+            if (slide.idx < currentIndex) {
+                newSlides.push(slide);
+            } else if (slide.idx === currentIndex) {
+                newSlides.push(slide);
+                newSlides.push({...newSlide, idx: currentIndex + 1})
+            } else {
+                newSlides.push({...slide, idx: slide.idx + 1});
+            }
+        });
+
+        fetch(`${api.quizCreate}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                creatorId: 1,
+                presId: presId,
+                idx: currentIndex + 1,
+                type: newSlide.type, // ???
+                question: newSlide.question,
+                votes: [],
+                background: newSlide.background,
+                fontColor: newSlide.fontColor,
+                fontSize: newSlide.fontSize, //???
+                graphColor: newSlide.graphColor
+            }),
+            headers: {
+
+            }
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((response) => {
+            newSlides[currentIndex + 1].quizId = response?.quizId;
+            onOptionCreate(0, newSlides[currentIndex + 1].quizId);
+            setPresData({
+                ...data,
+                slides: newSlides
+            });
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
 
     return (
         <div className="presentation view-wrapper">
-            <MetaInfo {...getRouteMetaInfo('About')} />
-            <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
-            <div className="slideBox">
-                <div className="slide" ref={slideRef}>
-                    {currentSlide?.kind === "question" ? createBar(currentSlide) : null}
-                    {/* <div className="slideQuestion">Как настроение?</div>
-                    <Bar className="chart" options={options} data={barData} /> */}
+            <PresentationBar
+                onDelete={onSlideDelete}
+                onCreate={onCreateSlide}
+            />
+            <div className="contents">
+                <MetaInfo {...getRouteMetaInfo('About')} />
+                <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
+                <div className="slideBox">
+                    <div className="slide" ref={slideRef}>
+                        {currentSlide?.kind === "question" && currentSlide.type ?
+                            <CustomBar kind={currentSlide.type} slide={currentSlide}/>
+                            : null}
+                    </div>
                 </div>
+                <QuizEditor
+                    setCurrentSlide={setCurrentSlide}
+                    currentSlide={currentSlide}
+                    onOptionUpdate={onOptionChange}
+                    onOptionCreate={onOptionCreate}
+                />
             </div>
-            <QuizEditor setCurrentSlide={setCurrentSlide} currentSlide={currentSlide}/>
         </div>
     );
 }
