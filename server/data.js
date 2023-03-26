@@ -13,10 +13,10 @@ let presData = {
             idx: 0,
             name: "green.png",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -28,11 +28,11 @@ let presData = {
             idx: 1,
             name: "example.png",
             kind: "question",
-            questionKind: "horizontal",
+            type: "horizontal",
             question: "Как настроение?",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             votes: [
                 {
@@ -56,10 +56,10 @@ let presData = {
             idx: 2,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -71,10 +71,10 @@ let presData = {
             idx: 3,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -86,10 +86,10 @@ let presData = {
             idx: 4,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -101,10 +101,10 @@ let presData = {
             idx: 5,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -116,10 +116,10 @@ let presData = {
             idx: 6,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -131,10 +131,10 @@ let presData = {
             idx: 7,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -146,10 +146,10 @@ let presData = {
             idx: 8,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -161,10 +161,10 @@ let presData = {
             idx: 9,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -176,10 +176,10 @@ let presData = {
             idx: 10,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -191,10 +191,10 @@ let presData = {
             idx: 11,
             name: "",
             kind: "slide",
-            questionKind: "",
+            type: "",
             quizId: 0,
-            width: 600,
-            height: 300,
+            width: 700,
+            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -226,47 +226,47 @@ const startServer = (app) => {
             // "ID": "1",
         });
     });
-    app.post("/presentation/create", function (req, res) {
+    app.post("/api/v1/presentation/create", function (req, res) {
         res.json({
             presId: presId
         });
     });
 
-    app.get(`/presentation/${presId}`, function (req, res) {
+    app.get(`/api/v1/presentation/${presId}`, function (req, res) {
         res.json({pres: presData})
     });
 
-    app.post('/quiz/create', function (req, res) {
+    app.post('/api/v1/quiz/create', function (req, res) {
         res.json({
             quizId: 1
         })
     });
 
-    app.post('/quiz/delete', function (req, res) {
+    app.post('/api/v1/quiz/delete', function (req, res) {
         res.json({
 
         })
     });
 
-    app.put('/quiz/update', function (req, res) {
+    app.put('/api/v1/quiz/update', function (req, res) {
         res.json({
 
         })
     });
 
-    app.post('/quiz/vote/create', function (req, res) {
+    app.post('/api/v1/quiz/vote/create', function (req, res) {
         res.json({
 
         })
     });
 
-    app.post('/quiz/vote/delete', function (req, res) {
+    app.post('/api/v1/quiz/vote/delete', function (req, res) {
         res.json({
 
         })
     });
 
-    app.put('/quiz/vote/update', function (req, res) {
+    app.put('/api/v1/quiz/vote/update', function (req, res) {
         res.json({
 
         })

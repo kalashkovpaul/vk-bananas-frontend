@@ -88,6 +88,24 @@
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
 
+@media (max-width: 800px) {
+    .deleteSlide {
+        display: none;
+    }
+}
+
+@media (max-width: 624px) {
+    .addSlide {
+        display: none;
+    }
+}
+
+@media (max-width: 440px) {
+    .shareButton {
+        display: none;
+    }
+}
+
 .deleteSlide:hover {
     box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
 }

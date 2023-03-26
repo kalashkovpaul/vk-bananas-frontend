@@ -1,3 +1,7 @@
+#root {
+    overflow-x: hidden;
+}
+
 .my_navbar {
     width: 100%;
     position: fixed;
@@ -279,3 +283,6 @@
     background-size: contain;
 }
 
+.ourLogo {
+    -webkit-tap-highlight-color: transparent;
+}

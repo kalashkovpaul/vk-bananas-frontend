@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api.config";
 import { authConfig } from "../../config/auth.config";
@@ -323,8 +324,8 @@ const AuthForm = (props: AuthProps) => {
                     </div>
                 </div>
             </form>
-            {kind === "login" && <a className="authInvitation" href="/register">Нет аккаунта? Зарегистрироваться!</a>}
-            {kind === "signup" && <a className="authInvitation" href="/login">Уже есть аккаунт? Войти!</a>}
+            {kind === "login" && <NavLink className="authInvitation" to="/register">Нет аккаунта? Зарегистрироваться!</NavLink>}
+            {kind === "signup" && <NavLink className="authInvitation" to="/login">Уже есть аккаунт? Войти!</NavLink>}
         </div>
     );
 };
