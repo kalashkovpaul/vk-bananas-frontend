@@ -107,7 +107,6 @@ const Presentation: FunctionComponent = () => {
 
     useEffect(() => {
         cur.current = currentSlide;
-        console.log(currentSlide);
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
                 // TODO show image
@@ -342,7 +341,7 @@ const Presentation: FunctionComponent = () => {
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
-                <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
+                <Sidebar data={data} setCurrentIndex={setCurrentIndex} currentSlide={currentSlide}/>
                 <div className="slideBox">
                     <div className="slide" ref={slideRef}>
                         {currentSlide?.kind === "question" && currentSlide.type ?

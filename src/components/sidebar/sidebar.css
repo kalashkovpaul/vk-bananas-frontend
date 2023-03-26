@@ -1,13 +1,14 @@
 .sidebar {
-    width: 230px;
+    width: 220px;
     height: 100%;
     background-color: white;
     overflow-y: scroll;
+    display: inline-block;
 }
 
 .miniSlide {
     width: 100%;
-    height: 100px;
+    min-height: 100px;
     position: relative;
 }
 
@@ -43,4 +44,16 @@
 
 .activeSlide {
     background-color: #E4E4EC;
+}
+
+.miniSlideQuestion {
+    margin: 5%;
+    width: 90%;
+    height: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
 }

@@ -5,13 +5,14 @@ import { domain, prefix } from '../../config/api.config';
 
 type SidebarProps = {
     setCurrentIndex: Function;
-    data: PresData
+    data: PresData;
+    currentSlide: SingleSlideData;
 }
 
 const Sidebar = (props: SidebarProps) => {
-    const {data, setCurrentIndex} = props;
+    const {data, setCurrentIndex, currentSlide} = props;
     const [curIndex, setLocalCurIndex] = useState<number>(0);
-    let slides: Array<React.ReactElement> = [];
+    const[slides, setSlides]= useState<Array<React.ReactElement>>([]);
 
     const createMiniSlide = (slideData: SingleSlideData) => {
         // TODO src
@@ -21,8 +22,10 @@ const Sidebar = (props: SidebarProps) => {
                 setLocalCurIndex(slideData.idx);
             }}>
                 <div className="miniSlideNumber">{(slideData.idx + 1)}</div>
-                <div className="miniSlideImage">
-                    {slideData.name && <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/>}
+                <div className="miniSlideImage"
+                    style={slideData.kind === "question" ? {backgroundColor: slideData.background} : {}}>
+                    {slideData.kind === "question" ?  <div className="miniSlideQuestion">{slideData.question}</div> :
+                    slideData.name ? <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/> : null}
                 </div>
             </div>
 
@@ -52,11 +55,22 @@ const Sidebar = (props: SidebarProps) => {
             setCurrentIndex(curIndex + 1);
             setLocalCurIndex(curIndex + 1);
         }
-    }, [data])
+    }, [data]);
 
-    data.slides.forEach((slide) => {
-        slides.push(createMiniSlide(slide))
-    });
+    useEffect(() => {
+        let s = slides.slice(0);
+        s[currentSlide.idx] = createMiniSlide(currentSlide);
+        setSlides(s);
+    }, [currentSlide]);
+
+    useEffect(() => {
+        let s: Array<React.ReactElement> = [];
+        data.slides.forEach((slide) => {
+            s.push(createMiniSlide(slide))
+        });
+        setSlides(s);
+    }, [data]);
+
 
     useEffect(() => {
         const previousActive = document.getElementsByClassName("activeSlide");

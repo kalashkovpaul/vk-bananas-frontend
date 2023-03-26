@@ -134,6 +134,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                         onChange={handleNameChange}
                         placeholder="Как настроение?"
                         value={currentSlide?.question}
+                        maxLength={34}
                     />
                     <ColorPicker
                         background={currentSlide?.fontColor}
@@ -168,8 +169,9 @@ const QuizEditor = (props: QuizEditorProps) => {
                 <div className="questionTitle">
                     Представить результат в виде:
                 </div>
-                <div className="chartTypes">
+                <div id="chartTypes" className="chartTypes">
                     <div
+                        style={{height: document.getElementById("chartTypes")?.style.width}}
                         className={`chartType vertical-bar ${currentSlide.type === "vertical" ? "chosen" : ""}`}
                         onClick={() => {handleQuestionKindChange("vertical");}}
                     />
