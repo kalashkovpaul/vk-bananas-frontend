@@ -156,19 +156,40 @@
 .copyButton {
     width: 260px;
     height: 50px;
+    padding-right: 10px;
 }
 
 .popup-content {
     width: 50%;
-    height: 50%;
+    /* height: 50%; */
     background-color: white;
     margin: auto;
-    top: 50%;
-    padding: 20px;
+    /* top: 50%; */
+    padding: 10px;
     border-radius: 20px;
-    box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 400px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 800px;
+}
+
+.popupWrapper {
+    width: 100%;
+    /* top: 50%; */
+    position: relative;
     display: grid;
     grid-template-areas: "link qr";
+    grid-template-columns: 50% 50%;
+    padding-right: 60px;
+}
+
+@media (max-width: 1270px) {
+    .popup-content {
+        width: 400px;
+    }
+    .popupWrapper {
+        grid-template-columns: 100%;
+        grid-template-areas:
+            "link"
+            "qr";
+    }
 }
 
 .popup-arrow {
@@ -178,8 +199,61 @@
 .copyLink {
     align-self: center;
     justify-self: center;
+    grid-area: link;
+}
+
+.copyLinkIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./copy.png");
+}
+
+.copyQrIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./qr.png");
 }
 
 .copyQr {
+    grid-area: qr;
     justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#react-qrcode-logo {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 10px;
+}
+
+.crossWrapper {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 6px;
+    border-radius: 20px;
+}
+
+.crossWrapper:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.crossWrapper:active {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.crossIcon {
+    background-image: url('./close.png');
+    background-size: contain;
+    width: 28px;
+    height: 28px;
 }

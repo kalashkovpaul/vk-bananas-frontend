@@ -76,3 +76,19 @@ export function calculateMiniScale(sw: number, sh: number, w: number, h: number)
         mHeight: height
     }
 }
+
+export function copyLink(link: string) {
+    navigator.clipboard.writeText(link);
+}
+
+export function copyQR() {
+    const canvas = document.getElementById("react-qrcode-logo") as HTMLCanvasElement;
+    if (canvas) {
+        canvas.toBlob((blob) => {
+            if (blob) {
+                const item = new ClipboardItem({"image/png": blob});
+                navigator.clipboard.write([item]);
+            }
+        });
+    }
+}
