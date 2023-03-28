@@ -193,7 +193,7 @@ const AuthForm = (props: AuthProps) => {
             }
         }).then((response) => response.json())
         .then((response) => {
-            if (response.ID) {
+            if (response.id) {
                 authModule.getUserFromSubmit(response);
                 navigate(`/`);
             } else {
@@ -219,7 +219,7 @@ const AuthForm = (props: AuthProps) => {
             }
         }).then((response) => response.json())
         .then((response) => {
-            if (response.ID) {
+            if (response.id) {
                 authModule.getUserFromSubmit(response);
                 navigate(`/`);
             } else {
@@ -251,7 +251,8 @@ const AuthForm = (props: AuthProps) => {
                 email: "",
                 username: "",
                 password: "",
-                repeatpassword: ""
+                repeatpassword: "",
+                img: "",
             };
             const logData: loginData = {
                 email: "",
@@ -287,23 +288,11 @@ const AuthForm = (props: AuthProps) => {
         });
     };
 
-
-    const onSubmit = () => {
-
-    }
-
-    const onChange = () => {
-
-    }
-
     useEffect(() => {
         initErrorMessages();
         addValidateListeners();
         addSubmitListener();
     }, []);
-
-
-
 
     return (
         <div className={kind === "login" ? "loginWrapper" : "signupWrapper"}>

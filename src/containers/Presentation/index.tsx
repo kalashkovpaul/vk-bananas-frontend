@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { FunctionComponent } from "react";
 import './presentation.css';
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -12,6 +12,7 @@ import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
 import { useParams } from "react-router-dom";
+import { calculateMiniScale, calculateScale } from "../../utils/utils";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -45,6 +46,19 @@ const newSlide: SingleSlideData = {
     graphColor: "black",
 }
 
+function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+}
+
 const Presentation: FunctionComponent = () => {
     const params = useParams(); // TODO parse from url
     const presId = params.id;
@@ -54,10 +68,27 @@ const Presentation: FunctionComponent = () => {
         url: "",
         slideNum: 0,
         quizNum: 0,
+        width: 0,
+        height: 0,
         slides: []
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
+    const [screenWidth, screenHeight] = useWindowSize();
+    const [slideWidth, setSlideWidth] = useState(0);
+    const [slideHeight, setSlideHeight] = useState(0);
+    const [miniSlideWidth, setMiniSlideWidth] = useState(0);
+    const [miniSlideHeight, setMiniSlideHeight] = useState(0);
+
+    useEffect(() => {
+        // console.log(screenWidth, screenHeight);
+        const {width, height} = calculateScale(screenWidth, screenHeight, data.width, data.height);
+        setSlideWidth(width);
+        setSlideHeight(height);
+        const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
+        setMiniSlideWidth(mWidth);
+        setMiniSlideHeight(mHeight);
+    }, [screenWidth, screenHeight, data]);
 
     const usePreviousSlide = (value: any) => {
         const prevSlideRef = useRef<any>(value);
@@ -111,8 +142,8 @@ const Presentation: FunctionComponent = () => {
             if (currentSlide?.name) {
                 // TODO show image
                 slideRef.current.style.backgroundImage = `url(${domain}/${data.url}${currentSlide.name})`;
-                slideRef.current.style.width = `${currentSlide.width}px`;
-                slideRef.current.style.height = `${currentSlide.height}px`;
+                // slideRef.current.style.width = `${currentSlide.width}px`;
+                // slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
                 slideRef.current.style.backgroundColor = "#CECECE";
             } else {
@@ -122,8 +153,8 @@ const Presentation: FunctionComponent = () => {
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            slideRef.current.style.width = null as any;
-            slideRef.current.style.height = null as any;
+            // slideRef.current.style.width = null as any;
+            // slideRef.current.style.height = null as any;
             if (currentIndex === previousSlide.idx)
                 onSlideChange();
         }
@@ -338,14 +369,29 @@ const Presentation: FunctionComponent = () => {
             <PresentationBar
                 onDelete={onSlideDelete}
                 onCreate={onCreateSlide}
+                screenWidth={screenWidth}
+                screenHeight={screenHeight}
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
-                <Sidebar data={data} setCurrentIndex={setCurrentIndex} currentSlide={currentSlide}/>
+                <Sidebar
+                    data={data}
+                    setCurrentIndex={setCurrentIndex}
+                    currentSlide={currentSlide}
+                    width={miniSlideWidth}
+                    height={miniSlideHeight}
+                />
                 <div className="slideBox">
-                    <div className="slide" ref={slideRef}>
+                    <div className="slide" style={{
+                        height: `${slideHeight}px`,
+                        width: `${slideWidth}px`
+                    }} ref={slideRef}>
                         {currentSlide?.kind === "question" && currentSlide.type ?
-                            <CustomBar kind={currentSlide.type} slide={currentSlide}/>
+                            <CustomBar
+                                width={slideWidth - 160}
+                                height={slideHeight - 100}
+                                kind={currentSlide.type}
+                                slide={currentSlide}/>
                             : null}
                     </div>
                 </div>

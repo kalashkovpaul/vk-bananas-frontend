@@ -43,6 +43,8 @@ export type PresData = {
     url: string,
     slideNum: number,
     quizNum: number,
+    width: number,
+    height: number,
     slides: Array<SingleSlideData>;
 };
 
@@ -63,6 +65,8 @@ type BarKind = "horizontal"|"vertical"|"pie"|"cloud"|"doughnut";
 type CustomBarProps = {
     slide: SingleSlideData,
     kind: BarKind,
+    width: number,
+    height: number,
 };
 
 type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;
@@ -98,15 +102,15 @@ export type registerData = {
     password: string,
     repeatpassword: string,
     username: string,
+    img: string,
 }
 
 export type authcheckResponse = {
-    status: string,
-    ID: string
+    id: string
 }
 
 export type userData = {
-    ID: string,
+    id: string,
     username: string,
     email: string,
     imgsrc: string,

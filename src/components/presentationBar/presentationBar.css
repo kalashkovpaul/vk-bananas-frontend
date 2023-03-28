@@ -152,3 +152,34 @@
     background-size: contain;
     background-image: url("./play.png");
 }
+
+.copyButton {
+    width: 260px;
+    height: 50px;
+}
+
+.popup-content {
+    width: 50%;
+    height: 50%;
+    background-color: white;
+    margin: auto;
+    top: 50%;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 400px;
+    display: grid;
+    grid-template-areas: "link qr";
+}
+
+.popup-arrow {
+    display: none;
+}
+
+.copyLink {
+    align-self: center;
+    justify-self: center;
+}
+
+.copyQr {
+    justify-self: center;
+}

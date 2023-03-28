@@ -52,12 +52,12 @@ class Auth {
                 return null;
             }
             const parsed = responseCheckAuth as authcheckResponse;
-            if (!parsed.ID) {
+            if (!parsed.id) {
                 window.localStorage.removeItem("user");
                 // this.eventBus.emit(events.auth.notLoggedIn);
                 return null;
             }
-            const responseCurrentUser = await this.getCurrentUser(parsed.ID);
+            const responseCurrentUser = await this.getCurrentUser(parsed.id);
             if (!responseCurrentUser) {
                 return;
             }

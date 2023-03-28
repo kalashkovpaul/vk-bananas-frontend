@@ -1,9 +1,10 @@
 .quizEditor {
-    width: calc(100% - 900px);
+    width: 35%;
+    max-width: calc(50% - 200px);
     background-color: white;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
     .quizEditor {
         display: none;
     }

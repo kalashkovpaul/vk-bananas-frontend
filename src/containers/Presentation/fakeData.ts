@@ -6,6 +6,8 @@ export const presData: PresData = {
     url: "",
     slideNum: 12,
     quizNum: 1,
+    width: 600,
+    height: 300,
     slides: [
         {
             idx: 0,

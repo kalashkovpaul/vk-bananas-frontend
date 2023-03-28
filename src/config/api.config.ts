@@ -19,9 +19,9 @@ export const api = {
     voteCreate: `${prefix}/quiz/vote/create`,
     voteUpdate: `${prefix}/quiz/vote/update`,
     voteDelete: `${prefix}/quiz/vote/delete`,
-    login: `${prefix}/login`,
-    register: `${prefix}/register`,
-    checkAuth: `${prefix}/authcheck`,
+    login: `${prefix}/user/login`,
+    register: `${prefix}/user/register`,
+    checkAuth: `${prefix}/user/session`,
     getUser: `${prefix}/user`,
 
 }

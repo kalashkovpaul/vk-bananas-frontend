@@ -6,13 +6,27 @@
     width: 100%;
     position: fixed;
     z-index: 30;
+
+}
+
+@keyframes disapper {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.navbarWrapper {
     height: 66px;
-    background-color: #20232a;
+    background-color: #fff;
+    /* background-color: #20232a; */
     box-shadow: 0 4px 6px 0 rgb(0 0 0 / 5%);
     display: grid;
 
     grid-template-areas: "vert_menu logo menu login";
-    grid-template-columns: 80px 120px minmax(360px, 1440px) 120px;
+    grid-template-columns: 80px 120px minmax(0px, 1440px) 120px;
     column-gap: 20px;
 }
 
@@ -24,10 +38,10 @@
 
 .verticalMenuBtn {
     position: relative;
-    margin-left: 10px;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     transition-duration: 0.5s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .verticalMenuBtn {
@@ -40,7 +54,8 @@
     height: 3px;
     width: 12px;
     top: 30px;
-    background-color: white;
+    background-color: black;
+    border-radius:  2px 0 0 2px;
 }
 
 .burgerLeft:before {
@@ -48,9 +63,10 @@
     position: absolute;
     width: 12px;
     height: 3px;
-    background-color: white;
+    background-color: black;
     content: "";
     top: -12px;
+    border-radius:  2px 0 0 2px;
 }
 
 .burgerLeft:after {
@@ -58,9 +74,10 @@
     position: absolute;
     width: 12px;
     height: 3px;
-    background-color: white;
+    background-color: black;
     content: "";
     top: 12px;
+    border-radius:  2px 0 0 2px;
 }
 
 .burgerRight {
@@ -69,8 +86,9 @@
     height: 3px;
     width: 12px;
     top: 30px;
-    background-color: white;
+    background-color: black;
     left: 12px;
+    border-radius: 0 2px 2px 0;
 }
 
 .burgerRight:before {
@@ -78,9 +96,10 @@
     position: absolute;
     width: 12px;
     height: 3px;
-    background-color: white;
+    background-color: black;
     content: "";
     top: -12px;
+    border-radius: 0 2px 2px 0;
 }
 
 .burgerRight:after {
@@ -88,34 +107,35 @@
     position: absolute;
     width: 12px;
     height: 3px;
-    background-color: white;
+    background-color: black;
     content: "";
     top: 12px;
+    border-radius: 0 2px 2px 0;
 }
 
-.open.burgerLeft {
+.open .burgerLeft {
     transition-duration: 0.5s;
     background: transparent;
 }
 
-.open.burgerLeft:before {
+.open .burgerLeft:before {
     transform: rotateZ(45deg) scaleX(1.4) translate(4px, 4px);
 }
 
-.open.burgerLeft:after {
+.open .burgerLeft:after {
     transform: rotateZ(-45deg) scaleX(1.4) translate(4px, -4px);
 }
 
-.open.burgerRight {
+.open .burgerRight {
     transition-duration: 0.5s;
     background: transparent;
 }
 
-.open.burgerRight:before {
+.open .burgerRight:before {
     transform: rotateZ(-45deg) scaleX(1.4) translate(-4px, 4px);
 }
 
-.open.burgerRight:after {
+.open .burgerRight:after {
     transform: rotateZ(45deg) scaleX(1.4) translate(-4px, -4px);
 }
 
@@ -129,7 +149,7 @@
     white-space: nowrap;
     overflow-x: hidden;
     background-color: #20232a;
-    margin-left: 100px;
+    left: 0;
     border-radius: 0 0 10px 0;
     padding: 8px;
 }
@@ -147,7 +167,7 @@
 .menuBtn {
     text-decoration: none;
     transition: 0.1s;
-    color: white;
+    color: black;
 }
 
 .menuBtn:hover {
@@ -285,4 +305,67 @@
 
 .ourLogo {
     -webkit-tap-highlight-color: transparent;
+}
+
+.joinBlock {
+    width: 100%;
+    height: 60px;
+    background-color: #f1f1f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.joinInputBlock {
+    position: relative;
+}
+
+.joinInvitation {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+    .joinInvitation {
+        display: none;
+    }
+}
+
+.joinInput {
+    width: 344px;
+    height: 40px;
+    border-radius: 20px;
+    border: 0;
+    font-size: 18px;
+    padding-left: 10px;
+    padding-bottom: 2px;
+}
+
+.joinInput:focus {
+    outline: none;
+}
+
+.joinButton {
+    position: absolute;
+    right: 6px;
+    top: 5px;
+    color: #757575;
+    font-size: 20px;
+    background-color: #eceff2;
+    height: 30px;
+    text-align: center;
+    width: 190px;
+    line-height: 30px;
+    border-radius: 24px;
+    font-weight: 500;
+}
+
+.joinButton:hover {
+    color: #757575;
+    background-color: #e0e5e9;
+}
+
+.joinButton:active {
+    color: #757575;
+    background-color: #d1d4d8;
 }

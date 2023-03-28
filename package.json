@@ -23,6 +23,7 @@
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.8",
     "react-transition-group": "^4.4.5",
+    "reactjs-popup": "^2.0.5",
     "styled-components": "^5.3.3",
     "web-vitals": "^3.1.1",
     "wordcloud": "^1.2.2",

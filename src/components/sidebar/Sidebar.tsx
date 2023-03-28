@@ -7,23 +7,42 @@ type SidebarProps = {
     setCurrentIndex: Function;
     data: PresData;
     currentSlide: SingleSlideData;
+    width: number;
+    height: number;
 }
 
 const Sidebar = (props: SidebarProps) => {
-    const {data, setCurrentIndex, currentSlide} = props;
+    const {data, setCurrentIndex, currentSlide, width, height} = props;
     const [curIndex, setLocalCurIndex] = useState<number>(0);
-    const[slides, setSlides]= useState<Array<React.ReactElement>>([]);
+    const [slides, setSlides]= useState<Array<React.ReactElement>>([]);
 
-    const createMiniSlide = (slideData: SingleSlideData) => {
+
+    const createMiniSlide = (slideData: SingleSlideData, w: number, h: number) => {
         // TODO src
         return (
-            <div key={slideData.idx} className={`miniSlide `} onClick={() => {
-                setCurrentIndex(slideData.idx);
-                setLocalCurIndex(slideData.idx);
-            }}>
+            <div
+                key={slideData.idx}
+                className={`miniSlide`}
+                onClick={() => {
+                    setCurrentIndex(slideData.idx);
+                    setLocalCurIndex(slideData.idx);
+                }}
+                style={{
+                    height: `${h + 20}px`
+                }}
+            >
                 <div className="miniSlideNumber">{(slideData.idx + 1)}</div>
                 <div className="miniSlideImage"
-                    style={slideData.kind === "question" ? {backgroundColor: slideData.background} : {}}>
+                    style={slideData.kind === "question" ?
+                    {
+                        backgroundColor: slideData.background,
+                        width: `${w}px`,
+                        height: `${h}px`,
+                    } :
+                    {
+                        width: `${w}px`,
+                        height: `${h}px`,
+                    }}>
                     {slideData.kind === "question" ?  <div className="miniSlideQuestion">{slideData.question}</div> :
                     slideData.name ? <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/> : null}
                 </div>
@@ -59,17 +78,17 @@ const Sidebar = (props: SidebarProps) => {
 
     useEffect(() => {
         let s = slides.slice(0);
-        s[currentSlide.idx] = createMiniSlide(currentSlide);
+        s[currentSlide.idx] = createMiniSlide(currentSlide, width, height);
         setSlides(s);
-    }, [currentSlide]);
+    }, [currentSlide, width, height]);
 
     useEffect(() => {
         let s: Array<React.ReactElement> = [];
         data.slides.forEach((slide) => {
-            s.push(createMiniSlide(slide))
+            s.push(createMiniSlide(slide, width, height))
         });
         setSlides(s);
-    }, [data]);
+    }, [data, width, height]);
 
 
     useEffect(() => {

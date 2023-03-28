@@ -8,6 +8,8 @@ let presData = {
     url: "images/121/",
     slideNum: 12,
     quizNum: 1,
+    width: 600,
+    height: 300,
     slides: [
         {
             idx: 0,
@@ -221,9 +223,9 @@ ids[id] = "a@a.ru";
 
 const startServer = (app) => {
 
-    app.get('/api/v1/authcheck', (req, res) => {
+    app.get('/api/v1/user/session', (req, res) => {
         res.json({
-            // "ID": "1",
+            // "id": "1",
         });
     });
     app.post("/api/v1/presentation/create", function (req, res) {
@@ -272,7 +274,7 @@ const startServer = (app) => {
         })
     });
 
-    app.post("/api/v1/login", function (req, res) {
+    app.post("/api/v1/user/login", function (req, res) {
         const password = req.body.password;
         const email = req.body.email;
         if (!password || !email) {
@@ -282,12 +284,12 @@ const startServer = (app) => {
         return res.status(200).send('Не верный E-Mail и/или пароль');
         }
 
-        const ID = uuid();
-        ids[ID] = email;
+        const id = uuid();
+        ids[id] = email;
 
-        res.cookie('podvorot', ID, { expires: new Date(Date.now() + 1000 * 60 * 10) });
+        res.cookie('podvorot', id, { expires: new Date(Date.now() + 1000 * 60 * 10) });
         res.status(200).json({
-            ID: 1,
+            id: 1,
             imgsrc: "server/images/adventures.webp",
             username: users[email].name,
             email: email,

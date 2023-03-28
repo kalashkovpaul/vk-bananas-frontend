@@ -35,7 +35,7 @@ export function createSuccess(title: string, subTitle: string) {
         root?.unmount();
         root = null;
     }, 2000);
-    
+
     let a =
         <Alert
             title={title}
@@ -53,4 +53,26 @@ export function createSuccess(title: string, subTitle: string) {
                 root.render(a);
             }
         }
+}
+
+export function calculateScale(sw: number, sh: number, w: number, h: number) {
+    const screenPercent = sw > 1000 ? 0.5 : (sw - 200)/sw;
+    const aspectRatio = w / h;
+    let width = screenPercent * sw - 40;
+    let height = width / aspectRatio;
+    return {
+        width: width,
+        height: height
+    }
+}
+
+export function calculateMiniScale(sw: number, sh: number, w: number, h: number) {
+    let screenPercent = sw < 600 ? 0.86 : 0.15 * sw > 200 ? 0.115 : 154/sw;
+    const aspectRatio = w / h;
+    let width = screenPercent * sw;
+    let height = width / aspectRatio;
+    return {
+        mWidth: width,
+        mHeight: height
+    }
 }
