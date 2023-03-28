@@ -11,9 +11,25 @@
 }
 
 .slideBox {
+    display: flex;
+    flex-direction: column;
     width: 50%;
     background-color: transparent;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.slideBox:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.slideBox:-webkit-full-screen .slideQuestion {
+    font-size: 60px;
+}
+
+.slideBox:-webkit-full-screen .slide {
+    margin: 0;
 }
 
 .slide {
@@ -23,9 +39,11 @@
     height: 400px;
     background-color: #9A8873;
     flex-direction: column;
-    border-radius: 20px;
+    /* border-radius: 20px; */
     box-shadow: rgba(0, 0, 0, 0.56) 0px 20px 70px 4px;
 }
+
+
 
 /* @media (max-width: 1400px) {
     .slide {

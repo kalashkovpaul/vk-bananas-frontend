@@ -5,7 +5,7 @@ const presId = 1;
 const quizId = 1;
 
 let presData = {
-    url: "images/121/",
+    url: "/images/121/",
     slideNum: 12,
     quizNum: 1,
     width: 600,

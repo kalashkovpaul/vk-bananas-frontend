@@ -96,14 +96,19 @@
 
 .chartTypes {
     /* width: fit-content; */
-    height: 120px;
-    gap: 8px;
+    height: 140px;
+    /* gap: 8px; */
     display: grid;
     margin: auto;
     grid-template-areas: "A1 A2 A3 A4";
     overflow-x: scroll;
     align-items: center;
     justify-items: center;
+    scrollbar-color: initial transparent;
+}
+
+.chartTypes::-webkit-scrollbar {
+    display: none;
 }
 
 @media (max-width: 1400px) {

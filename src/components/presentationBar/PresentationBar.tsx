@@ -9,12 +9,13 @@ import { copyLink, copyQR } from "../../utils/utils";
 type PresBarProps = {
     onDelete: Function;
     onCreate: Function;
+    onDemonstrate: Function;
     screenWidth: number;
     screenHeight: number;
 }
 
 const PresentationBar = (props: PresBarProps) => {
-    const {onDelete, onCreate, screenWidth, screenHeight} = props;
+    const {onDelete, onCreate, onDemonstrate, screenWidth, screenHeight} = props;
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
 
@@ -72,7 +73,9 @@ const PresentationBar = (props: PresBarProps) => {
                 </div>
             </Popup>
 
-            <div className="bar-button showButton">
+            <div className="bar-button showButton" onClick={() => {
+                onDemonstrate();
+            }}>
                 <div className="showButtonIcon"/>
                 Демонстрировать
             </div>

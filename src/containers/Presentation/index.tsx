@@ -20,8 +20,6 @@ const emptySlide: SingleSlideData = {
     kind: "slide",
     type: "",
     quizId: 0,
-    width: 600,
-    height: 300,
     fontSize: "",
     question: "",
     votes: [],
@@ -36,8 +34,6 @@ const newSlide: SingleSlideData = {
     kind: "question",
     type: "vertical",
     quizId: 0,
-    width: 600,
-    height: 300,
     fontSize: "",
     question: "",
     votes: [],
@@ -49,12 +45,12 @@ const newSlide: SingleSlideData = {
 function useWindowSize() {
     const [size, setSize] = useState([0, 0]);
     useLayoutEffect(() => {
-      function updateSize() {
-        setSize([window.innerWidth, window.innerHeight]);
-      }
-      window.addEventListener('resize', updateSize);
-      updateSize();
-      return () => window.removeEventListener('resize', updateSize);
+        function updateSize() {
+            setSize([window.innerWidth, window.innerHeight]);
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
     }, []);
     return size;
 }
@@ -80,9 +76,11 @@ const Presentation: FunctionComponent = () => {
     const [miniSlideWidth, setMiniSlideWidth] = useState(0);
     const [miniSlideHeight, setMiniSlideHeight] = useState(0);
 
+    const [isDemonstration, setDemonstration] = useState(false);
+
     useEffect(() => {
         // console.log(screenWidth, screenHeight);
-        const {width, height} = calculateScale(screenWidth, screenHeight, data.width, data.height);
+        const {width, height} = calculateScale(isDemonstration, screenWidth, screenHeight, data.width, data.height);
         setSlideWidth(width);
         setSlideHeight(height);
         const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
@@ -141,7 +139,7 @@ const Presentation: FunctionComponent = () => {
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
                 // TODO show image
-                slideRef.current.style.backgroundImage = `url(${domain}/${data.url}${currentSlide.name})`;
+                slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
                 // slideRef.current.style.width = `${currentSlide.width}px`;
                 // slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
@@ -161,6 +159,7 @@ const Presentation: FunctionComponent = () => {
     }, [currentSlide]);
 
     useEffect(() => {
+        addControlListeners();
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
             // body: JSON.stringify({
@@ -363,6 +362,19 @@ const Presentation: FunctionComponent = () => {
         });
     }
 
+    const demonstrate = () => {
+        const slidebox = document.querySelector(".slideBox");
+        if (slidebox) {
+            slidebox.requestFullscreen();
+        }
+    }
+
+    const addControlListeners = () => {
+        document.addEventListener("fullscreenchange", (e) => {
+            setDemonstration(o => !o);
+        })
+    }
+
 
     return (
         <div className="presentation view-wrapper">
@@ -371,6 +383,7 @@ const Presentation: FunctionComponent = () => {
                 onCreate={onCreateSlide}
                 screenWidth={screenWidth}
                 screenHeight={screenHeight}
+                onDemonstrate={demonstrate}
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />

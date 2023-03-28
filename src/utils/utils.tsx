@@ -55,8 +55,8 @@ export function createSuccess(title: string, subTitle: string) {
         }
 }
 
-export function calculateScale(sw: number, sh: number, w: number, h: number) {
-    const screenPercent = sw > 1000 ? 0.5 : (sw - 200)/sw;
+export function calculateScale(isFullscreen=false, sw: number, sh: number, w: number, h: number) {
+    const screenPercent = isFullscreen ? 1 : sw > 1000 ? 0.5 : (sw - 200)/sw;
     const aspectRatio = w / h;
     let width = screenPercent * sw - 40;
     let height = width / aspectRatio;
