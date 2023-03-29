@@ -28,6 +28,12 @@
     font-size: 60px;
 }
 
+@media (max-width: 890px) {
+    .slideBox:-webkit-full-screen .slideQuestion {
+        font-size: 30px;
+    }
+}
+
 .slideBox:-webkit-full-screen .slide {
     margin: 0;
 }

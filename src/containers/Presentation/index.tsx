@@ -79,14 +79,13 @@ const Presentation: FunctionComponent = () => {
     const [isDemonstration, setDemonstration] = useState(false);
 
     useEffect(() => {
-        // console.log(screenWidth, screenHeight);
         const {width, height} = calculateScale(isDemonstration, screenWidth, screenHeight, data.width, data.height);
         setSlideWidth(width);
         setSlideHeight(height);
         const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
         setMiniSlideWidth(mWidth);
         setMiniSlideHeight(mHeight);
-    }, [screenWidth, screenHeight, data]);
+    }, [isDemonstration, screenWidth, screenHeight, data]);
 
     const usePreviousSlide = (value: any) => {
         const prevSlideRef = useRef<any>(value);
@@ -159,7 +158,6 @@ const Presentation: FunctionComponent = () => {
     }, [currentSlide]);
 
     useEffect(() => {
-        addControlListeners();
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
             // body: JSON.stringify({
@@ -369,11 +367,21 @@ const Presentation: FunctionComponent = () => {
         }
     }
 
-    const addControlListeners = () => {
-        document.addEventListener("fullscreenchange", (e) => {
-            setDemonstration(o => !o);
-        })
+    const screenChangeHandler = (e: any) => {
+        if (!isDemonstration) {
+            window.screen.orientation.lock("landscape").then().catch(e => {});
+        } else {
+            window.screen.orientation.unlock();
+        }
+        setDemonstration(o => !o);
     }
+
+    useEffect(() => {
+        document.addEventListener("fullscreenchange", screenChangeHandler)
+        return () => {
+            document.removeEventListener("fullscreenchange", screenChangeHandler)
+        }
+    }, [screenWidth, screenHeight]);
 
 
     return (

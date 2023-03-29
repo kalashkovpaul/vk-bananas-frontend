@@ -32,6 +32,12 @@ const PresentationBar = (props: PresBarProps) => {
             }}>
                 Удалить слайд
             </div>
+            <div className="bar-button showButton" onClick={() => {
+                onDemonstrate();
+            }}>
+                <div className="showButtonIcon"/>
+                Демонстрировать
+            </div>
             <div className="bar-button shareButton" onClick={() => {
                 setOpen(o => !o);
             }}>
@@ -72,13 +78,6 @@ const PresentationBar = (props: PresBarProps) => {
                     </div>
                 </div>
             </Popup>
-
-            <div className="bar-button showButton" onClick={() => {
-                onDemonstrate();
-            }}>
-                <div className="showButtonIcon"/>
-                Демонстрировать
-            </div>
         </div>
     );
 }

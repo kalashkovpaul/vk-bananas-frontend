@@ -114,7 +114,7 @@
     box-shadow: #D5D9D8 0 3px 7px inset;
 }
 
-.shareButton {
+.showButton {
     color: black;
     margin-left: auto;
     padding-left: 0;
@@ -123,34 +123,34 @@
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
 
-.shareButton:hover {
+.showButton:hover {
     box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
 }
 
-.shareButton:active {
+.showButton:active {
     box-shadow: #D5D9D8 0 3px 7px inset;
-}
-
-.shareButtonIcon {
-    width: 30px;
-    height: 30px;
-    margin-right: 16px;
-    background-size: contain;
-    background-image: url("./share.png");
-}
-
-.showButton {
-    width: 240px;
-    padding-left: 8px;
-    padding-right: 16px;
 }
 
 .showButtonIcon {
     width: 30px;
     height: 30px;
-    margin-right: 4px;
+    margin-right: 16px;
     background-size: contain;
     background-image: url("./play.png");
+}
+
+.shareButton {
+    width: 190px;
+    padding-left: 8px;
+    padding-right: 16px;
+}
+
+.shareButtonIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./share.png");
 }
 
 .copyButton {
