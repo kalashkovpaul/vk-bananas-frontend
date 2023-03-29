@@ -24,5 +24,6 @@ export const api = {
     register: `${prefix}/user/register`,
     checkAuth: `${prefix}/user/session`,
     getUser: `${prefix}/user`,
-
+    getHash: `${prefix}/demonstration/hash`,
+    getDemonstration: `${prefix}/demonstration`
 }

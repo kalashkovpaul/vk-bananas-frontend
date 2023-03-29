@@ -55,7 +55,25 @@ const Navbar = () => {
             const value = input.value;
             if (value && value.length === 4) {
                 console.log("JOIN: ", value);
-                navigate(`/presentation/${value}`)
+                fetch(`${api.getHash}`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        code: value
+                    }),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then((response) => {
+                    console.log(response.status);
+                    return response.status === 404 ? {} : response.json();
+                }).then(response => {
+                    if ((response as any).hash) {
+                        navigate(`/demonstration/${(response as any).hash}`);
+                    }
+                })
+                .catch(e => {
+                    console.error(e);
+                });
             }
         }
     }
@@ -70,6 +88,10 @@ const Navbar = () => {
         }).catch(e => {
             console.error(e);
         });
+    }
+
+    if (location.pathname.includes("demonstration")) {
+        return null;
     }
 
     return (
@@ -94,6 +116,13 @@ const Navbar = () => {
                             }
                         }}
                         autoComplete="off"
+                        onInput={() => {
+                            const input = document.getElementById("joinInput") as HTMLInputElement;
+                            if (input) {
+                                const value = input.value;
+                                input.value = value.toUpperCase();
+                            }
+                        }}
                     />
                     <NavLink
                         className="joinButton"

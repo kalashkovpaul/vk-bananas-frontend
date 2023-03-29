@@ -66,9 +66,13 @@
 
 .slideQuestion {
     position: absolute;
-    font-size: 40px;
+    font-size: 30px;
     top: 20px;
     left: 20px;
+}
+
+.slideBox:-webkit-full-screen .slideQuestion {
+    top: 40px;
 }
 
 :root {
@@ -84,6 +88,10 @@
     left: 40px;
 }
 
+.slideBox:-webkit-full-screen .chart {
+    top: 130px;
+}
+
 .piechart {
     width: var(--graph-width) !important;
     height: var(--graph-height) !important;
@@ -92,11 +100,15 @@
     left: 40px;
 }
 
+.slideBox:-webkit-full-screen .piechart {
+    top: 130px;
+}
+
 #cloud-chart {
     /* width: 600px !important;
     height: 300px !important; */
     position: absolute;
-    top: 80px;
+    top: 100px;
     left: 40px;
 }
 

@@ -1,0 +1,44 @@
+.invitationBar {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background-color: #f6f6f6;
+    display: grid;
+    grid-template-areas:
+        "left text code empty logo";
+    grid-template-columns: minmax(0, 440px) 460px 90px minmax(90px, 240px) 200px;
+}
+
+.invitationText {
+    grid-area: text;
+    font-size: 27px;
+    line-height: 50px;
+    color: #313131;
+}
+
+.invitationCode {
+    grid-area: code;
+    font-size: 36px;
+    line-height: 50px;
+    font-weight: bolder;
+    color: #313131;
+}
+
+.invitationLogo {
+    grid-area: logo;
+    display: flex;
+    align-items: center;
+}
+
+.invitationLogoImg {
+    background-image: url('../navbar/statistics.png');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+}
+
+.invitationLogoText {
+    font-size: 24px;
+    margin-left: 10px;
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+}

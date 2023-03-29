@@ -134,7 +134,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                         onChange={handleNameChange}
                         placeholder="Как настроение?"
                         value={currentSlide?.question}
-                        maxLength={34}
+                        maxLength={44}
                     />
                     <ColorPicker
                         background={currentSlide?.fontColor}

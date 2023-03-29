@@ -8,6 +8,7 @@ export const presData: PresData = {
     quizNum: 1,
     width: 600,
     height: 300,
+    code: "1234",
     slides: [
         {
             idx: 0,

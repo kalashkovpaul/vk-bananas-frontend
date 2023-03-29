@@ -39,6 +39,7 @@ export type SingleSlideData = {
 
 export type PresData = {
     url: string,
+    code: string,
     slideNum: number,
     quizNum: number,
     width: number,

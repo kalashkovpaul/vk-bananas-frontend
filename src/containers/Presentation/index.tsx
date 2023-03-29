@@ -13,6 +13,7 @@ import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
 import { useParams } from "react-router-dom";
 import { calculateMiniScale, calculateScale } from "../../utils/utils";
+import InvitationBar from "../../components/invitationBar/InvitationBar";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -56,7 +57,7 @@ function useWindowSize() {
 }
 
 const Presentation: FunctionComponent = () => {
-    const params = useParams(); // TODO parse from url
+    const params = useParams();
     const presId = params.id;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
@@ -66,7 +67,8 @@ const Presentation: FunctionComponent = () => {
         quizNum: 0,
         width: 0,
         height: 0,
-        slides: []
+        slides: [],
+        code: "",
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
@@ -407,10 +409,14 @@ const Presentation: FunctionComponent = () => {
                         height: `${slideHeight}px`,
                         width: `${slideWidth}px`
                     }} ref={slideRef}>
+                        {isDemonstration && currentSlide?.kind === "question" &&
+                            <InvitationBar code={data.code}/>}
+                        {/* TODO: invitationBar */}
+                        {/* TODO: reactionBar */}
                         {currentSlide?.kind === "question" && currentSlide.type ?
                             <CustomBar
-                                width={slideWidth - 160}
-                                height={slideHeight - 100}
+                                width={slideWidth - 180}
+                                height={slideHeight - 140}
                                 kind={currentSlide.type}
                                 slide={currentSlide}/>
                             : null}

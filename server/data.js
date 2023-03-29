@@ -10,6 +10,7 @@ let presData = {
     quizNum: 1,
     width: 600,
     height: 300,
+    code: "1234",
     slides: [
         {
             idx: 0,
@@ -285,6 +286,17 @@ const startServer = (app) => {
     app.put("/api/v1/user/logout", function (req, res) {
         res.status(200).json({
         });
+    });
+
+    app.post("/api/v1/demonstration/hash", function (req, res) {
+        const code = req.body.code;
+        if (code === "1234") {
+            res.status(200).json({
+                hash: "a1b2c3d4"
+            });
+        } else {
+            res.status(404).json({});
+        }
     });
 
 
