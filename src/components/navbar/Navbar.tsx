@@ -5,15 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactComponent as ReactSeoLogoSvg } from '../assets/img/ReactSeoLogo.svg';
 import './navbar.css';
 import { UserContext } from '../../App';
+import { api } from '../../config/api.config';
 
 const Navbar = () => {
-    const {userData} = useContext(UserContext);
+    const {userData, setUserData} = useContext(UserContext);
     const location = useLocation();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log(location.pathname);
-    }, [location])
 
     const removeLogoutButton = () => {
         const logoutBtn = [...Object.values(document.querySelectorAll('.navbar__vertical-menu__btn-container a'))]
@@ -61,6 +58,18 @@ const Navbar = () => {
                 navigate(`/presentation/${value}`)
             }
         }
+    }
+
+    const onLogout = () => {
+        fetch(`${api.logout}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+            }),
+            headers: {
+            }
+        }).catch(e => {
+            console.error(e);
+        });
     }
 
     return (
@@ -114,8 +123,20 @@ const Navbar = () => {
                 </NavLink>
                 <div className="navbarMenu">
                     <NavLink className='menuBtn' to='/presentation/1'>Презентации</NavLink>
+                    {userData?.username &&
+                    <div className="profileMenu">
+                        <NavLink className="menuBtn" to='/profile'> Профиль </NavLink>
+                    </div>}
                 </div>
-                {userData?.id ? <div>TODO</div> :
+
+                {userData?.username ?
+                    <div className="navbarLogin" onClick={(e) => {
+                        e.preventDefault();
+                        setUserData(null);
+                        onLogout();
+                    }}>
+                        <div className="navbarLoginBtn">Выйти</div>
+                    </div> :
                     <div className="navbarLogin">
                         <NavLink className="navbarLoginBtn" to="/login">Войти</NavLink>
                     </div>

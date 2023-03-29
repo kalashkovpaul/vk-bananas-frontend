@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../App";
 import { api } from "../../config/api.config";
 import { authConfig } from "../../config/auth.config";
 import { emptyField, errorInfo } from "../../config/errors.config";
@@ -15,10 +16,9 @@ type AuthProps = {
 
 const authFormName = "authForm";
 
-
-
 const AuthForm = (props: AuthProps) => {
     const {kind} = props;
+    const {userData, setUserData} = useContext(UserContext);
     const navigate = useNavigate();
     let errorMessages = new Map();
 
@@ -193,8 +193,9 @@ const AuthForm = (props: AuthProps) => {
             }
         }).then((response) => response.json())
         .then((response) => {
-            if (response.id) {
+            if (response.username) {
                 authModule.getUserFromSubmit(response);
+                setUserData(response);
                 navigate(`/`);
             } else {
                 addSubmitError("Неправильный email или пароль!");
@@ -219,8 +220,9 @@ const AuthForm = (props: AuthProps) => {
             }
         }).then((response) => response.json())
         .then((response) => {
-            if (response.id) {
+            if (response.username) {
                 authModule.getUserFromSubmit(response);
+                setUserData(response);
                 navigate(`/`);
             } else {
                 addSubmitError("Пользователь с таким email уже существует!");

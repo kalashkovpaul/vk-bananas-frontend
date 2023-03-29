@@ -17,8 +17,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -33,8 +31,6 @@ let presData = {
             type: "horizontal",
             question: "Как настроение?",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             votes: [
                 {
@@ -60,8 +56,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -75,8 +69,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -90,8 +82,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -105,8 +95,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -120,8 +108,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -135,8 +121,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -150,8 +134,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -165,8 +147,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -180,8 +160,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -195,8 +173,6 @@ let presData = {
             kind: "slide",
             type: "",
             quizId: 0,
-            width: 700,
-            height: 400,
             fontSize: "",
             question: "",
             votes: [],
@@ -289,16 +265,25 @@ const startServer = (app) => {
 
         res.cookie('podvorot', id, { expires: new Date(Date.now() + 1000 * 60 * 10) });
         res.status(200).json({
-            id: 1,
-            imgsrc: "server/images/adventures.webp",
+            // id: 1,
             username: users[email].name,
             email: email,
+            img: "",
         });
     });
 
-    app.post("/api/v1/logout", function (req, res) {
+    app.post("/api/v1/user/register", function (req, res) {
+        const email = "a@a.ru";
         res.status(200).json({
-        status: 200,
+            // id: 1,
+            username: users[email].name,
+            email: email,
+            img: "",
+        });
+    });
+
+    app.put("/api/v1/user/logout", function (req, res) {
+        res.status(200).json({
         });
     });
 

@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { Home, About, Presentation, Login, Registration } from '../containers';
+import { Home, About, Presentation, Login, Registration, Demonstration } from '../containers';
 
 const DESC_SUFFIX = 'description - length <= 160 chars.';
 
@@ -65,6 +65,15 @@ export const routes: Route[] = [
     metaInfo: {
       title: 'Register',
       description: `Register ${DESC_SUFFIX}`
+    }
+  },
+  {
+    path: '/demonstration/:hash',
+    name: 'Demonstration',
+    Component: Demonstration,
+    metaInfo: {
+      title: 'Demonstration',
+      description: `Demonstration ${DESC_SUFFIX}`
     }
   }
 ];

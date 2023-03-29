@@ -20,6 +20,7 @@ export const api = {
     voteUpdate: `${prefix}/quiz/vote/update`,
     voteDelete: `${prefix}/quiz/vote/delete`,
     login: `${prefix}/user/login`,
+    logout: `${prefix}/user/logout`,
     register: `${prefix}/user/register`,
     checkAuth: `${prefix}/user/session`,
     getUser: `${prefix}/user`,
