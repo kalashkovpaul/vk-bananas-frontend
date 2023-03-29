@@ -16,36 +16,67 @@ const Sidebar = (props: SidebarProps) => {
     const [curIndex, setLocalCurIndex] = useState<number>(0);
     const [slides, setSlides]= useState<Array<React.ReactElement>>([]);
 
-    const addControlListeners = () => {
-        document.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                if (curIndex < data.slides.length - 1) {
+    const enterHandler = (e: any) => {
+        if (e.key === "Enter") {
+            if (curIndex < data.slides.length - 1) {
+                setCurrentIndex(curIndex + 1);
+                setLocalCurIndex(curIndex + 1);
+            }
+        }
+    }
+
+    const arrowHandler = (e: KeyboardEvent) => {
+        if (e.key === "ArrowRight") {
+            const slide = document.querySelector(".slide") as HTMLDivElement;
+            const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+            if (isFullscreen && curIndex < slides.length - 1) {
+                setCurrentIndex(curIndex + 1);
+                setLocalCurIndex(curIndex + 1);
+            }
+        } else if (e.key === "ArrowDown" && curIndex < slides.length - 1) {
+            e.preventDefault();
+            setCurrentIndex(curIndex + 1);
+            setLocalCurIndex(curIndex + 1);
+        } else if (e.key === "ArrowLeft") {
+            const slide = document.querySelector(".slide") as HTMLDivElement;
+            const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+            if (isFullscreen && curIndex > 0) {
+                setCurrentIndex(curIndex - 1);
+                setLocalCurIndex(curIndex - 1);
+            }
+        } else if (e.key === "ArrowUp" && curIndex > 0) {
+            e.preventDefault();
+            setCurrentIndex(curIndex - 1);
+            setLocalCurIndex(curIndex - 1);
+        }
+    }
+
+    const clickHandler = (e: MouseEvent) => {
+        const slide = document.querySelector(".slide") as HTMLDivElement;
+        const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+        if (isFullscreen) {
+            if (e.offsetX < window.innerWidth / 2 && curIndex > 0) {
+                setCurrentIndex(curIndex - 1);
+                setLocalCurIndex(curIndex - 1);
+            } else if (e.offsetX > window.innerWidth / 2 &&
+                curIndex < slides.length - 1) {
                     setCurrentIndex(curIndex + 1);
                     setLocalCurIndex(curIndex + 1);
                 }
-            }
-        });
-        document.addEventListener("click", (e) => {
-            // const slide = document.querySelector(".slide") as HTMLDivElement;
-            // let isFullscreen = window.innerWidth - slide.offsetWidth < 100;
-            // console.log(isFullscreen);
-            // if (isFullscreen) {
-            //     if (e.offsetX < window.innerWidth / 2 && curIndex > 0) {
-            //         setCurrentIndex(curIndex - 1);
-            //         setLocalCurIndex(curIndex - 1);
-            //     } else if (e.offsetX > window.innerWidth / 2 &&
-            //         curIndex < data.slides.length - 1) {
-            //             setCurrentIndex(curIndex + 1);
-            //             setLocalCurIndex(curIndex + 1);
-            //         }
-            // }
-        });
-        // document.addEventListener("keypress", (e) => {
-        //     if
-        // });
+        }
     }
 
-    addControlListeners();
+    const addControlListeners = () => {
+        document.addEventListener("keypress", enterHandler);
+        document.addEventListener("click", clickHandler);
+        document.addEventListener("keydown", arrowHandler);
+    }
+
+    const removeControlListeners = () => {
+        document.removeEventListener("keypress", enterHandler);
+        document.removeEventListener("click", clickHandler);
+        document.removeEventListener("keydown", arrowHandler);
+    }
 
     const createMiniSlide = (slideData: SingleSlideData, w: number, h: number) => {
         // TODO src
@@ -131,6 +162,14 @@ const Sidebar = (props: SidebarProps) => {
             sidebar.children[curIndex].classList.add("activeSlide");
         }
     }, [curIndex, slides]);
+
+    useEffect(() => {
+        addControlListeners();
+
+        return () => {
+            removeControlListeners();
+        }
+    }, [slides]);
 
     return (
         <div
