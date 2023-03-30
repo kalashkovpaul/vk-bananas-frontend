@@ -159,7 +159,7 @@
     padding-right: 10px;
 }
 
-.popup-content {
+[data-popup="modal"] .popup-content {
     width: 50%;
     /* height: 50%; */
     background-color: white;
@@ -170,7 +170,7 @@
     box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 800px;
 }
 
-.popupWrapper {
+[data-popup="modal"] .popupWrapper {
     width: 100%;
     /* top: 50%; */
     position: relative;
@@ -181,10 +181,10 @@
 }
 
 @media (max-width: 1270px) {
-    .popup-content {
+    [data-popup="modal"] .popup-content {
         width: 400px;
     }
-    .popupWrapper {
+    [data-popup="modal"] .popupWrapper {
         grid-template-columns: 100%;
         grid-template-areas:
             "link"
@@ -192,7 +192,7 @@
     }
 }
 
-.popup-arrow {
+[data-popup="modal"] .popup-arrow {
     display: none;
 }
 

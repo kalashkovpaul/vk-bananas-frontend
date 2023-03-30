@@ -5,8 +5,8 @@
     background-color: #f6f6f6;
     display: grid;
     grid-template-areas:
-        "left text code empty logo";
-    grid-template-columns: minmax(0, 440px) 460px 90px minmax(90px, 240px) 200px;
+        "left text code margin qr empty logo";
+    grid-template-columns: minmax(0, 440px) 460px 90px 40px 60px minmax(90px, 240px) 200px;
 }
 
 .invitationText {
@@ -22,6 +22,7 @@
     line-height: 50px;
     font-weight: bolder;
     color: #313131;
+    cursor: pointer;
 }
 
 .invitationLogo {
@@ -41,4 +42,29 @@
     font-size: 24px;
     margin-left: 10px;
     font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+[role="tooltip"].popup-content {
+    background-color: #282e3e;
+    padding: 8px;
+    border-radius: 12px;
+}
+
+[role="tooltip"] .popup-arrow {
+    color: #282e3e;
+}
+
+.copyCodeInvitation {
+    color: white;
+    width: 240px;
+    text-align: center;
+}
+
+.invitationQr {
+    grid-area: qr;
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-image: url('./qr.png');
 }

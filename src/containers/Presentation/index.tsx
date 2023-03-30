@@ -371,9 +371,11 @@ const Presentation: FunctionComponent = () => {
 
     const screenChangeHandler = (e: any) => {
         if (!isDemonstration) {
+            document.getElementById("popup-root")?.remove();
             window.screen.orientation.lock("landscape").then().catch(e => {});
         } else {
             window.screen.orientation.unlock();
+            document.getElementById("popup-root")?.remove();
         }
         setDemonstration(o => !o);
     }
