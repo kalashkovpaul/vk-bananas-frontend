@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './invitationBar.css';
 import Popup from 'reactjs-popup';
 import { QRCode } from "react-qrcode-logo";
-import { copyQR } from "../../utils/utils";
+import { copyQR, copyLink } from "../../utils/utils";
 
 type InvitationBarProps = {
     code: string;
@@ -22,6 +22,7 @@ const InvitationBar = (props: InvitationBarProps) => {
                 trigger={open => (
                     <div className="invitationCode" onClick={(e) => {
                         e.stopPropagation();
+                        copyLink(code);
                         setCodeCopied(true);
                         setTimeout(() => {
                             setCodeCopied(false);

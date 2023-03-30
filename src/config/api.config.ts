@@ -2,7 +2,7 @@ const local = "http://localhost:3001"
 const global = "http://185.241.192.112"
 
 
-export const domain = local;
+export const domain = global;
 
 const apiVersion = "/api/v1"
 
