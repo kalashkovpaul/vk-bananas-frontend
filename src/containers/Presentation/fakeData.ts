@@ -4,11 +4,20 @@ import type { PresData } from "../../types"
 
 export const presData: PresData = {
     url: "",
+    name: "New presentation",
+    emotions: {
+        like: 0,
+        love: 0,
+        laughter: 0,
+        surprise: 0,
+        sad: 0,
+    },
     slideNum: 12,
     quizNum: 1,
     width: 600,
     height: 300,
     code: "1234",
+    hash: "a1b2c3d4",
     slides: [
         {
             idx: 0,

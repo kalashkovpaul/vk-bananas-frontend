@@ -48,6 +48,7 @@
     background-color: #282e3e;
     padding: 8px;
     border-radius: 12px;
+    top: 0 !important;
 }
 
 [role="tooltip"] .popup-arrow {
@@ -89,4 +90,9 @@
     .invitationQr {
         display: none;
     }
+}
+
+.invitationBar #popup-root {
+    position: absolute;
+    top: 60px;
 }

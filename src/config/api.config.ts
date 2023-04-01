@@ -1,8 +1,10 @@
 const local = "http://localhost:3001"
 const global = "http://185.241.192.112"
-
+const localSite = "http://localhost:3000"
+const globalSite = "http://185.241.192.112"
 
 export const domain = global;
+export const site = globalSite
 
 const apiVersion = "/api/v1"
 
@@ -24,6 +26,8 @@ export const api = {
     register: `${prefix}/user/register`,
     checkAuth: `${prefix}/user/session`,
     getUser: `${prefix}/user`,
-    getHash: `${prefix}/demonstration/hash`,
-    getDemonstration: `${prefix}/demonstration`
+    getHash: `${prefix}/presentation/view/join`,
+    getDemonstration: `${prefix}/presentation/view`,
+    showGo: `${prefix}/presentation`,
+
 }

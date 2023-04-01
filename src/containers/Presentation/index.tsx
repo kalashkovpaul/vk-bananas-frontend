@@ -14,6 +14,7 @@ import { api, domain } from "../../config/api.config";
 import { useParams } from "react-router-dom";
 import { calculateMiniScale, calculateScale } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
+import ReactionBar from "../../components/reactionBar/ReactionBar";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -43,7 +44,7 @@ const newSlide: SingleSlideData = {
     graphColor: "black",
 }
 
-function useWindowSize() {
+export function useWindowSize() {
     const [size, setSize] = useState([0, 0]);
     useLayoutEffect(() => {
         function updateSize() {
@@ -63,12 +64,21 @@ const Presentation: FunctionComponent = () => {
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
         url: "",
+        name: "New presentation",
+        emotions: {
+            like: 0,
+            love: 0,
+            laughter: 0,
+            surprise: 0,
+            sad: 0,
+        },
         slideNum: 0,
         quizNum: 0,
         width: 0,
         height: 0,
         slides: [],
         code: "",
+        hash: ""
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
@@ -367,6 +377,12 @@ const Presentation: FunctionComponent = () => {
         if (slidebox) {
             slidebox.requestFullscreen();
         }
+        fetch(`${api.showGo}/${presId}/show/go/${currentIndex}`, {
+            method: 'PUT',
+        })
+        .catch(e => {
+            console.error(e);
+        });
     }
 
     const screenChangeHandler = (e: any) => {
@@ -393,9 +409,8 @@ const Presentation: FunctionComponent = () => {
             <PresentationBar
                 onDelete={onSlideDelete}
                 onCreate={onCreateSlide}
-                screenWidth={screenWidth}
-                screenHeight={screenHeight}
                 onDemonstrate={demonstrate}
+                hash={data.hash}
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
@@ -412,8 +427,7 @@ const Presentation: FunctionComponent = () => {
                         width: `${slideWidth}px`
                     }} ref={slideRef}>
                         {isDemonstration && currentSlide?.kind === "question" &&
-                            <InvitationBar code={data.code}/>}
-                        {/* TODO: invitationBar */}
+                            <InvitationBar code={data.code} hash={data.hash}/>}
                         {/* TODO: reactionBar */}
                         {currentSlide?.kind === "question" && currentSlide.type ?
                             <CustomBar
@@ -423,6 +437,8 @@ const Presentation: FunctionComponent = () => {
                                 slide={currentSlide}/>
                             : null}
                     </div>
+                    {isDemonstration &&
+                        <ReactionBar emotions={data.emotions}/>}
                 </div>
                 <QuizEditor
                     setCurrentSlide={setCurrentSlide}

@@ -5,17 +5,17 @@ import Popup from 'reactjs-popup';
 // import { useQRCode } from 'react-qrcodes';
 import { QRCode } from 'react-qrcode-logo';
 import { copyLink, copyQR } from "../../utils/utils";
+import { domain, site } from "../../config/api.config";
 
 type PresBarProps = {
     onDelete: Function;
     onCreate: Function;
     onDemonstrate: Function;
-    screenWidth: number;
-    screenHeight: number;
+    hash: string;
 }
 
 const PresentationBar = (props: PresBarProps) => {
-    const {onDelete, onCreate, onDemonstrate, screenWidth, screenHeight} = props;
+    const {onDelete, onCreate, onDemonstrate, hash} = props;
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
 
@@ -58,7 +58,7 @@ const PresentationBar = (props: PresBarProps) => {
                         <div className="crossIcon"/>
                     </div>
                     <div className="copyLink" onClick={(e) => {
-                        copyLink(window.location.href);
+                        copyLink(`${site}/demonstration/${hash}`);
                         (e.currentTarget.firstChild?.childNodes[1] as any).data = "Ссылка скопирована!";
                     }}>
                         <div className="bar-button copyButton">
@@ -74,7 +74,7 @@ const PresentationBar = (props: PresBarProps) => {
                             <div className="copyQrIcon"/>
                             Скопировать QR-код
                         </div>
-                        <QRCode value={window.location.href} />
+                        <QRCode value={`${site}/demonstration/${hash}`} />
                     </div>
                 </div>
             </Popup>

@@ -3,13 +3,15 @@ import './invitationBar.css';
 import Popup from 'reactjs-popup';
 import { QRCode } from "react-qrcode-logo";
 import { copyQR, copyLink } from "../../utils/utils";
+import { domain, site } from "../../config/api.config";
 
 type InvitationBarProps = {
     code: string;
+    hash: string;
 }
 
 const InvitationBar = (props: InvitationBarProps) => {
-    const {code} = props;
+    const {code, hash} = props;
     const copyTime = 2000;
     const [isCodeCopied, setCodeCopied] = useState(false);
 
@@ -20,6 +22,7 @@ const InvitationBar = (props: InvitationBarProps) => {
             <Popup
                 on="hover"
                 trigger={open => (
+                    // <div/>
                     <div className="invitationCode" onClick={(e) => {
                         e.stopPropagation();
                         copyLink(code);
@@ -38,7 +41,7 @@ const InvitationBar = (props: InvitationBarProps) => {
             <Popup
                 trigger={open => (
                     <div className="invitationQr"/>
-                )}
+                    )}
                 on="hover"
             >
                 <div className="copyQrInvitation">
@@ -50,7 +53,7 @@ const InvitationBar = (props: InvitationBarProps) => {
                             <div className="copyQrIcon"/>
                             Скопировать QR-код
                         </div>
-                        <QRCode value={window.location.href} />
+                        <QRCode value={`${site}/demonstration/${hash}`} />
                     </div>
                 </div>
             </Popup>

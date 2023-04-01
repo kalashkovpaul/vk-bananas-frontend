@@ -1,0 +1,45 @@
+.reactionBar {
+    width: 100%;
+    height: 60px;
+    background-color: white;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+.emotion {
+    width: 80px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.emotionIcon {
+    background-size: contain;
+    width: 50px;
+    height: 50px;
+}
+
+.likeIcon {
+    background-image: url('./like.png');
+}
+
+.loveIcon {
+    background-image: url('./love.png');
+}
+
+.laughterIcon {
+    background-image: url('./laugh.png');
+}
+
+.surpriseIcon {
+    background-image: url('./surprise.png');
+}
+
+.sadIcon {
+    background-image: url('./sad.png');
+}
+
+
+

@@ -7,10 +7,18 @@ const quizId = 1;
 let presData = {
     url: "/images/121/",
     slideNum: 12,
+    emotions: {
+        like: 1,
+        love: 2,
+        laughter: 3,
+        surprise: 4,
+        sad: 5,
+    },
     quizNum: 1,
     width: 600,
     height: 300,
     code: "1234",
+    hash: "a1b2c3d4",
     slides: [
         {
             idx: 0,
@@ -41,7 +49,49 @@ let presData = {
                     color: "red",
                 },
                 {
-                    idx: 0,
+                    idx: 1,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 2,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 3,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 4,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 5,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 6,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 7,
+                    option: "Отличное",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 8,
                     option: "Отличное",
                     votes: 5,
                     color: "blue",
@@ -53,16 +103,35 @@ let presData = {
         },
         {
             idx: 2,
-            name: "",
-            kind: "slide",
-            type: "",
+            name: "example.png",
+            kind: "question",
+            type: "doughnut",
+            question: "Какое приветствие лучше всех?",
             quizId: 0,
             fontSize: "",
-            question: "",
-            votes: [],
-            background: "",
-            fontColor: "",
-            graphColor: "",
+            votes: [
+                {
+                    idx: 0,
+                    option: "Привет",
+                    votes: 2,
+                    color: "red",
+                },
+                {
+                    idx: 1,
+                    option: "Алоха",
+                    votes: 5,
+                    color: "blue",
+                },
+                {
+                    idx: 2,
+                    option: "*молчание*",
+                    votes: 5,
+                    color: "blue",
+                },
+            ],
+            background: "white",
+            fontColor: "#000000",
+            graphColor: "#000000",
         },
         {
             idx: 3,
@@ -288,17 +357,27 @@ const startServer = (app) => {
         });
     });
 
-    app.post("/api/v1/demonstration/hash", function (req, res) {
-        const code = req.body.code;
-        if (code === "1234") {
-            res.status(200).json({
-                hash: "a1b2c3d4"
-            });
-        } else {
-            res.status(404).json({});
-        }
+    app.get("/api/v1/presentation/view/join/1234", function (req, res) {
+        res.status(200).json({
+            hash: "a1b2c3d4"
+        });
     });
 
+    let index = 1;
+    app.get("/api/v1/presentation/view/a1b2c3d4", function(req, res) {
+        index++;
+        // presData.slides[1].votes[0].votes++;
+        if (index > 3)
+            index = 0;
+        res.json({
+            viewMode: true,
+            width: presData.width,
+            height: presData.height,
+            url: presData.url,
+            emotions: presData.emotions,
+            slide: presData.slides[index]
+        });
+    });
 
 }
 

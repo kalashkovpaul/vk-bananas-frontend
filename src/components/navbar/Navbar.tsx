@@ -55,14 +55,14 @@ const Navbar = () => {
             const value = input.value;
             if (value && value.length === 4) {
                 console.log("JOIN: ", value);
-                fetch(`${api.getHash}`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        code: value
-                    }),
-                    headers: {
-                        'content-type': 'application/json'
-                    }
+                fetch(`${api.getHash}/${value}`, {
+                    method: 'GET',
+                    // body: JSON.stringify({
+                    //     code: value
+                    // }),
+                    // headers: {
+                    //     'content-type': 'application/json'
+                    // }
                 }).then((response) => {
                     console.log(response.status);
                     return response.status === 404 ? {} : response.json();

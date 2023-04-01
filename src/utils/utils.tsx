@@ -66,6 +66,18 @@ export function calculateScale(isFullscreen=false, sw: number, sh: number, w: nu
     }
 }
 
+export function calculateDemonstrationScale(sw: number, sh: number, w: number, h: number) {
+    const screenPercent = sw > 1000 ? 0.6 : 0.8;
+    const aspectRatio = w / h;
+    let width = true ? screenPercent * sw : screenPercent * sw - 40;
+    let height = width / aspectRatio;
+    return {
+        sWidth: width,
+        sHeight: height
+    }
+}
+
+
 export function calculateMiniScale(sw: number, sh: number, w: number, h: number) {
     let screenPercent = sw < 600 ? 0.86 : 0.15 * sw > 200 ? 0.115 : 154/sw;
     const aspectRatio = w / h;

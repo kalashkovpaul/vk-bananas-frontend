@@ -37,9 +37,26 @@ export type SingleSlideData = {
     fontSize: string;
 }
 
+export type Emotions = {
+    like: number;
+    love: number;
+    laughter: number;
+    surprise: number;
+    sad: number;
+}
+
 export type PresData = {
+    name: string;
+    emotions: {
+        like: number;
+        love: number;
+        laughter: number;
+        surprise: number;
+        sad: number;
+    }
     url: string,
     code: string,
+    hash: string,
     slideNum: number,
     quizNum: number,
     width: number,
