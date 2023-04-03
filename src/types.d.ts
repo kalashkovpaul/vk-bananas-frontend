@@ -122,7 +122,7 @@ export type registerData = {
 }
 
 export type authcheckResponse = {
-    id: string
+    status: boolean;
 }
 
 export type userData = {

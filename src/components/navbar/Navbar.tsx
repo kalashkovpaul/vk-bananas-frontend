@@ -6,6 +6,7 @@ import { ReactComponent as ReactSeoLogoSvg } from '../assets/img/ReactSeoLogo.sv
 import './navbar.css';
 import { UserContext } from '../../App';
 import { api } from '../../config/api.config';
+import { authModule } from '../../modules/auth';
 
 const Navbar = () => {
     const {userData, setUserData} = useContext(UserContext);
@@ -47,6 +48,7 @@ const Navbar = () => {
 
     useEffect(() => {
         addEventListenerToVerticalMenu();
+        authModule.setUser(setUserData);
     }, [])
 
     const onJoin = () => {

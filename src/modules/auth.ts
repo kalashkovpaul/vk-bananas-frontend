@@ -3,6 +3,7 @@ import type { authcheckResponse, userData } from "../types";
 
 class Auth {
     public user: userData | null;
+    public setUser: Function = () => {};
 
     constructor() {
         this.user = null;
@@ -52,20 +53,23 @@ class Auth {
                 return null;
             }
             const parsed = responseCheckAuth as authcheckResponse;
-            if (!parsed.id) {
+            if (!parsed.status) {
                 window.localStorage.removeItem("user");
                 // this.eventBus.emit(events.auth.notLoggedIn);
                 return null;
             }
-            const responseCurrentUser = await this.getCurrentUser(parsed.id);
+            const responseCurrentUser = window.localStorage.getItem("user");
             if (!responseCurrentUser) {
+                console.error("failed to retrieve user from localStorage :(");
                 return;
             }
-            this.user = responseCurrentUser.parsedResponse as userData;
-            if (this.user) {
+            this.user = JSON.parse(responseCurrentUser);
+            this.setUser(this.user);
+            // this.user = responseCurrentUser.parsedResponse as userData;
+            // if (this.user) {
                 window.localStorage.setItem("user", JSON.stringify(this.user));
                 // this.eventBus.emit(events.auth.gotUser);
-            }
+            // }
         } catch (err) {
             console.error("err");
             // this.eventBus.emit(events.app.errorPage);
@@ -88,6 +92,10 @@ class Auth {
             // this.lastEvent = events.auth.gotUser;
         }
     };
+
+    setUserFunction(f: Function) {
+        this.setUser = f;
+    }
 
     // logoutUser = () => {
     //     logout().then((response) => {
