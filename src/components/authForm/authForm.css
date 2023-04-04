@@ -214,6 +214,7 @@
     white-space: nowrap;
     will-change: box-shadow,transform;
     font-size: 22px;
+    text-align: center;
 }
 
 .authBtnInput:focus {

@@ -95,6 +95,7 @@ class Auth {
 
     setUserFunction(f: Function) {
         this.setUser = f;
+        this.setUser(this.user);
     }
 
     // logoutUser = () => {

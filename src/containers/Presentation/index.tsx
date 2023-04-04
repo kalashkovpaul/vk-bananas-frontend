@@ -59,7 +59,7 @@ export function useWindowSize() {
 
 const Presentation: FunctionComponent = () => {
     const params = useParams();
-    const presId = params.id;
+    const presId = params.id ? +params.id : 0;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
@@ -149,7 +149,6 @@ const Presentation: FunctionComponent = () => {
         cur.current = currentSlide;
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
-                // TODO show image
                 slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
                 // slideRef.current.style.width = `${currentSlide.width}px`;
                 // slideRef.current.style.height = `${currentSlide.height}px`;
@@ -162,8 +161,6 @@ const Presentation: FunctionComponent = () => {
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            // slideRef.current.style.width = null as any;
-            // slideRef.current.style.height = null as any;
             if (currentIndex === previousSlide.idx)
                 onSlideChange();
         }
@@ -172,10 +169,6 @@ const Presentation: FunctionComponent = () => {
     useEffect(() => {
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
-            // body: JSON.stringify({
-            //     creatorId: 1
-            // }),
-
             headers: {
 
             }
@@ -183,7 +176,6 @@ const Presentation: FunctionComponent = () => {
             return data ? data.json() : {} as any
         })
         .then((presdata) => {
-            // console.log("ONCE???");
             const newdata = presdata?.pres;
             if (newdata) {
                 if (newdata.slides?.length) {
@@ -249,7 +241,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteCreate}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: quizId,
                 idx: index,
                 option: "",
@@ -268,7 +259,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteDelete}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 idx: index,
             }),
@@ -284,7 +274,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 votes: newoptions,
             }),
@@ -300,7 +289,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.quizUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 presId: presId,
                 idx: currentIndex,
@@ -377,7 +365,22 @@ const Presentation: FunctionComponent = () => {
         if (slidebox) {
             slidebox.requestFullscreen();
         }
-        fetch(`${api.showGo}/${presId}/show/go/${currentIndex}`, {
+        showGo();
+    }
+
+    const showGo = () => {
+        if (isDemonstration) {
+            fetch(`${api.showGo}/${presId}/show/go/${currentIndex}`, {
+                method: 'PUT',
+            })
+            .catch(e => {
+                console.error(e);
+            });
+        }
+    }
+
+    const showStop = () => {
+        fetch(`${api.showStop}/${presId}/show/stop`, {
             method: 'PUT',
         })
         .catch(e => {
@@ -391,6 +394,7 @@ const Presentation: FunctionComponent = () => {
             window.screen.orientation.lock("landscape").then().catch(e => {});
         } else {
             window.screen.orientation.unlock();
+            showStop();
             document.getElementById("popup-root")?.remove();
         }
         setDemonstration(o => !o);
@@ -420,6 +424,7 @@ const Presentation: FunctionComponent = () => {
                     currentSlide={currentSlide}
                     width={miniSlideWidth}
                     height={miniSlideHeight}
+                    showGo={showGo}
                 />
                 <div className="slideBox">
                     <div className="slide" style={{

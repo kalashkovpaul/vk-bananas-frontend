@@ -9,12 +9,14 @@ type SidebarProps = {
     currentSlide: SingleSlideData;
     width: number;
     height: number;
+    showGo: Function;
 }
 
 const Sidebar = (props: SidebarProps) => {
-    const {data, setCurrentIndex, currentSlide, width, height} = props;
+    const {data, setCurrentIndex, currentSlide, width, height, showGo} = props;
     const [curIndex, setLocalCurIndex] = useState<number>(0);
     const [slides, setSlides]= useState<Array<React.ReactElement>>([]);
+
 
     const enterHandler = (e: any) => {
         if (e.key === "Enter") {
@@ -32,22 +34,26 @@ const Sidebar = (props: SidebarProps) => {
             if (isFullscreen && curIndex < slides.length - 1) {
                 setCurrentIndex(curIndex + 1);
                 setLocalCurIndex(curIndex + 1);
+                showGo(curIndex + 1);
             }
         } else if (e.key === "ArrowDown" && curIndex < slides.length - 1) {
             e.preventDefault();
             setCurrentIndex(curIndex + 1);
             setLocalCurIndex(curIndex + 1);
+            showGo(curIndex + 1);
         } else if (e.key === "ArrowLeft") {
             const slide = document.querySelector(".slide") as HTMLDivElement;
             const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
             if (isFullscreen && curIndex > 0) {
                 setCurrentIndex(curIndex - 1);
                 setLocalCurIndex(curIndex - 1);
+                showGo(curIndex - 1);
             }
         } else if (e.key === "ArrowUp" && curIndex > 0) {
             e.preventDefault();
             setCurrentIndex(curIndex - 1);
             setLocalCurIndex(curIndex - 1);
+            showGo(curIndex - 1);
         }
     }
 
@@ -58,10 +64,12 @@ const Sidebar = (props: SidebarProps) => {
             if (e.offsetX < window.innerWidth / 2 && curIndex > 0) {
                 setCurrentIndex(curIndex - 1);
                 setLocalCurIndex(curIndex - 1);
+                showGo(curIndex - 1);
             } else if (e.offsetX > window.innerWidth / 2 &&
                 curIndex < slides.length - 1) {
                     setCurrentIndex(curIndex + 1);
                     setLocalCurIndex(curIndex + 1);
+                    showGo(curIndex + 1);
                 }
         }
     }

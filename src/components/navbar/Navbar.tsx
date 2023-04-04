@@ -48,7 +48,7 @@ const Navbar = () => {
 
     useEffect(() => {
         addEventListenerToVerticalMenu();
-        authModule.setUser(setUserData);
+        authModule.setUserFunction(setUserData);
     }, [])
 
     const onJoin = () => {
@@ -90,6 +90,8 @@ const Navbar = () => {
         }).catch(e => {
             console.error(e);
         });
+        authModule.user = null;
+        window.localStorage.removeItem("user");
     }
 
     if (location.pathname.includes("demonstration")) {

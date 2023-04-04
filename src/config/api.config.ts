@@ -29,5 +29,5 @@ export const api = {
     getHash: `${prefix}/presentation/view/join`,
     getDemonstration: `${prefix}/presentation/view`,
     showGo: `${prefix}/presentation`,
-
+    showStop: `${prefix}/presentation`,
 }
