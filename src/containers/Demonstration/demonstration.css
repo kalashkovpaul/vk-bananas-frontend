@@ -21,6 +21,8 @@
     border-radius: 4px;
     border: solid 1px #ccc;
     justify-self: center;
+    background-size: contain;
+    box-sizing: content-box;
 }
 
 .reactions {
@@ -53,9 +55,19 @@
     }
 }
 
+.demonstrationSorry {
+    grid-area: slide;
+    font-size: 30px;
+    text-align: center;
+}
+
 @media (max-width: 800px) {
     .pollQuestion {
         font-size: 20px
+    }
+
+    .demonstrationSorry {
+        font-size: 20px;
     }
 }
 

@@ -56,8 +56,8 @@ const UploadFileButton = () => {
           return;
         }
         let fileType = (file.name.match(/\.[0-9a-z]+$/i) as any)[0];
-        if (fileType !== '.pptx') {
-            createError("Ошибка", "Файлы презентации должны иметь расширение pptx");
+        if (fileType !== '.pptx' && fileType !== '.pdf') {
+            createError("Ошибка", "Файлы презентации должны иметь расширение pptx или pdf");
             setLoading(false);
             return;
         }

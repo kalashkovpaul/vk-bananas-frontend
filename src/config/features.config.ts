@@ -5,21 +5,21 @@ export type Feature = Readonly<{
 
 export const Features: Feature[] = [
   {
-    description: 'Собрали команду'
+    description: 'Прикрутили авторизацию и регистрацию'
   },
   {
-    description: 'Придумали классное название'
+    description: 'Научились создавать комнаты для презентаций'
   },
   {
-    description: 'Сделали первую страничку с редактированием презентации',
+    description: 'Научились загружать pdf презентации',
     // package_name: 'react-helmet-async'
   },
   {
-    description: 'Научились загружать pptx презентации',
+    description: 'Сделали возможным подключение к демонстрации',
     // package_name: 'react-ga'
   },
   {
-    description: 'Научились отображать опросы',
+    description: 'Адаптивность! Мы доступны на телефонах!',
     // package_name: 'react-snap'
   }
 ];

@@ -47,6 +47,7 @@
     flex-direction: column;
     /* border-radius: 20px; */
     box-shadow: rgba(0, 0, 0, 0.56) 0px 20px 70px 4px;
+    background-size: contain;
 }
 
 
@@ -90,6 +91,10 @@
 
 .slideBox:-webkit-full-screen .chart {
     top: 130px;
+}
+
+.slideBox:fullscreen .slide {
+    margin: 0;
 }
 
 .piechart {

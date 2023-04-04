@@ -365,12 +365,12 @@ const Presentation: FunctionComponent = () => {
         if (slidebox) {
             slidebox.requestFullscreen();
         }
-        showGo();
+        showGo(currentIndex);
     }
 
-    const showGo = () => {
+    const showGo = (index: number) => {
         if (isDemonstration) {
-            fetch(`${api.showGo}/${presId}/show/go/${currentIndex}`, {
+            fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
             })
             .catch(e => {

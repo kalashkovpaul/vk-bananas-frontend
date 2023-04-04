@@ -35,6 +35,7 @@ const Demonstration: FunctionComponent = () => {
     const [slideHeight, setSlideHeight] = useState(0);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
+    const [viewMode, setViewMode] = useState(false);
     const [url, setUrl] = useState("");
     const [emotions, setEmotions] = useState<Emotions>({
         like: 0,
@@ -54,6 +55,7 @@ const Demonstration: FunctionComponent = () => {
             setWidth(slidedata.width);
             setHeight(slidedata.height);
             setUrl(slidedata.url);
+            setViewMode(slidedata.viewMode)
             setEmotions(slidedata.emotions);
             setCurrentSlide(slidedata.slide);
         })
@@ -119,11 +121,15 @@ const Demonstration: FunctionComponent = () => {
                 <NavLink className="invitationLogoImg" to="/"/>
                 <div className="invitationLogoText">Kinda Slides</div>
             </div>
-            {currentSlide?.kind !== "question" &&
+            {currentSlide?.kind !== "question" && viewMode &&
             <div className="demonstrationSlide" style={{
                         height: `${slideHeight}px`,
                         width: `${slideWidth}px`
                     }} ref={slideRef}>
+            </div>}
+            {!viewMode &&
+            <div className="demonstrationSorry">
+                Данная презетация сейчас не демонстрируется!
             </div>}
             {currentSlide?.kind === "question" && currentSlide.type ?
                 // <CustomBar
