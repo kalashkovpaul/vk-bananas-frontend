@@ -148,7 +148,7 @@
     justify-content: center;
     white-space: nowrap;
     overflow-x: hidden;
-    background-color: #20232a;
+    background-color: #fff;
     left: 0;
     border-radius: 0 0 10px 0;
     padding: 8px;
@@ -167,7 +167,7 @@
 .menuBtn {
     text-decoration: none;
     transition: 0.1s;
-    color: white;
+    color: black;
 }
 
 .menuBtn:hover {

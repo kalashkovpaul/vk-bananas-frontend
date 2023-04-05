@@ -76,11 +76,14 @@ const Demonstration: FunctionComponent = () => {
 
     useEffect(() => {
         getInfo();
-        setInterval(getInfo, updateTime);
+        const id = setInterval(getInfo, updateTime);
         const bubblyButtons = document.getElementsByClassName("clickable");
 
         for (var i = 0; i < bubblyButtons.length; i++) {
             bubblyButtons[i].addEventListener('click', animateButton, false);
+        }
+        return () => {
+            clearInterval(id);
         }
     }, []);
 
@@ -129,7 +132,7 @@ const Demonstration: FunctionComponent = () => {
             </div>}
             {!viewMode &&
             <div className="demonstrationSorry">
-                Данная презетация сейчас не демонстрируется!
+                Данная презентация сейчас не демонстрируется!
             </div>}
             {currentSlide?.kind === "question" && currentSlide.type ?
                 // <CustomBar

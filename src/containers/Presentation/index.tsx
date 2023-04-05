@@ -60,6 +60,7 @@ export function useWindowSize() {
 const Presentation: FunctionComponent = () => {
     const params = useParams();
     const presId = params.id ? +params.id : 0;
+    const updateTime = 1000;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
@@ -87,6 +88,7 @@ const Presentation: FunctionComponent = () => {
     const [slideHeight, setSlideHeight] = useState(0);
     const [miniSlideWidth, setMiniSlideWidth] = useState(0);
     const [miniSlideHeight, setMiniSlideHeight] = useState(0);
+    const [timerId, setTimerId] = useState<number>(0);
 
     const [isDemonstration, setDemonstration] = useState(false);
 
@@ -123,7 +125,7 @@ const Presentation: FunctionComponent = () => {
             } else if (value) {
                 newoptions[index] = {
                     option: value,
-                    votes: 2,
+                    votes: 0,
                     color: color,
                     idx: index,
                 }
@@ -145,6 +147,22 @@ const Presentation: FunctionComponent = () => {
         });
     };
 
+    const checkVotes = () => {
+        fetch(`${api.getDemonstration}/${data.hash}`, {
+            method: 'GET',
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((slidedata) => {
+            if (slidedata.viewMode) {
+                setCurrentSlide(slidedata.slide);
+            }
+        })
+        .catch(e => {
+            console.error(e);
+        });
+    }
+
     useEffect(() => {
         cur.current = currentSlide;
         if (currentSlide?.kind === "slide" && slideRef.current) {
@@ -158,11 +176,17 @@ const Presentation: FunctionComponent = () => {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
             }
+            clearInterval(timerId)
+            setTimerId(0);
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            if (currentIndex === previousSlide.idx)
+            if (currentIndex === previousSlide.idx && !isDemonstration)
                 onSlideChange();
+            if (isDemonstration && timerId === 0) {
+                const id = window.setInterval(checkVotes, updateTime);
+                setTimerId(id);
+            }
         }
     }, [currentSlide]);
 
@@ -365,18 +389,17 @@ const Presentation: FunctionComponent = () => {
         if (slidebox) {
             slidebox.requestFullscreen();
         }
-        showGo(currentIndex);
     }
 
     const showGo = (index: number) => {
-        if (isDemonstration) {
+        // if (isDemonstration) {
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
             })
             .catch(e => {
                 console.error(e);
             });
-        }
+        // }
     }
 
     const showStop = () => {
@@ -387,6 +410,12 @@ const Presentation: FunctionComponent = () => {
             console.error(e);
         });
     }
+
+    useEffect(() =>{
+        if (isDemonstration) {
+            showGo(currentIndex);
+        }
+    }, [isDemonstration]);
 
     const screenChangeHandler = (e: any) => {
         if (!isDemonstration) {

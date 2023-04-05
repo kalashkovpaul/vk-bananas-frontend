@@ -8,7 +8,7 @@ export function createError(title: string, subTitle: string) {
     setTimeout(() => {
         root?.unmount();
         root = null;
-    }, 2000);
+    }, 4000);
 
     let a =
         <Alert
@@ -16,7 +16,7 @@ export function createError(title: string, subTitle: string) {
             subTitle={subTitle}
             iconName="exclamation-circle"
             alertBackgroundColor="#e93e60"
-            alertAnimation="rubberBand_animation 1s, 1s dissapear 1s"
+            alertAnimation="rubberBand_animation 1s, 2s dissapear 2s"
         />;
     let el = document.getElementById("alertWrapper");
     if (root) {

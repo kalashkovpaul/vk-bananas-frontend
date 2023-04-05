@@ -30,4 +30,5 @@ export const api = {
     getDemonstration: `${prefix}/presentation/view`,
     showGo: `${prefix}/presentation`,
     showStop: `${prefix}/presentation`,
+    votePoll: `${prefix}/quiz/vote/poll`
 }

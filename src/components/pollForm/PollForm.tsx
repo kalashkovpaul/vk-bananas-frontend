@@ -3,6 +3,7 @@ import type { SingleSlideData } from "../../types";
 import './pollForm.css';
 // import Poll from './poll';//'react-polls';//'./poll';
 import { LeafPoll } from 'react-leaf-polls'
+import { api } from "../../config/api.config";
 
 type PollFormProps = {
     currentSlide: SingleSlideData;
@@ -48,10 +49,26 @@ const PollForm = (props: PollFormProps) => {
         }
     }, [currentSlide]);
 
+    const voteHandler = () => {
+        fetch(`${api.votePoll}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                quizId: currentSlide.quizId,
+                idx: choice,
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
     const onSubmit = (e: any) => {
         e.preventDefault();
         if (choice < 0) return;
         // TODO fetch to server
+        voteHandler();
         const button = document.querySelector(".submitBtn") as HTMLButtonElement;
         button.classList.add("disabledBtn");
         const poll = document.querySelector(".poll") as HTMLFormElement;
