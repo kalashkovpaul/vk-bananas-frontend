@@ -18,3 +18,9 @@
         "D0 D0 D0 D1 D1 D1 D1 D1 D1 D2 D2 D2";
     justify-items: center;
 }
+
+@media (max-width: 450px) {
+    .loginPage {
+        row-gap: 0;
+    }
+}

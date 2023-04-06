@@ -1,0 +1,98 @@
+.invitationBar {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background-color: #f6f6f6;
+    display: grid;
+    grid-template-areas:
+        "left text code margin qr empty logo";
+    grid-template-columns: minmax(0, 440px) 460px 90px 40px 60px minmax(90px, 240px) 200px;
+}
+
+.invitationText {
+    grid-area: text;
+    font-size: 27px;
+    line-height: 50px;
+    color: #313131;
+}
+
+.invitationCode {
+    grid-area: code;
+    font-size: 36px;
+    line-height: 50px;
+    font-weight: bolder;
+    color: #313131;
+    cursor: pointer;
+}
+
+.invitationLogo {
+    grid-area: logo;
+    display: flex;
+    align-items: center;
+}
+
+.invitationLogoImg {
+    background-image: url('../navbar/statistics.png');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+}
+
+.invitationLogoText {
+    font-size: 24px;
+    margin-left: 10px;
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+[role="tooltip"].popup-content {
+    background-color: #282e3e;
+    padding: 8px;
+    border-radius: 12px;
+    top: 0 !important;
+}
+
+[role="tooltip"] .popup-arrow {
+    color: #282e3e;
+}
+
+.copyCodeInvitation {
+    color: white;
+    width: 240px;
+    text-align: center;
+}
+
+.invitationQr {
+    grid-area: qr;
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-image: url('./qr.png');
+}
+
+.invitationBar #react-qrcode-logo {
+    width: 400px !important;
+    height: 400px !important;
+    margin: 10px;
+}
+
+@media (max-width: 900px) {
+    .invitationBar {
+        grid-template-areas:
+        "left text code margin";
+        grid-template-columns: minmax(0, 220px) 460px 90px minmax(100px, 400px);
+    }
+
+    .invitationLogo {
+        display: none;
+    }
+
+    .invitationQr {
+        display: none;
+    }
+}
+
+.invitationBar #popup-root {
+    position: absolute;
+    top: 60px;
+}

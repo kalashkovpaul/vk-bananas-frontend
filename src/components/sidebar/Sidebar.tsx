@@ -5,24 +5,115 @@ import { domain, prefix } from '../../config/api.config';
 
 type SidebarProps = {
     setCurrentIndex: Function;
-    data: PresData
+    data: PresData;
+    currentSlide: SingleSlideData;
+    width: number;
+    height: number;
+    showGo: Function;
 }
 
 const Sidebar = (props: SidebarProps) => {
-    const {data, setCurrentIndex} = props;
+    const {data, setCurrentIndex, currentSlide, width, height, showGo} = props;
     const [curIndex, setLocalCurIndex] = useState<number>(0);
-    let slides: Array<React.ReactElement> = [];
+    const [slides, setSlides]= useState<Array<React.ReactElement>>([]);
 
-    const createMiniSlide = (slideData: SingleSlideData) => {
+
+    const enterHandler = (e: any) => {
+        if (e.key === "Enter") {
+            if (curIndex < data.slides.length - 1) {
+                setCurrentIndex(curIndex + 1);
+                setLocalCurIndex(curIndex + 1);
+            }
+        }
+    }
+
+    const arrowHandler = (e: KeyboardEvent) => {
+        if (e.key === "ArrowRight") {
+            const slide = document.querySelector(".slide") as HTMLDivElement;
+            const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+            if (isFullscreen && curIndex < slides.length - 1) {
+                setCurrentIndex(curIndex + 1);
+                setLocalCurIndex(curIndex + 1);
+                showGo(curIndex + 1);
+            }
+        } else if (e.key === "ArrowDown" && curIndex < slides.length - 1) {
+            e.preventDefault();
+            setCurrentIndex(curIndex + 1);
+            setLocalCurIndex(curIndex + 1);
+            showGo(curIndex + 1);
+        } else if (e.key === "ArrowLeft") {
+            const slide = document.querySelector(".slide") as HTMLDivElement;
+            const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+            if (isFullscreen && curIndex > 0) {
+                setCurrentIndex(curIndex - 1);
+                setLocalCurIndex(curIndex - 1);
+                showGo(curIndex - 1);
+            }
+        } else if (e.key === "ArrowUp" && curIndex > 0) {
+            e.preventDefault();
+            setCurrentIndex(curIndex - 1);
+            setLocalCurIndex(curIndex - 1);
+            showGo(curIndex - 1);
+        }
+    }
+
+    const clickHandler = (e: MouseEvent) => {
+        const slide = document.querySelector(".slide") as HTMLDivElement;
+        const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+        if (isFullscreen) {
+            if (e.offsetX < window.innerWidth / 2 && curIndex > 0) {
+                setCurrentIndex(curIndex - 1);
+                setLocalCurIndex(curIndex - 1);
+                showGo(curIndex - 1);
+            } else if (e.offsetX > window.innerWidth / 2 &&
+                curIndex < slides.length - 1) {
+                    setCurrentIndex(curIndex + 1);
+                    setLocalCurIndex(curIndex + 1);
+                    showGo(curIndex + 1);
+                }
+        }
+    }
+
+    const addControlListeners = () => {
+        document.addEventListener("keypress", enterHandler);
+        document.addEventListener("click", clickHandler);
+        document.addEventListener("keydown", arrowHandler);
+    }
+
+    const removeControlListeners = () => {
+        document.removeEventListener("keypress", enterHandler);
+        document.removeEventListener("click", clickHandler);
+        document.removeEventListener("keydown", arrowHandler);
+    }
+
+    const createMiniSlide = (slideData: SingleSlideData, w: number, h: number) => {
         // TODO src
         return (
-            <div key={slideData.idx} className={`miniSlide `} onClick={() => {
-                setCurrentIndex(slideData.idx);
-                setLocalCurIndex(slideData.idx);
-            }}>
+            <div
+                key={slideData.idx}
+                className={`miniSlide`}
+                onClick={() => {
+                    setCurrentIndex(slideData.idx);
+                    setLocalCurIndex(slideData.idx);
+                }}
+                style={{
+                    height: `${h + 20}px`
+                }}
+            >
                 <div className="miniSlideNumber">{(slideData.idx + 1)}</div>
-                <div className="miniSlideImage">
-                    {slideData.name && <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/>}
+                <div className="miniSlideImage"
+                    style={slideData.kind === "question" ?
+                    {
+                        backgroundColor: slideData.background,
+                        width: `${w}px`,
+                        height: `${h}px`,
+                    } :
+                    {
+                        width: `${w}px`,
+                        height: `${h}px`,
+                    }}>
+                    {slideData.kind === "question" ?  <div className="miniSlideQuestion">{slideData.question}</div> :
+                    slideData.name ? <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/> : null}
                 </div>
             </div>
 
@@ -52,11 +143,22 @@ const Sidebar = (props: SidebarProps) => {
             setCurrentIndex(curIndex + 1);
             setLocalCurIndex(curIndex + 1);
         }
-    }, [data])
+    }, [data]);
 
-    data.slides.forEach((slide) => {
-        slides.push(createMiniSlide(slide))
-    });
+    useEffect(() => {
+        let s = slides.slice(0);
+        s[currentSlide.idx] = createMiniSlide(currentSlide, width, height);
+        setSlides(s);
+    }, [currentSlide, width, height]);
+
+    useEffect(() => {
+        let s: Array<React.ReactElement> = [];
+        data.slides.forEach((slide) => {
+            s.push(createMiniSlide(slide, width, height))
+        });
+        setSlides(s);
+    }, [data, width, height]);
+
 
     useEffect(() => {
         const previousActive = document.getElementsByClassName("activeSlide");
@@ -68,6 +170,14 @@ const Sidebar = (props: SidebarProps) => {
             sidebar.children[curIndex].classList.add("activeSlide");
         }
     }, [curIndex, slides]);
+
+    useEffect(() => {
+        addControlListeners();
+
+        return () => {
+            removeControlListeners();
+        }
+    }, [slides]);
 
     return (
         <div

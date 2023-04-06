@@ -26,9 +26,12 @@ ChartJS.register(
 const labels = [''];
 
 export const CustomBar = (props: CustomBarProps) => {
-  const {slide, kind} = props;
+  const {slide, kind, width, height} = props;
   const [updateMode, setUpdateMode] = useState<UpdateModeType>("default");
   const chartRef = useRef<any>(null);
+  const root = document.querySelector(':root') as HTMLDivElement;
+  root?.style.setProperty('--graph-width', `${width}px`);
+  root?.style.setProperty('--graph-height', `${height}px`);
 
   const verticalOptions = {
     responsive: true,

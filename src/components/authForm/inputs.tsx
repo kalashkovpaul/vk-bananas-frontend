@@ -15,6 +15,7 @@ export const inputElements: authInputElements = {
             id={authConfig.emailInput.name}
             placeholder={authConfig.emailInput.placeholder}
             className="textInput"
+            autoComplete="email"
         />
         <div className={`authInputHeadError ${authConfig.emailInput.name}`}/>
     </div>,
@@ -31,6 +32,7 @@ export const inputElements: authInputElements = {
             id={authConfig.nameInput.name}
             placeholder={authConfig.nameInput.placeholder}
             className="textInput"
+            autoComplete="name"
         />
         <div className={`authInputHeadError ${authConfig.nameInput.name}`}/>
     </div>,
@@ -47,6 +49,7 @@ export const inputElements: authInputElements = {
             id={authConfig.passwordInput.name}
             placeholder={authConfig.passwordInput.placeholder}
             className="textInput"
+            autoComplete="new-password"
         />
         <div className={`authInputHeadError ${authConfig.passwordInput.name}`}/>
     </div>,
@@ -63,6 +66,7 @@ export const inputElements: authInputElements = {
             id={authConfig.repeatePasswordInput.name}
             placeholder={authConfig.repeatePasswordInput.placeholder}
             className="textInput"
+            autoComplete="new-password"
         />
         <div className={`authInputHeadError ${authConfig.repeatePasswordInput.name}`}/>
     </div>,

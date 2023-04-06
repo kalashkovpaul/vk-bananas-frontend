@@ -13,3 +13,8 @@
     background-size: contain;
     animation: rotation infinite 10s linear
 }
+
+.centered {
+    justify-content: center;
+    text-align: center;
+}

@@ -29,7 +29,6 @@ const OptionInput = (props: OptionProps) => {
                 name="option"
                 onChange={(e) => {
                     setOption(e.target.value);
-                    console.log(e.target.value, curColor);
                     onChange(trueIndex, e.target.value, curColor);
                 }}
                 placeholder="Прекрасное!"

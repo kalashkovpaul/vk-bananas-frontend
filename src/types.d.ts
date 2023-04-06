@@ -27,8 +27,6 @@ export type SingleSlideData = {
     idx: number;
     name: string;
     quizId: number;
-    width: number;
-    height: number;
     kind: "slide" | "question";
     type: "" | BarKind;
     question: string;
@@ -39,10 +37,30 @@ export type SingleSlideData = {
     fontSize: string;
 }
 
+export type Emotions = {
+    like: number;
+    love: number;
+    laughter: number;
+    surprise: number;
+    sad: number;
+}
+
 export type PresData = {
+    name: string;
+    emotions: {
+        like: number;
+        love: number;
+        laughter: number;
+        surprise: number;
+        sad: number;
+    }
     url: string,
+    code: string,
+    hash: string,
     slideNum: number,
     quizNum: number,
+    width: number,
+    height: number,
     slides: Array<SingleSlideData>;
 };
 
@@ -63,6 +81,8 @@ type BarKind = "horizontal"|"vertical"|"pie"|"cloud"|"doughnut";
 type CustomBarProps = {
     slide: SingleSlideData,
     kind: BarKind,
+    width: number,
+    height: number,
 };
 
 type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;
@@ -87,3 +107,28 @@ export type authInputElements = {
     passwordInput: JSX.Elementut,
     repeatePasswordInput: JSX.Elementput
 }
+
+export type loginData = {
+    email: string,
+    password: string,
+}
+
+export type registerData = {
+    email: string,
+    password: string,
+    repeatpassword: string,
+    username: string,
+    img: string,
+}
+
+export type authcheckResponse = {
+    status: boolean;
+}
+
+export type userData = {
+    id: string,
+    username: string,
+    email: string,
+    imgsrc: string,
+}
+

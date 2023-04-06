@@ -5,13 +5,17 @@ Deploy: http://185.241.192.112/
 ## **Team Bananas**
 
 Калашков Павел https://github.com/kalashkovpaul
+
 Мужецкий Антон https://github.com/muzhts-anton
+
 Гасанов Марат https://github.com/gassannov
 
 #### **Репозитории**
 
 Frontend: https://github.com/kalashkovpaul/vk-bananas-frontend
+
 Backend: https://github.com/muzhts-anton/Bananchiki_back
+
 Presentation parsing: https://github.com/gassannov/presentation_parce
 
 ## **Описание проекта**

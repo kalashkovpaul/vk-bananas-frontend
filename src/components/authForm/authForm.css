@@ -14,6 +14,7 @@
         "B0 B1 B1 B1 B1 B2"
         "C0 C1 C1 C1 C1 C2";
     grid-auto-columns: minmax(0, 136px);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
 }
 
 .loginInvitation {
@@ -23,7 +24,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 65px;
+    height: 64px;
+    font-weight: 400;
 }
 
 .loginForm {
@@ -31,7 +33,7 @@
     width: 100%;
     height: 100%;
     display: grid;
-    gap: 20px;
+    /* gap: 20px; */
     grid-template-areas:
         "A0 A0 A0 A0"
         "B0 B0 B0 B0"
@@ -45,11 +47,11 @@
     padding: 16px;
     align-items: center;
     border-width: thin;
-    border-style: solid;
+    /* border-style: solid; */
     background: rgb(240 240 240 / 83%);
     border-radius: 10px;
     display: grid;
-    gap: 20px;
+    /* gap: 20px; */
     grid-template-areas:
         "A0 A0 A0 A0 A0 A0"
         "B0 B1 B1 B1 B1 B2"
@@ -59,6 +61,7 @@
         "B0 B1 B1 B1 B1 B2"
         "C0 C1 C1 C1 C1 C2";
     grid-auto-columns: minmax(0, 136px);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
 }
 
 .signupInvitation {
@@ -68,7 +71,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 65px;
+    height: 64px;
+    font-weight: 400;
 }
 
 .signupForm {
@@ -76,7 +80,7 @@
     width: 100%;
     height: 100%;
     display: grid;
-    gap: 20px;
+    /* gap: 20px; */
     grid-template-areas:
         "Z0 Z0 Z0 Z0"
         "A0 A0 A0 A0"
@@ -102,7 +106,7 @@
     font-size: 1.5em;
     /* font-family: $main_font; */
     align-self: baseline;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .authInputHeadError {
@@ -112,20 +116,39 @@
     /* font-family: $main_font; */
     font-weight: 600;
     font-size: 16px;
-    line-height: 24px;
-    height: 40px;
+    line-height: 20px;
+    height: 20px;
     /* color: $error; */
 }
 
+.signupForm .authInputHeadError {
+    height: 30px;
+}
+
 .textInput {
-    height: 50px;
+    height: 40px;
     /* font-family: $main_font; */
-    font-weight: 700;
+    font-weight: 400;
     width: 100%;
     padding-left: 10px;
-    border-radius: 10px;
+    border-radius: 12px;
     box-sizing: border-box;
     outline: none;
+    font-size: 20px;
+    border: 1px solid grey
+}
+
+.textInput:focus {
+  outline: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+/* Change the white to any color */
+.textInput:-webkit-autofill,
+.textInput:-webkit-autofill:hover,
+.textInput:-webkit-autofill:focus,
+.textInput:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 .email {
@@ -161,18 +184,53 @@
 }
 
 .authBtnInput {
-    /* font-family: $main_font; */
-    font-weight: bold;
-    font-size: 18px;
-    color: white;
-    margin: 1em auto 0;
-    height: 40px;
+    height: 50px;
+    /* width: 200px; */
+    position: relative;
+    border-radius: 8px;
+    /* margin: 4px; */
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
     border: 0;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
     cursor: pointer;
-    width: 220px;
-    background: #b70084;
-    border-radius: 12px;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    /* padding-left: 16px;
+    padding-right: 16px; */
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 22px;
+    text-align: center;
 }
+
+.authBtnInput:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.authBtnInput:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.authBtnInput:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
 
 .authInvitation {
     width: 100%;
@@ -204,6 +262,67 @@
     border-width: 2px;
     animation-name: input-error;
     animation-duration: 1s;
+}
+
+@media (max-width: 660px) {
+    .loginWrapper {
+        width: 50%;
+    }
+
+    .loginInvitation {
+        font-size: 30px;
+    }
+
+    .signupWrapper {
+        width: 50%;
+    }
+
+    .signupInvitation {
+        font-size: 30px;
+    }
+
+    .authInputHeadError {
+        font-size: 16px;
+        line-height: 20px;
+    }
+}
+
+@media (max-width: 450px) {
+    .login {
+        width:40%;
+
+        grid-template-areas:
+        "A0 A0 A0 A0 A0 A0 A0 A0 A0 A0"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "C0 C1 C1 C1 C1 C1 C1 C1 C1 C2";
+    }
+
+    .loginInvitation {
+        font-size: 25px;
+    }
+
+    .signupWrapper {
+        width:40%;
+
+        grid-template-areas:
+        "A0 A0 A0 A0 A0 A0 A0 A0 A0 A0"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "B0 B1 B1 B1 B1 B1 B1 B1 B1 B2"
+        "C0 C1 C1 C1 C1 C1 C1 C1 C1 C2";
+    }
+
+    .signupInvitation {
+        font-size: 25px;
+    }
+
+    .authInputHeadError{
+        line-height: 20px;
+    }
 }
 
 

@@ -88,6 +88,24 @@
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
 
+@media (max-width: 800px) {
+    .deleteSlide {
+        display: none;
+    }
+}
+
+@media (max-width: 624px) {
+    .addSlide {
+        display: none;
+    }
+}
+
+@media (max-width: 440px) {
+    .shareButton {
+        display: none;
+    }
+}
+
 .deleteSlide:hover {
     box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
 }
@@ -96,7 +114,7 @@
     box-shadow: #D5D9D8 0 3px 7px inset;
 }
 
-.shareButton {
+.showButton {
     color: black;
     margin-left: auto;
     padding-left: 0;
@@ -105,32 +123,137 @@
     background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
 }
 
-.shareButton:hover {
+.showButton:hover {
     box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
 }
 
-.shareButton:active {
+.showButton:active {
     box-shadow: #D5D9D8 0 3px 7px inset;
-}
-
-.shareButtonIcon {
-    width: 30px;
-    height: 30px;
-    margin-right: 16px;
-    background-size: contain;
-    background-image: url("./share.png");
-}
-
-.showButton {
-    width: 240px;
-    padding-left: 8px;
-    padding-right: 16px;
 }
 
 .showButtonIcon {
     width: 30px;
     height: 30px;
-    margin-right: 4px;
+    margin-right: 16px;
     background-size: contain;
     background-image: url("./play.png");
+}
+
+.shareButton {
+    width: 190px;
+    padding-left: 8px;
+    padding-right: 16px;
+}
+
+.shareButtonIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./share.png");
+}
+
+.copyButton {
+    width: 260px;
+    height: 50px;
+    padding-right: 10px;
+}
+
+[data-popup="modal"] .popup-content {
+    width: 50%;
+    /* height: 50%; */
+    background-color: white;
+    margin: auto;
+    /* top: 50%; */
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 22px 70px 800px;
+}
+
+[data-popup="modal"] .popupWrapper {
+    width: 100%;
+    /* top: 50%; */
+    position: relative;
+    display: grid;
+    grid-template-areas: "link qr";
+    grid-template-columns: 50% 50%;
+    padding-right: 60px;
+}
+
+@media (max-width: 1270px) {
+    [data-popup="modal"] .popup-content {
+        width: 400px;
+    }
+    [data-popup="modal"] .popupWrapper {
+        grid-template-columns: 100%;
+        grid-template-areas:
+            "link"
+            "qr";
+    }
+}
+
+[data-popup="modal"] .popup-arrow {
+    display: none;
+}
+
+.copyLink {
+    align-self: center;
+    justify-self: center;
+    grid-area: link;
+}
+
+.copyLinkIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./copy.png");
+}
+
+.copyQrIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+    background-size: contain;
+    background-image: url("./qr.png");
+}
+
+.copyQr {
+    grid-area: qr;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#react-qrcode-logo {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 10px;
+}
+
+.crossWrapper {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 6px;
+    border-radius: 20px;
+}
+
+.crossWrapper:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.crossWrapper:active {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.crossIcon {
+    background-image: url('./close.png');
+    background-size: contain;
+    width: 28px;
+    height: 28px;
 }

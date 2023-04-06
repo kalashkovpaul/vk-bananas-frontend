@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { FunctionComponent } from "react";
 import './presentation.css';
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -12,6 +12,9 @@ import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
 import { useParams } from "react-router-dom";
+import { calculateMiniScale, calculateScale } from "../../utils/utils";
+import InvitationBar from "../../components/invitationBar/InvitationBar";
+import ReactionBar from "../../components/reactionBar/ReactionBar";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -19,8 +22,6 @@ const emptySlide: SingleSlideData = {
     kind: "slide",
     type: "",
     quizId: 0,
-    width: 600,
-    height: 300,
     fontSize: "",
     question: "",
     votes: [],
@@ -35,8 +36,6 @@ const newSlide: SingleSlideData = {
     kind: "question",
     type: "vertical",
     quizId: 0,
-    width: 600,
-    height: 300,
     fontSize: "",
     question: "",
     votes: [],
@@ -45,19 +44,62 @@ const newSlide: SingleSlideData = {
     graphColor: "black",
 }
 
+export function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+        function updateSize() {
+            setSize([window.innerWidth, window.innerHeight]);
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+}
+
 const Presentation: FunctionComponent = () => {
-    const params = useParams(); // TODO parse from url
-    const presId = params.id;
+    const params = useParams();
+    const presId = params.id ? +params.id : 0;
+    const updateTime = 1000;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentSlide, setCurrentSlide] = useState<SingleSlideData>(emptySlide);
     const [data, setPresData] = useState<PresData>({
         url: "",
+        name: "New presentation",
+        emotions: {
+            like: 0,
+            love: 0,
+            laughter: 0,
+            surprise: 0,
+            sad: 0,
+        },
         slideNum: 0,
         quizNum: 0,
-        slides: []
+        width: 0,
+        height: 0,
+        slides: [],
+        code: "",
+        hash: ""
     });
     const slideRef = useRef<HTMLDivElement>(null);
     const cur = useRef<SingleSlideData>();
+    const [screenWidth, screenHeight] = useWindowSize();
+    const [slideWidth, setSlideWidth] = useState(0);
+    const [slideHeight, setSlideHeight] = useState(0);
+    const [miniSlideWidth, setMiniSlideWidth] = useState(0);
+    const [miniSlideHeight, setMiniSlideHeight] = useState(0);
+    const [timerId, setTimerId] = useState<number>(0);
+
+    const [isDemonstration, setDemonstration] = useState(false);
+
+    useEffect(() => {
+        const {width, height} = calculateScale(isDemonstration, screenWidth, screenHeight, data.width, data.height);
+        setSlideWidth(width);
+        setSlideHeight(height);
+        const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
+        setMiniSlideWidth(mWidth);
+        setMiniSlideHeight(mHeight);
+    }, [isDemonstration, screenWidth, screenHeight, data]);
 
     const usePreviousSlide = (value: any) => {
         const prevSlideRef = useRef<any>(value);
@@ -83,7 +125,7 @@ const Presentation: FunctionComponent = () => {
             } else if (value) {
                 newoptions[index] = {
                     option: value,
-                    votes: 2,
+                    votes: 0,
                     color: color,
                     idx: index,
                 }
@@ -105,38 +147,52 @@ const Presentation: FunctionComponent = () => {
         });
     };
 
+    const checkVotes = () => {
+        fetch(`${api.getDemonstration}/${data.hash}`, {
+            method: 'GET',
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((slidedata) => {
+            if (slidedata.viewMode) {
+                setCurrentSlide(slidedata.slide);
+            }
+        })
+        .catch(e => {
+            console.error(e);
+        });
+    }
+
     useEffect(() => {
         cur.current = currentSlide;
-        console.log(currentSlide);
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
-                // TODO show image
-                slideRef.current.style.backgroundImage = `url(${domain}/${data.url}${currentSlide.name})`;
-                slideRef.current.style.width = `${currentSlide.width}px`;
-                slideRef.current.style.height = `${currentSlide.height}px`;
+                slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
+                // slideRef.current.style.width = `${currentSlide.width}px`;
+                // slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
                 slideRef.current.style.backgroundColor = "#CECECE";
             } else {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
             }
+            clearInterval(timerId)
+            setTimerId(0);
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            slideRef.current.style.width = null as any;
-            slideRef.current.style.height = null as any;
-            if (currentIndex === previousSlide.idx)
+            if (currentIndex === previousSlide.idx && !isDemonstration)
                 onSlideChange();
+            if (isDemonstration && timerId === 0) {
+                const id = window.setInterval(checkVotes, updateTime);
+                setTimerId(id);
+            }
         }
     }, [currentSlide]);
 
     useEffect(() => {
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
-            // body: JSON.stringify({
-            //     creatorId: 1
-            // }),
-
             headers: {
 
             }
@@ -144,7 +200,6 @@ const Presentation: FunctionComponent = () => {
             return data ? data.json() : {} as any
         })
         .then((presdata) => {
-            // console.log("ONCE???");
             const newdata = presdata?.pres;
             if (newdata) {
                 if (newdata.slides?.length) {
@@ -210,7 +265,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteCreate}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: quizId,
                 idx: index,
                 option: "",
@@ -229,7 +283,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteDelete}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 idx: index,
             }),
@@ -245,7 +298,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.voteUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 votes: newoptions,
             }),
@@ -261,7 +313,6 @@ const Presentation: FunctionComponent = () => {
         fetch(`${api.quizUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
-                creatorId: 1,
                 quizId: currentSlide.quizId,
                 presId: presId,
                 idx: currentIndex,
@@ -333,22 +384,95 @@ const Presentation: FunctionComponent = () => {
         });
     }
 
+    const demonstrate = () => {
+        const slidebox = document.querySelector(".slideBox");
+        if (slidebox) {
+            slidebox.requestFullscreen();
+        }
+    }
+
+    const showGo = (index: number) => {
+        // if (isDemonstration) {
+            fetch(`${api.showGo}/${presId}/show/go/${index}`, {
+                method: 'PUT',
+            })
+            .catch(e => {
+                console.error(e);
+            });
+        // }
+    }
+
+    const showStop = () => {
+        fetch(`${api.showStop}/${presId}/show/stop`, {
+            method: 'PUT',
+        })
+        .catch(e => {
+            console.error(e);
+        });
+    }
+
+    useEffect(() =>{
+        if (isDemonstration) {
+            showGo(currentIndex);
+        }
+    }, [isDemonstration]);
+
+    const screenChangeHandler = (e: any) => {
+        if (!isDemonstration) {
+            document.getElementById("popup-root")?.remove();
+            window.screen.orientation.lock("landscape").then().catch(e => {});
+        } else {
+            window.screen.orientation.unlock();
+            showStop();
+            document.getElementById("popup-root")?.remove();
+        }
+        setDemonstration(o => !o);
+    }
+
+    useEffect(() => {
+        document.addEventListener("fullscreenchange", screenChangeHandler)
+        return () => {
+            document.removeEventListener("fullscreenchange", screenChangeHandler)
+        }
+    }, [screenWidth, screenHeight]);
+
 
     return (
         <div className="presentation view-wrapper">
             <PresentationBar
                 onDelete={onSlideDelete}
                 onCreate={onCreateSlide}
+                onDemonstrate={demonstrate}
+                hash={data.hash}
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
-                <Sidebar data={data} setCurrentIndex={setCurrentIndex}/>
+                <Sidebar
+                    data={data}
+                    setCurrentIndex={setCurrentIndex}
+                    currentSlide={currentSlide}
+                    width={miniSlideWidth}
+                    height={miniSlideHeight}
+                    showGo={showGo}
+                />
                 <div className="slideBox">
-                    <div className="slide" ref={slideRef}>
+                    <div className="slide" style={{
+                        height: `${slideHeight}px`,
+                        width: `${slideWidth}px`
+                    }} ref={slideRef}>
+                        {isDemonstration && currentSlide?.kind === "question" &&
+                            <InvitationBar code={data.code} hash={data.hash}/>}
+                        {/* TODO: reactionBar */}
                         {currentSlide?.kind === "question" && currentSlide.type ?
-                            <CustomBar kind={currentSlide.type} slide={currentSlide}/>
+                            <CustomBar
+                                width={slideWidth - 180}
+                                height={slideHeight - 140}
+                                kind={currentSlide.type}
+                                slide={currentSlide}/>
                             : null}
                     </div>
+                    {isDemonstration &&
+                        <ReactionBar emotions={data.emotions}/>}
                 </div>
                 <QuizEditor
                     setCurrentSlide={setCurrentSlide}

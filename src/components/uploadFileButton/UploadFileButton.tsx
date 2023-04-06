@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import './uploadFileButton.css';
 import styled from 'styled-components';
 import Alert from "../Alert";
@@ -8,6 +8,7 @@ import { createError, createSuccess } from "../../utils/utils";
 import {BarLoader} from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api.config";
+import { UserContext } from "../../App";
 
 const Button = styled.button`
     position: relative;
@@ -45,6 +46,7 @@ const UploadFileButton = () => {
     const [isLoading, setLoading] = React.useState<boolean>(false);
     const hiddenFileInput = React.useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+    const {userData} = useContext(UserContext);
 
     const handleClick = () => {
       hiddenFileInput?.current?.click();
@@ -56,8 +58,15 @@ const UploadFileButton = () => {
           return;
         }
         let fileType = (file.name.match(/\.[0-9a-z]+$/i) as any)[0];
-        if (fileType !== '.pptx') {
-            createError("Ошибка", "Файлы презентации должны иметь расширение pptx");
+        if (!userData) {
+            createError("Вы авторизованы?", "Пожалуйста, войдите в аккаунт и зарегистрируйтесь");
+            setTimeout(() => {
+                navigate(`/login`);
+            }, 4000);
+            return;
+        }
+        if (fileType !== '.pptx' && fileType !== '.pdf') {
+            createError("Ошибка", "Файлы презентации должны иметь расширение pptx или pdf");
             setLoading(false);
             return;
         }
