@@ -4,7 +4,7 @@ const localSite = "http://localhost:3000"
 const globalSite = "http://185.241.192.112"
 
 export const domain = global;
-export const site = globalSite
+export const site = globalSite;
 
 const apiVersion = "/api/v1"
 
@@ -30,5 +30,8 @@ export const api = {
     getDemonstration: `${prefix}/presentation/view`,
     showGo: `${prefix}/presentation`,
     showStop: `${prefix}/presentation`,
-    votePoll: `${prefix}/quiz/vote/poll`
+    votePoll: `${prefix}/quiz/vote/poll`,
+    reactionUpdate: `${prefix}/reactions/update`,
+    askQuestion: `${prefix}/question/ask`,
+    likeQuestion: `${prefix}/question/like`,
 }

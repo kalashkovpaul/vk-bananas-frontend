@@ -89,17 +89,24 @@ const Presentation: FunctionComponent = () => {
     const [miniSlideWidth, setMiniSlideWidth] = useState(0);
     const [miniSlideHeight, setMiniSlideHeight] = useState(0);
     const [timerId, setTimerId] = useState<number>(0);
+    const [emotions, setEmotions] = useState({
+        like: 0,
+        love: 0,
+        laughter: 0,
+        surprise: 0,
+        sad: 0,
+    });
 
-    const [isDemonstration, setDemonstration] = useState(false);
+    const isDemonstration = useRef(false);
 
     useEffect(() => {
-        const {width, height} = calculateScale(isDemonstration, screenWidth, screenHeight, data.width, data.height);
+        const {width, height} = calculateScale(isDemonstration.current as any, screenWidth, screenHeight, data.width, data.height);
         setSlideWidth(width);
         setSlideHeight(height);
         const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
         setMiniSlideWidth(mWidth);
         setMiniSlideHeight(mHeight);
-    }, [isDemonstration, screenWidth, screenHeight, data]);
+    }, [isDemonstration.current, screenWidth, screenHeight, data]);
 
     const usePreviousSlide = (value: any) => {
         const prevSlideRef = useRef<any>(value);
@@ -147,7 +154,7 @@ const Presentation: FunctionComponent = () => {
         });
     };
 
-    const checkVotes = () => {
+    const checkDemonstration = () => {
         fetch(`${api.getDemonstration}/${data.hash}`, {
             method: 'GET',
         }).then(data => {
@@ -155,7 +162,10 @@ const Presentation: FunctionComponent = () => {
         })
         .then((slidedata) => {
             if (slidedata.viewMode) {
-                setCurrentSlide(slidedata.slide);
+                if (currentSlide.kind === "question"
+                    && currentSlide.idx === slidedata.slide.idx)
+                        setCurrentSlide(slidedata.slide);
+                setEmotions(slidedata.emotions);
             }
         })
         .catch(e => {
@@ -176,17 +186,12 @@ const Presentation: FunctionComponent = () => {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
             }
-            clearInterval(timerId)
-            setTimerId(0);
+
         } else if (currentSlide?.kind === "question" && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            if (currentIndex === previousSlide.idx && !isDemonstration)
+            if (currentIndex === previousSlide.idx && !isDemonstration.current)
                 onSlideChange();
-            if (isDemonstration && timerId === 0) {
-                const id = window.setInterval(checkVotes, updateTime);
-                setTimerId(id);
-            }
         }
     }, [currentSlide]);
 
@@ -204,6 +209,7 @@ const Presentation: FunctionComponent = () => {
             if (newdata) {
                 if (newdata.slides?.length) {
                     setPresData(newdata);
+                    setEmotions(newdata.emotions);
                     // setCurrentIndex(0);
                 }
             }
@@ -392,14 +398,14 @@ const Presentation: FunctionComponent = () => {
     }
 
     const showGo = (index: number) => {
-        // if (isDemonstration) {
+        if (isDemonstration.current) {
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
             })
             .catch(e => {
                 console.error(e);
             });
-        // }
+        }
     }
 
     const showStop = () => {
@@ -412,13 +418,21 @@ const Presentation: FunctionComponent = () => {
     }
 
     useEffect(() =>{
-        if (isDemonstration) {
+        console.log(isDemonstration.current);
+        if (isDemonstration.current) {
             showGo(currentIndex);
+            if (isDemonstration.current && timerId === 0) {
+                const id = window.setInterval(checkDemonstration, updateTime);
+                setTimerId(id);
+            }
+        } else {
+            clearInterval(timerId);
+            setTimerId(0);
         }
-    }, [isDemonstration]);
+    }, [isDemonstration.current]);
 
     const screenChangeHandler = (e: any) => {
-        if (!isDemonstration) {
+        if (!isDemonstration.current) {
             document.getElementById("popup-root")?.remove();
             window.screen.orientation.lock("landscape").then().catch(e => {});
         } else {
@@ -426,7 +440,7 @@ const Presentation: FunctionComponent = () => {
             showStop();
             document.getElementById("popup-root")?.remove();
         }
-        setDemonstration(o => !o);
+        isDemonstration.current = !isDemonstration.current;
     }
 
     useEffect(() => {
@@ -455,13 +469,15 @@ const Presentation: FunctionComponent = () => {
                     height={miniSlideHeight}
                     showGo={showGo}
                 />
-                <div className="slideBox">
+                <div className="slideBox" style={{
+                        height: `${slideHeight + 50}px`,
+                    }}>
+                    {isDemonstration.current &&
+                        <InvitationBar code={data.code} hash={data.hash}/>}
                     <div className="slide" style={{
                         height: `${slideHeight}px`,
                         width: `${slideWidth}px`
                     }} ref={slideRef}>
-                        {isDemonstration && currentSlide?.kind === "question" &&
-                            <InvitationBar code={data.code} hash={data.hash}/>}
                         {/* TODO: reactionBar */}
                         {currentSlide?.kind === "question" && currentSlide.type ?
                             <CustomBar
@@ -471,8 +487,8 @@ const Presentation: FunctionComponent = () => {
                                 slide={currentSlide}/>
                             : null}
                     </div>
-                    {isDemonstration &&
-                        <ReactionBar emotions={data.emotions}/>}
+                    {isDemonstration.current &&
+                        <ReactionBar emotions={emotions}/>}
                 </div>
                 <QuizEditor
                     setCurrentSlide={setCurrentSlide}

@@ -132,3 +132,9 @@ export type userData = {
     imgsrc: string,
 }
 
+export type userQuestion = {
+    idx: number;
+    question: string;
+    likes: number;
+}
+

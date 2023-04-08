@@ -67,7 +67,7 @@ export function calculateScale(isFullscreen=false, sw: number, sh: number, w: nu
 }
 
 export function calculateDemonstrationScale(sw: number, sh: number, w: number, h: number) {
-    const screenPercent = sw > 1000 ? 0.6 : 0.8;
+    const screenPercent = sw > 1000 ? 0.6 : (window.innerHeight < window.innerWidth) ? 0.6 : 0.8;
     const aspectRatio = w / h;
     let width = true ? screenPercent * sw : screenPercent * sw - 40;
     let height = width / aspectRatio;

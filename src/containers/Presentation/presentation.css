@@ -91,11 +91,11 @@
 }
 
 .slideBox:fullscreen .slideQuestion {
-    top: 40px;
+    top: 20px;
 }
 
 .slideBox:-webkit-full-screen .slideQuestion {
-    top: 40px;
+    top: 20px;
 }
 
 :root {

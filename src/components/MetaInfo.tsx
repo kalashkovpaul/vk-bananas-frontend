@@ -23,7 +23,7 @@ const MetaInfo: FunctionComponent<MetaInfoProps> = ({
       defer={defer}
       title={title}
       htmlAttributes={{ lang }}
-      titleTemplate={`${APP_NAME} | %s`}
+      titleTemplate={`${APP_NAME}`}
       link={[
         {
           rel: 'canonical',

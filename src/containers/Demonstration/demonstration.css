@@ -1,13 +1,36 @@
+.demonstrationPage {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
 .demonstration {
-    min-height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     display: grid;
     grid-template-areas:
     "L1 logo R1"
     "L2 slide R2"
-    "L3 reactions R3"
-    "L4 invitation R4";
+    "L3 bottom R3";
     grid-template-columns: 20% 60% 20%;
-    grid-template-rows: 60px minmax(200px 800px) 200px 60px;
+    grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px);
+    margin: 20px;
+}
+
+.questionPage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-areas:
+    "L1 logo R1"
+    "L2 panel R2"
+    "L3 bottom R3";
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px);
     margin: 20px;
 }
 
@@ -27,10 +50,15 @@
     box-sizing: content-box;
 }
 
-.reactions {
-    grid-area: reactions;
+.bottomArea {
+    grid-area: bottom;
     display: flex;
-    justify-self: center;
+    flex-direction: column;
+}
+
+.reactions {
+    display: flex;
+    align-self: center;
     gap: 10px;
 }
 
@@ -38,22 +66,48 @@
     flex-direction: column;
     height: 74px;
     width: 50px;
+    justify-content: center;
+    align-items: center;
 }
 
 .emotionBtn .emotionIcon {
+    width: 36px;
+    height: 36px;
     cursor: pointer;
-    transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    /* transition: transform ease-in 0.1s, box-shadow ease-in 0.25s; */
     /* box-shadow: 0 2px 25px rgba(255, 0, 130, 0.5); */
+}
+
+.emotionBtn .emotionIcon:hover {
+    transition: 0.2s ease;
+    transform: translateY(-6px);
+}
+
+.animate {
+    animation-name: reactionAnimation;
 }
 
 @media (max-width: 1000px) {
     .demonstration {
+        margin: 0;
         grid-template-areas:
             "logo"
             "slide"
-            "reactions"
-            "invitation";
+            "bottom";
         grid-template-columns: 100%;
+        grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px);
+    }
+
+    .questionPage {
+        margin: 0;
+        grid-template-areas:
+            "logo"
+            "panel"
+            "bottom";
+        grid-template-columns: 100%;
+        grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px);
     }
 }
 
@@ -77,4 +131,174 @@
     .demonstrationLogo {
         display: flex;
     }
+}
+
+@keyframes reactionAnimation {
+    0% {
+        transform: scale(1) translateY(-6px);
+    }
+
+    50% {
+        transform: scale(1.5) translateY(-6px);
+    }
+
+    100% {
+        transform: scale(1) translateY(-6px);
+    }
+}
+
+
+.invitationWrapper {
+    grid-area: invitation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.askQuestionBtn {
+    width: 200px;
+    height: 50px;
+    position: relative;
+    border-radius: 8px;
+    margin: 4px;
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    /* padding-left: 16px;
+    padding-right: 16px; */
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+}
+
+.askQuestionBtn:focus {
+  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  color: #fff;
+}
+
+.askQuestionBtn:hover {
+  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.askQuestionBtn:active {
+  box-shadow: #3c4fe0 0 3px 7px inset;
+  transform: translateY(2px);
+  color: #fff;
+}
+
+.goBackBtn {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.goBackBtnIcon {
+    background-image: url('./back.png');
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
+
+.questionInputWrapper {
+    justify-self: center;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+    margin: 8px;
+}
+
+.questionInputElement {
+    width: 80%;
+    height: 60px;
+    font-size: 18px;
+    resize: none;
+    padding: 4px;
+    border: solid 1px black;
+    border-radius: 8px;
+}
+
+.questionInputElement:focus {
+    outline: none !important;
+    border: solid 1px black;
+    border-radius: 8px;
+}
+
+.questionInputElement:active {
+    outline: none !important;
+    border: solid 1px black;
+}
+
+.questionCharLeft {
+    position: absolute;
+    right: 11%;
+    bottom: 0;
+}
+
+.questionPanelAnimated-enter {
+    opacity: 0;
+}
+
+.questionPanelAnimated-enter-active {
+    opacity: 1;
+    transition: opacity 400ms;
+}
+
+.questionPanelAnimated-exit-done {
+    opacity: 0;
+}
+
+.questionPanelAnimated-exit {
+    opacity: 1;
+}
+
+.questionPanelAnimated-exit-active {
+    opacity: 0;
+    transition: opacity 400ms;
+}
+
+.askQuestionWrapper {
+    grid-area: bottom;
+}
+
+.askQuestionInvitation {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+@media (orientation: landscape) and (max-width: 1000px) {
+    .demonstrationPage {
+        overflow-y: scroll;
+    }
+
+    .demonstration {
+        margin: 0;
+        grid-template-areas:
+        "L1 logo R1"
+        "L2 slide R2"
+        "L3 bottom R3";
+        grid-template-columns: 20% 60% 20%;
+        grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px);
+    }
+
 }

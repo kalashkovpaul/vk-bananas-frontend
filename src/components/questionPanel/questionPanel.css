@@ -1,0 +1,108 @@
+.questionPanel {
+    grid-area: panel;
+    position: relative;
+    z-index: 1;
+}
+
+.questionsTitle {
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.questionInvitation {
+
+}
+
+.questionsWrapper {
+    max-height: 360px;
+    overflow-y: scroll;
+}
+
+.singleUserQuestion {
+    display: grid;
+    grid-template-columns: [question] 80% [likeNumber] 10% [likeIcon] 10%;
+    font-size: 20px;
+}
+
+.questionText {
+    grid-area: question;
+    text-align: center;
+    align-self: center;
+}
+
+.likeNumber {
+    grid-area: likeNumber;
+    justify-self: flex-end;
+    align-self: center;
+}
+
+.questionLikeIcon {
+    grid-area: likeIcon;
+    cursor: pointer;
+    align-self: center;
+    justify-self: center;
+    background-image: url('./questionLike.png');
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+    margin: 6px 6px 10px 6px;
+    animation-duration: 0.5s;
+    animation-timing-function: ease;
+    transition-timing-function: ease;
+}
+
+.questionLikeIcon:hover {
+    /* transform: translateY(-4px); */
+}
+
+.questionLikeIcon.animated {
+    animation-name: rotateLike;
+}
+
+@keyframes rotateLike {
+    0% {
+        transform: rotate(0) translateY(0px);
+    }
+
+    25% {
+        transform: rotate(5deg) translateY(0px);
+    }
+
+    50% {
+        transform: rotate(0) translateY(0px);
+    }
+
+    75% {
+        transform: rotate(-5deg) translateY(0px);
+    }
+
+    100% {
+        transform: rotate(0) translateY(0px);
+    }
+}
+
+@media (max-width: 1000px) {
+    .questionsWrapper {
+        max-height: 340px;
+    }
+
+    .singleUserQuestion {
+        display: grid;
+        grid-template-columns: [question] 70% [likeNumber] 10% [likeIcon] 20%;
+        font-size: 18px;
+    }
+
+    .questionInputWrapper {
+        margin: 0px;
+    }
+
+    .questionInputElement {
+        width: 90%;
+    }
+
+    .questionCharLeft {
+        right: 7%;
+    }
+
+}

@@ -13,12 +13,83 @@
     height: 60px;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .emotionIcon {
     background-size: contain;
     width: 50px;
     height: 50px;
+}
+
+.iconForAnimation {
+    position: absolute;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+}
+
+.toLeft {
+    animation-name: floatToLeft;
+}
+
+.toLeftCenter {
+    animation-name: floatToLeftCenter;
+}
+
+.toRightCenter {
+    animation-name: floatToRightCenter;
+}
+
+.toRight {
+    animation-name: floatToRight;
+}
+
+@keyframes floatToLeft {
+    0% {
+        transform: none;
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-60px) translateY(-170px);
+        opacity: 0;
+    }
+}
+
+@keyframes floatToLeftCenter {
+    0% {
+        transform: none;
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-20px) translateY(-200px);
+        opacity: 0;
+    }
+}
+
+@keyframes floatToRightCenter {
+    0% {
+        transform: none;
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(20px) translateY(-200px);
+        opacity: 0;
+    }
+}
+
+@keyframes floatToRight {
+    0% {
+        transform: none;
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(60px) translateY(-170px);
+        opacity: 0;
+    }
 }
 
 .likeIcon {

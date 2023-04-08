@@ -263,6 +263,55 @@ const users = {
     },
 };
 
+const userQuestions =
+[
+    {
+        idx: 0,
+        question: "Как меня зовут?",
+        likes: 9,
+    },
+    {
+        idx: 1,
+        question: "Привет. Я не совсем понимаю, что я тут забыл и кто ты такой, это нормально?",
+        likes: 8,
+    },
+    {
+        idx: 2,
+        question: "Зачем ты вообще делал эту презентацию?",
+        likes: 13,
+    },
+    {
+        idx: 3,
+        question: "Сколько времени ты убил на то, чтобы всё это сделать?",
+        likes: 7,
+    },
+    {
+        idx: 4,
+        question: "Если бы ты был не здесь, а на Марсе, как бы изменилась реакция твоего соседа на странные анекдоты?",
+        likes: 6,
+    },
+    {
+        idx: 5,
+        question: "Привет. Я не совсем понимаю, что я тут забыл и кто ты такой, это нормально?",
+        likes: 8,
+    },
+    {
+        idx: 6,
+        question: "Зачем ты вообще делал эту презентацию?",
+        likes: 13,
+    },
+    {
+        idx: 7,
+        question: "Сколько времени ты убил на то, чтобы всё это сделать?",
+        likes: 7,
+    },
+    {
+        idx: 8,
+        question: "Если бы ты был не здесь, а на Марсе, как бы изменилась реакция твоего соседа на странные анекдоты?",
+        likes: 6,
+    },
+];
+
 const ids = {};
 const id = uuid();
 ids[id] = "a@a.ru";
@@ -364,8 +413,11 @@ const startServer = (app) => {
     });
 
     let index = 1;
+    let emotions = presData.emotions;
     app.get("/api/v1/presentation/view/a1b2c3d4", function(req, res) {
         index++;
+        let keys = Object.keys(emotions);
+        emotions[keys[ keys.length * Math.random() << 0]]+=3;
         // presData.slides[1].votes[0].votes++;
         if (index > 3)
             index = 0;
@@ -375,7 +427,8 @@ const startServer = (app) => {
             height: presData.height,
             url: presData.url,
             emotions: presData.emotions,
-            slide: presData.slides[index]
+            slide: presData.slides[0],
+            questions: userQuestions,
         });
     });
 

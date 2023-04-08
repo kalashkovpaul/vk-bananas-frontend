@@ -19,10 +19,22 @@ const customTheme = {
 const PollForm = (props: PollFormProps) => {
     const {currentSlide} = props;
     const [choice, setChoice] = useState(-1);
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const handleOptionChange = (e: any) => {
         console.log(e.target.disabled);
         setChoice(+e.target.value);
+    }
+
+    const checkLocalStorage = () => {
+        const json = window.localStorage.getItem(`${currentSlide.question}`);
+        if (json) {
+            const value = JSON.parse(json).value;
+            setChoice(value);
+            setIsDisabled(true);
+        } else {
+            setIsDisabled(false);
+        }
     }
 
     const usePreviousSlide = (value: any) => {
@@ -36,8 +48,13 @@ const PollForm = (props: PollFormProps) => {
     const prevCurrentSlide = usePreviousSlide(currentSlide);
 
     useEffect(() => {
+        checkLocalStorage();
+    }, []);
+
+    useEffect(() => {
         if (prevCurrentSlide.idx !== currentSlide.idx) {
             setChoice(-1);
+            checkLocalStorage();
             const button = document.querySelector(".submitBtn") as HTMLButtonElement;
             button.classList.remove("disabledBtn");
             const poll = document.querySelector(".poll") as HTMLFormElement;
@@ -48,6 +65,14 @@ const PollForm = (props: PollFormProps) => {
             });
         }
     }, [currentSlide]);
+
+    useEffect(() => {
+        if (isDisabled) {
+            disable();
+        } else {
+            enable();
+        }
+    }, [isDisabled]);
 
     const voteHandler = () => {
         fetch(`${api.votePoll}`, {
@@ -64,11 +89,7 @@ const PollForm = (props: PollFormProps) => {
         });
     }
 
-    const onSubmit = (e: any) => {
-        e.preventDefault();
-        if (choice < 0) return;
-        // TODO fetch to server
-        voteHandler();
+    const disable = () => {
         const button = document.querySelector(".submitBtn") as HTMLButtonElement;
         button.classList.add("disabledBtn");
         const poll = document.querySelector(".poll") as HTMLFormElement;
@@ -77,6 +98,27 @@ const PollForm = (props: PollFormProps) => {
         options.forEach((option) => {
             option.disabled = true;
         });
+    }
+
+    const enable = () => {
+        const button = document.querySelector(".submitBtn") as HTMLButtonElement;
+        button.classList.remove("disabledBtn");
+        const poll = document.querySelector(".poll") as HTMLFormElement;
+        poll.classList.remove("disabledPoll");
+        const options = document.querySelectorAll(".pollSingleOptionInput") as NodeListOf<HTMLInputElement>;
+        options.forEach((option) => {
+            option.disabled = false;
+        });
+    }
+
+    const onSubmit = (e: any) => {
+        e.preventDefault();
+        if (choice < 0 || isDisabled) return;
+        voteHandler();
+        window.localStorage.setItem(`${currentSlide.question}`, JSON.stringify({
+            value: choice
+        }));
+        setIsDisabled(true);
     }
 
 
@@ -116,6 +158,9 @@ const PollForm = (props: PollFormProps) => {
                         </button>
                     </div>
                 </form>
+                {isDisabled && <div className="thanksText">
+                    Спасибо! Ваш голос будет учтён
+                </div>}
             </div>
         </div>
     );
