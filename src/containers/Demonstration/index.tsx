@@ -143,8 +143,11 @@ const Demonstration: FunctionComponent = () => {
             method: 'PUT',
             body: JSON.stringify({
                 hash: hash,
-                idx: idx,
-                question: question,
+                question: {
+                    question: question,
+                    idx: idx,
+                    likes: 1,
+                }
             }),
             headers: {
 
@@ -292,7 +295,7 @@ const Demonstration: FunctionComponent = () => {
                                 <div className="askQuestionBtn" onClick={() => {
                                 if (isQuestionsPage) {
                                     const input = document.querySelector(".questionInputElement") as HTMLTextAreaElement;
-                                    const newIdx = Math.max(...(questions.map(q => {return q?.idx})));
+                                    const newIdx = !questions.length ? 0 : Math.max(...(questions.map(q => {return q?.idx}))) + 1
                                     askQuestion(newIdx, input.value);
                                     window.localStorage.setItem(input.value, "liked");
                                 }

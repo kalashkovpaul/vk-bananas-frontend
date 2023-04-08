@@ -45,7 +45,7 @@ const QuestionPanel = (props: QuestionPanelProps) => {
         <div className="questionPanel">
             <div className="questionsTitle">Список заданных вопросов</div>
             <div className="questionsWrapper">
-                {!questions && <div className="questionInvitation">Будьте первым!</div>}
+                {!questions.length && <div className="questionInvitation">Будьте первым!</div>}
                 {questions.map(q => {
                     return (
                         <div key={q.idx} className="singleUserQuestion">

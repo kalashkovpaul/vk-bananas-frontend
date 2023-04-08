@@ -18,7 +18,7 @@ const InvitationBar = (props: InvitationBarProps) => {
     return (
         <div className="invitationBar">
             <div id="popup-root"/>
-            <div className="invitationText">Чтобы присоединиться, введите код: </div>
+            <div className="invitationText">Заходите на kindaslides.ru и вводите код: </div>
             <Popup
                 on="hover"
                 trigger={open => (

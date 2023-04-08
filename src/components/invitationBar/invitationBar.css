@@ -6,7 +6,7 @@
     display: grid;
     grid-template-areas:
         "left text code margin qr empty logo";
-    grid-template-columns: minmax(0, 440px) 460px 90px 40px 60px minmax(90px, 240px) 200px;
+    grid-template-columns: minmax(0, 440px) 505px 90px 40px 60px minmax(90px, 240px) 200px;
 }
 
 .invitationText {
@@ -80,7 +80,7 @@
     .invitationBar {
         grid-template-areas:
         "left text code margin";
-        grid-template-columns: minmax(0, 220px) 460px 90px minmax(100px, 400px);
+        grid-template-columns: minmax(0, 220px) 505px 90px minmax(100px, 400px);
     }
 
     .invitationLogo {
