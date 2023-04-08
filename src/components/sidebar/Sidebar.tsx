@@ -102,7 +102,7 @@ const Sidebar = (props: SidebarProps) => {
             >
                 <div className="miniSlideNumber">{(slideData.idx + 1)}</div>
                 <div className="miniSlideImage"
-                    style={slideData.kind === "question" ?
+                    style={slideData.kind !== "slide" ?
                     {
                         backgroundColor: slideData.background,
                         width: `${w}px`,
@@ -112,7 +112,7 @@ const Sidebar = (props: SidebarProps) => {
                         width: `${w}px`,
                         height: `${h}px`,
                     }}>
-                    {slideData.kind === "question" ?  <div className="miniSlideQuestion">{slideData.question}</div> :
+                    {slideData.kind !== "slide" ?  <div className="miniSlideQuestion">{slideData.question}</div> :
                     slideData.name ? <img src={`${domain}/${data.url}${slideData.name}`} className="miniSlideImageImg"/> : null}
                 </div>
             </div>

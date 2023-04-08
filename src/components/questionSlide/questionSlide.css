@@ -1,9 +1,10 @@
 .questionBoxes {
-    margin-top: 100px;
+    margin-top: 70px;
     display: grid;
     width: 100%;
     grid-template-columns: [row0] 33% [row1] 33% [row2] 33%;
     overflow-y: scroll;
+    min-height: 250px;
 }
 
 .row0 {
@@ -33,11 +34,19 @@
     margin: 10px;
 }
 
-.slideBox:fullscreen {
+.slideBox:fullscreen .singleQuestionBox{
     font-size: 20px;
     border: solid 2px;
     padding: 10px;
     margin: 10px;
+}
+
+.slideBox:-webkit-full-screen .questionBoxes {
+    margin-top: 100px;
+}
+
+.slideBox:fullscreen .questionBoxes{
+    margin-top: 100px;
 }
 
 

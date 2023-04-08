@@ -15,6 +15,7 @@ import { calculateMiniScale, calculateScale } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
 import ReactionBar from "../../components/reactionBar/ReactionBar";
 import QuestionSlide from "../../components/questionSlide/QuestionSlide";
+import { fakeQuestions } from "./fakeData";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -110,7 +111,7 @@ const Presentation: FunctionComponent = () => {
         surprise: 0,
         sad: 0,
     });
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [questions, setQuestions] = useState<any[]>(fakeQuestions);
 
     const isDemonstration = useRef(false);
 
@@ -531,10 +532,10 @@ const Presentation: FunctionComponent = () => {
                                 kind={currentSlide.type}
                                 slide={currentSlide}/>
                             : null}
-                        {isDemonstration && currentSlide?.kind === "userQuestion" &&
+                        {currentSlide?.kind === "userQuestion" &&
                             <QuestionSlide
                                 width={slideWidth - 180}
-                                height={slideHeight - 140}
+                                height={isDemonstration ? slideHeight - 140 : slideHeight + 20}
                                 questions={questions}
                                 slide={currentSlide}
                             />}
