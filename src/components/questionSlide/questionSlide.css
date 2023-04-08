@@ -1,0 +1,43 @@
+.questionBoxes {
+    margin-top: 100px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: [row0] 33% [row1] 33% [row2] 33%;
+    overflow-y: scroll;
+}
+
+.row0 {
+    grid-area: row0;
+}
+
+.row1 {
+    grid-area: row1;
+}
+
+.row2 {
+    grid-area: row2;
+}
+
+.singleQuestionBox {
+    font-size: 10px;
+    border: solid 2px;
+    padding: 4px;
+    margin: 4px;
+    border-radius: 4px;
+}
+
+.slideBox:-webkit-full-screen .singleQuestionBox {
+    font-size: 20px;
+    border: solid 2px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.slideBox:fullscreen {
+    font-size: 20px;
+    border: solid 2px;
+    padding: 10px;
+    margin: 10px;
+}
+
+

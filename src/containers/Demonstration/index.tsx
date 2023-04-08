@@ -145,7 +145,6 @@ const Demonstration: FunctionComponent = () => {
                 hash: hash,
                 idx: idx,
                 question: question,
-                likes: 1,
             }),
             headers: {
 

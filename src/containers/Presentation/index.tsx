@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { FunctionComponent } from "react";
 import './presentation.css';
 import Sidebar from "../../components/sidebar/Sidebar";
 import QuizEditor from "../../components/quizEditor/QuizEditor";
-import { presData } from "./fakeData";
 import type { OptionData, PresData, SingleSlideData } from "../../types";
 import { getRouteMetaInfo } from '../../config/routes.config';
 import { MetaInfo } from "../../components";
@@ -15,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { calculateMiniScale, calculateScale } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
 import ReactionBar from "../../components/reactionBar/ReactionBar";
+import QuestionSlide from "../../components/questionSlide/QuestionSlide";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -28,6 +28,20 @@ const emptySlide: SingleSlideData = {
     background: "",
     fontColor: "",
     graphColor: "",
+}
+
+const newQuestionSlide: SingleSlideData = {
+    idx: 0,
+    name: "",
+    kind: "userQuestion",
+    type: "",
+    quizId: 0,
+    fontSize: "",
+    question: "Вопросы:",
+    votes: [],
+    background: "white",
+    fontColor: "black",
+    graphColor: "black",
 }
 
 const newSlide: SingleSlideData = {
@@ -96,6 +110,7 @@ const Presentation: FunctionComponent = () => {
         surprise: 0,
         sad: 0,
     });
+    const [questions, setQuestions] = useState<any[]>([]);
 
     const isDemonstration = useRef(false);
 
@@ -163,8 +178,10 @@ const Presentation: FunctionComponent = () => {
         .then((slidedata) => {
             if (slidedata.viewMode) {
                 if (currentSlide.kind === "question"
-                    && currentSlide.idx === slidedata.slide.idx)
+                    && currentSlide.idx === slidedata.slide.idx) {
                         setCurrentSlide(slidedata.slide);
+                    }
+                setQuestions(slidedata.questions);
                 setEmotions(slidedata.emotions);
             }
         })
@@ -187,7 +204,7 @@ const Presentation: FunctionComponent = () => {
                 slideRef.current.style.boxShadow = "none";
             }
 
-        } else if (currentSlide?.kind === "question" && slideRef.current) {
+        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion") && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
             if (currentIndex === previousSlide.idx && !isDemonstration.current)
@@ -205,11 +222,16 @@ const Presentation: FunctionComponent = () => {
             return data ? data.json() : {} as any
         })
         .then((presdata) => {
-            const newdata = presdata?.pres;
+            let newdata = presdata?.pres;
             if (newdata) {
+                newdata?.slides.push({
+                    ...newQuestionSlide,
+                    idx: newdata.slides.length,
+                });
                 if (newdata.slides?.length) {
                     setPresData(newdata);
-                    setEmotions(newdata.emotions);
+                    if (newdata.emotions)
+                        setEmotions(newdata.emotions);
                     // setCurrentIndex(0);
                 }
             }
@@ -217,7 +239,6 @@ const Presentation: FunctionComponent = () => {
         .catch(e => {
             console.error(e);
         });
-
     }, []);
 
 
@@ -417,28 +438,52 @@ const Presentation: FunctionComponent = () => {
         });
     }
 
+    const createQuestionSlide = () => {
+        let newslides = data.slides;
+        newslides.push({
+            ...newQuestionSlide,
+            idx: data.slides.length,
+        });
+        setPresData({...data, slides: newslides});
+    }
+
+    const deleteQuestionSlide = () => {
+        let newslides = data.slides;
+        const last = newslides.pop() as SingleSlideData;
+        if (last.kind !== "userQuestion")
+            newslides.push(last);
+        setPresData({...data, slides: newslides});
+    }
+
     useEffect(() =>{
-        console.log(isDemonstration.current);
         if (isDemonstration.current) {
+            window.screen.orientation.lock("landscape").then().catch(e => {});
             showGo(currentIndex);
-            if (isDemonstration.current && timerId === 0) {
+            if (timerId === 0) {
                 const id = window.setInterval(checkDemonstration, updateTime);
                 setTimerId(id);
             }
-        } else {
-            clearInterval(timerId);
-            setTimerId(0);
-        }
-    }, [isDemonstration.current]);
 
-    const screenChangeHandler = (e: any) => {
-        if (!isDemonstration.current) {
-            document.getElementById("popup-root")?.remove();
-            window.screen.orientation.lock("landscape").then().catch(e => {});
         } else {
             window.screen.orientation.unlock();
             showStop();
             document.getElementById("popup-root")?.remove();
+            clearInterval(timerId);
+            setTimerId(0);
+            const {width, height} = calculateScale(isDemonstration.current as any, screenWidth, screenHeight, data.width, data.height);
+            setSlideWidth(width);
+            setSlideHeight(height);
+        }
+    }, [isDemonstration.current]);
+
+    const screenChangeHandler = (e: any) => {
+        document.getElementById("popup-root")?.remove();
+        if (!isDemonstration.current) {
+            // createQuestionSlide();
+        } else {
+            // if (currentIndex === data.slides.length)
+            //     console.log("HERE");
+            // deleteQuestionSlide();
         }
         isDemonstration.current = !isDemonstration.current;
     }
@@ -486,6 +531,13 @@ const Presentation: FunctionComponent = () => {
                                 kind={currentSlide.type}
                                 slide={currentSlide}/>
                             : null}
+                        {isDemonstration && currentSlide?.kind === "userQuestion" &&
+                            <QuestionSlide
+                                width={slideWidth - 180}
+                                height={slideHeight - 140}
+                                questions={questions}
+                                slide={currentSlide}
+                            />}
                     </div>
                     {isDemonstration.current &&
                         <ReactionBar emotions={emotions}/>}

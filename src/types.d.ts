@@ -27,7 +27,7 @@ export type SingleSlideData = {
     idx: number;
     name: string;
     quizId: number;
-    kind: "slide" | "question";
+    kind: "slide" | "question" | "userQuestion";
     type: "" | BarKind;
     question: string;
     votes: Array<OptionData>;
