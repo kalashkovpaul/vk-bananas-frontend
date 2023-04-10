@@ -6,7 +6,7 @@
     width: 100%;
     position: fixed;
     z-index: 30;
-
+    font-family: 'Nunito';
 }
 
 @keyframes disapper {
@@ -167,11 +167,11 @@
 .menuBtn {
     text-decoration: none;
     transition: 0.1s;
-    color: black;
+    color: rgba(0, 0, 0, 0.635);
 }
 
 .menuBtn:hover {
-    color: #61dafb;
+    color: black;
     cursor: pointer;
 }
 
@@ -181,7 +181,7 @@
 }
 
 .menuBtnActive {
-    color: #61dafb;
+    color: black;
     cursor: pointer;
 }
 
@@ -195,13 +195,15 @@
 .navbarLoginBtn {
     /* width: 200px; */
     position: relative;
-    border-radius: 8px;
-    margin: 4px;
+    border-radius: 9999px;
+    margin: 10px;
     align-items: center;
     appearance: none;
-    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    background-color: rgba(51,193,115,1);
     border: 0;
-    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #15a962;
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
@@ -225,20 +227,21 @@
 }
 
 .navbarLoginBtn:focus {
-  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
-  color: #fff;
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #15a962;
 }
 
 .navbarLoginBtn:hover {
-  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
-  transform: translateY(-2px);
-  color: #fff;
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #15a962;
 }
 
 .navbarLoginBtn:active {
-  box-shadow: #3c4fe0 0 3px 7px inset;
-  transform: translateY(2px);
-  color: #fff;
+    background-color: #15a962;
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
 }
 
 @media (max-width: 1035px) {
@@ -275,6 +278,9 @@
     .verticalMenuBtn {
       font-size: 18px;
     }
+    .navbarWrapper {
+        column-gap: 0;
+    }
   }
 
 @media (max-width: 600px) {
@@ -305,6 +311,15 @@
 
 .ourLogo {
     -webkit-tap-highlight-color: transparent;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: fit-content;
+    align-items: center;
+    font-family: 'Nunito';
+    color: black;
+    font-weight: 800;
+    font-size: 24px;
 }
 
 .joinBlock {

@@ -1,0 +1,339 @@
+.profilePage {
+    background-color: #f0f4fa;
+    display: grid;
+    grid-template-areas:
+    "L1 profile R1"
+    "L2 presData R2";
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: 242px;
+}
+
+.profileData {
+    grid-area: profile;
+    display: grid;
+    grid-template-areas: "avatar userdata";
+    grid-auto-flow: column;
+    grid-template-columns: 25% 75%;
+    margin: 20px;
+}
+
+.profilePresentationData {
+    grid-area: presData;
+    border-top: 2px solid rgba(211,215,225,1);
+    margin-bottom: 16px;
+}
+
+.profilePage input[type="file"] {
+    display: none;
+}
+
+.customFileUpload {
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    padding: 6px;
+    cursor: pointer;
+    background: linear-gradient(270deg, #3fa1a9, #79f1a4);
+    margin-bottom: 25px;
+}
+
+.imgWrap{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.uploadIcon{
+    content: "\f093";
+    font-size: 90px;
+    position: absolute;
+    padding-top: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #63d3a6;
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: .5s ease;
+    padding: 60px;
+    background-color: #fff;
+}
+
+.imgUpload:hover .uploadIcon{
+   opacity: 1;
+}
+
+.profileImg {
+    width: auto;
+    height: 100%;
+}
+
+#profileSubmit {
+    display: none;
+}
+
+.avatar {
+    grid-area: avatar;
+}
+
+.userData {
+    grid-area: userdata;
+    margin: 20px;
+    font-family: 'Nunito';
+}
+
+.userDataName {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.userDataEmail {
+    font-size: 30px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.presentationsTitle {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 8px;
+    font-family: 'Nunito';
+}
+
+.explanation {
+    font-family: 'Nunito';
+    display: grid;
+    grid-template-areas: "name empty code creation demonstrate";
+    grid-template-columns: 30% 16% 12% 18% 20%;
+}
+
+.explanationName {
+    grid-area: name;
+    font-weight: bold;
+    padding-left: 12px;
+}
+
+.explanationCode {
+    grid-area: code;
+    font-weight: bold;
+    text-align: center;
+}
+
+.explanationCreationDate {
+    grid-area: creation;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.presItem {
+    width: 100%;
+    height: 74px;
+    margin-top: 16px;
+    border-radius: 8px;
+    color: rgba(112,112,112,1);
+    background-color: #fff;
+    box-shadow: 0 0 transparent, 0 0 transparent, 0px 1px 3px 0px rgba(211,215,225,0.81);
+    display: grid;
+    font-family: 'Nunito';
+    grid-template-areas: "name empty code creation demonstrate kebab";
+    grid-template-columns: 36% 10% 12% 16% 22% 4%;
+    transition: .5s;
+    transition-timing-function: cubic-bezier(.33,1,.68,1);
+    align-items: center;
+    cursor: pointer;
+}
+
+.presItem:hover {
+    box-shadow: 0 25px 20px -20px rgba(0,0,0,.2);
+}
+
+.presItemName {
+    grid-area: name;
+    font-size: 16px;
+    color: black;
+    font-weight: 600;
+    padding-left: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.presItemCode {
+    grid-area: code;
+    font-weight: 700;
+    text-align: center;
+    color: rgba(112,112,112,1);
+}
+
+.presItemCreationDate {
+    grid-area: creation;
+    text-align: center;
+    font-weight: 700;
+    color: rgba(112,112,112,1);
+}
+
+.hiddenLink {
+    display: none;
+}
+
+.presItemDemonstrate {
+    grid-area: demonstrate;
+    opacity: 0;
+    background-color: rgba(52,142,246,1);
+    color: #fff;
+    transition-duration: .25s;
+    border-radius: 9999px;
+    height: 28px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 28px;
+    justify-content: center;
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #257adc;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.presItem:hover .presItemDemonstrate {
+    opacity: 1;
+}
+
+.presItemDemonstrate:hover {
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #257adc;
+}
+
+.presItemDemonstrate:active {
+    background-color: rgba(37,122,220,1);
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
+}
+
+.playIconSmall {
+    background-image: url('./play.png');
+    width: 12px;
+    height: 12px;
+    background-size: contain;
+}
+
+.presItemKebab {
+    opacity: 0;
+    grid-area: kebab;
+    background-image: url('./kebab.png');
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    transition: 0.25s;
+}
+
+.presItem:hover .presItemKebab {
+    opacity: 0.5;
+}
+
+.presItemKebab:hover {
+    opacity: 1 !important;
+}
+
+.changePresForm {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.changePresLabel {
+    width: 80%;
+    font-size: 24px;
+    font-family: 'Nunito';
+    font-weight: 700;
+    color: black;
+}
+
+.changePresInput {
+    outline: none;
+    border: solid 1px black;
+    margin-left: 12px;
+    font-size: 22px;
+    font-weight: 400;
+    border-radius: 8px;
+    width: 70%;
+}
+
+.changePresInput:focus {
+    outline: none;
+}
+
+.buttonsArea {
+    margin: 8px;
+    display: flex;
+    gap: 12px;
+}
+
+.deletePresButton {
+    background-color: rgba(218,50,60,1);
+    color: #fff;
+    padding: 8px;
+    transition-duration: .25s;
+    border-radius: 9999px;
+    height: 40px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 40px;
+    font-size: 22px;
+    justify-content: center;
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px rgb(172, 40, 49);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.deletePresButton:hover {
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px rgb(172, 40, 49);
+}
+
+.deletePresButton:active {
+    background-color: rgb(172, 40, 49);
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
+}
+
+.savePresButton {
+    border: none;
+    background-color: rgba(52,142,246,1);
+    color: #fff;
+    padding: 8px;
+    transition-duration: .25s;
+    border-radius: 9999px;
+    height: 40px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 40px;
+    font-size: 22px;
+    justify-content: center;
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #257adc;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.savePresButton:hover {
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #257adc;
+}
+
+.savePresButton:active {
+    background-color: #257adc;
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
+}

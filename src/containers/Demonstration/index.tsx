@@ -67,8 +67,8 @@ const Demonstration: FunctionComponent = () => {
                 setViewMode(slidedata.viewMode)
                 setEmotions(slidedata.emotions);
                 setCurrentSlide(slidedata.slide);
-                setQuestions(slidedata.questions);
             }
+            setQuestions(slidedata.questions);
         })
         .catch(e => {
             console.error(e);
@@ -156,6 +156,15 @@ const Demonstration: FunctionComponent = () => {
             console.error(e);
         });
     }
+
+    useEffect(() => {
+        if (!viewMode) {
+            const user = window.localStorage.getItem("user");
+            window.localStorage.clear();
+            if (user)
+                window.localStorage.setItem("user", user);
+        }
+    }, [viewMode]);
 
     return (
         <div className="demonstrationPage">
@@ -295,9 +304,11 @@ const Demonstration: FunctionComponent = () => {
                                 <div className="askQuestionBtn" onClick={() => {
                                 if (isQuestionsPage) {
                                     const input = document.querySelector(".questionInputElement") as HTMLTextAreaElement;
-                                    const newIdx = !questions.length ? 0 : Math.max(...(questions.map(q => {return q?.idx}))) + 1
-                                    askQuestion(newIdx, input.value);
-                                    window.localStorage.setItem(input.value, "liked");
+                                    if (input.value) {
+                                        const newIdx = !questions.length ? 0 : Math.max(...(questions.map(q => {return q?.idx}))) + 1
+                                        askQuestion(newIdx, input.value);
+                                        window.localStorage.setItem(input.value, "liked");
+                                    }
                                 }
                                 setQuestionsPage(false);
                                 isQuestionRef.current = !isQuestionRef.current;

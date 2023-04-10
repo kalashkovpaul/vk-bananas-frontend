@@ -8,6 +8,7 @@ import {
   faExternalLinkAlt,
   faExclamationCircle,
   faCircleCheck,
+  faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faEtsy,
@@ -30,5 +31,6 @@ export const registerIcons = () => {
     faExternalLinkAlt,
     faExclamationCircle,
     faCircleCheck,
+    faUpload,
   );
 };

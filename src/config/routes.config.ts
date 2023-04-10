@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { Home, About, Presentation, Login, Registration, Demonstration } from '../containers';
+import { Home, About, Presentation, Login, Registration, Demonstration, Profile } from '../containers';
 
 const DESC_SUFFIX = 'description - length <= 160 chars.';
 
@@ -75,7 +75,16 @@ export const routes: Route[] = [
       title: 'Demonstration',
       description: `Demonstration ${DESC_SUFFIX}`
     }
-  }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    Component: Profile,
+    metaInfo: {
+      title: 'Profile',
+      description: `Profile ${DESC_SUFFIX}`
+    }
+  },
 ];
 
 export const getRouteMetaInfo = (name: string): MetaInfoProps => {

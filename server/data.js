@@ -401,7 +401,7 @@ const startServer = (app) => {
 
     app.get('/api/v1/user/session', (req, res) => {
         res.json({
-            // "id": "1",
+            status: true,
         });
     });
     app.post("/api/v1/presentation/create", function (req, res) {
@@ -468,7 +468,7 @@ const startServer = (app) => {
             // id: 1,
             username: users[email].name,
             email: email,
-            img: "",
+            img: "/images/121/default.jpeg",
         });
     });
 
@@ -478,7 +478,7 @@ const startServer = (app) => {
             // id: 1,
             username: users[email].name,
             email: email,
-            img: "",
+            img: "/images/121/default.jpeg",
         });
     });
 
@@ -511,6 +511,64 @@ const startServer = (app) => {
             slide: presData.slides[0],
             questions: userQuestions,
         });
+    });
+
+    app.get("/api/v1/profile", function(req, res) {
+        res.json({
+            username: "Paul Kalashkov",
+            email: "kalashkovpaul@gmail.com",
+            imgsrc: "",
+            presentations: [
+                {
+                    name: "My first presentation",
+                    idx: 1,
+                    code: "1234",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "Рубежный контроль 1",
+                    idx: 2,
+                    code: "4321",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "Воркшоп",
+                    idx: 3,
+                    code: "2134",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "РК2",
+                    idx: 4,
+                    code: "1234",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "Предзащита",
+                    idx: 5,
+                    code: "1234",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "Воркшоп",
+                    idx: 6,
+                    code: "2134",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "РК2",
+                    idx: 7,
+                    code: "1234",
+                    hash: "a1b2c3d4"
+                },
+                {
+                    name: "Предзащита",
+                    idx: 8,
+                    code: "1234",
+                    hash: "a1b2c3d4"
+                }
+            ]
+        })
     });
 
 }

@@ -138,3 +138,10 @@ export type userQuestion = {
     likes: number;
 }
 
+export type shortPres = {
+    name: string,
+    idx: number,
+    code: string,
+    hash: string,
+}
+

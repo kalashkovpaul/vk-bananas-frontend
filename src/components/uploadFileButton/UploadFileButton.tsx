@@ -12,14 +12,16 @@ import { UserContext } from "../../App";
 
 const Button = styled.button`
     position: relative;
-    border-radius: 8px;
+    border-radius: 9999px;
     height: 60px;
-    margin: 4px;
+    margin: 0;
     align-items: center;
     appearance: none;
-    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
-    border: 0;
-    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    background-color: rgba(52,142,246,1);
+    color: #fff;    border: 0;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #257adc;
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
@@ -103,7 +105,7 @@ const UploadFileButton = () => {
     };
     return (
       <>
-            <Button className="uploadFileButton bar-button addPresentation" onClick={handleClick}>
+            <Button className="uploadFileButton addPresentation" onClick={handleClick}>
                 <div className="addFileIcon"/>
             {isLoading ? <BarLoader color="#5468ff"/> : "Загрузить презентацию"}
             </Button>

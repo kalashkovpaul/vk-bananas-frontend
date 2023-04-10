@@ -6,13 +6,14 @@
     display: grid;
     grid-template-areas:
         "left text code margin qr empty logo";
-    grid-template-columns: minmax(0, 440px) 505px 90px 40px 60px minmax(90px, 240px) 200px;
+    grid-template-columns: minmax(0, 440px) 515px 90px 40px 60px minmax(90px, 240px) 200px;
 }
 
 .invitationText {
     grid-area: text;
-    font-size: 27px;
+    font-size: 26px;
     line-height: 50px;
+    font-family: 'Nunito';
     color: #313131;
 }
 
@@ -23,6 +24,7 @@
     font-weight: bolder;
     color: #313131;
     cursor: pointer;
+    font-family: 'Nunito';
 }
 
 .invitationLogo {
@@ -40,14 +42,19 @@
 
 .invitationLogoText {
     font-size: 24px;
-    margin-left: 10px;
-    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-left: 8px;
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 800;
+    color: black;
 }
 
 [role="tooltip"].popup-content {
     background-color: #282e3e;
     padding: 8px;
     border-radius: 12px;
+}
+
+.presentation [role="tooltip"].popup-content {
     top: 0 !important;
 }
 

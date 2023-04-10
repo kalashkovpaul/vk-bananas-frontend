@@ -3,6 +3,7 @@
     max-width: calc(50% - 200px);
     background-color: white;
     overflow-y: scroll;
+    font-family: 'Nunito';
 }
 
 @media (max-width: 1000px) {
@@ -32,6 +33,14 @@
     height: 30px;
     font-size: 20px;
     line-height: 30px;
+    outline:none;
+    border: solid 1px black;
+    border-radius: 4px;
+    font-family: 'Nunito';
+}
+
+.questionInput:focus {
+    outline: none;
 }
 
 .optionsWrapper {
@@ -51,6 +60,14 @@
     font-size: 20px;
     line-height: 30px;
     margin-left: 2px;
+    outline:none;
+    border: solid 1px black;
+    border-radius: 4px;
+    font-family: 'Nunito';
+}
+
+.optionInput:focus {
+    outline: none;
 }
 
 .singleOption {
@@ -70,14 +87,26 @@
 .addVariant {
     margin-top: 12px;
     width: 100%;
-    height: 44px;
-    background-color: #708D81;
+    height: 36px;
+    background: #70AD81;
     border: none;
-    border-radius: 8px;
+    border-radius: 9999px;
+    font-family: 'Nunito';
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 transparent,0 0 transparent,0px 4px 0px #708D81;
 }
 
 .addVariant:hover {
-    background-color: #70AD81;
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #708D81;
+}
+
+.addVariant:active {
+    background-color: #708D81;
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
 }
 
 .addVariantText {

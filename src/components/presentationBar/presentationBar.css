@@ -7,31 +7,19 @@
     border-bottom: solid 2px #CFCFCF;
     box-sizing: content-box;
 }
-/*
-.bar-button {
-    height: 52px;
-    width: 120px;
-    margin: 4px;
-    box-sizing: border-box;
-    background-color: rgba(0, 16, 61, 0.06);
-    border-radius: 8px;
-    font-family: "BlinkMacSystemFont", -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-}
-
-.bar-button:hover {
-    background-color: rgba(0, 16, 61, 0.16);
-} */
 
 .bar-button {
     /* width: 200px; */
     position: relative;
-    border-radius: 8px;
-    margin: 4px;
+    border-radius: 9999px;
+    margin: 4px 4px 8px 4px;
     align-items: center;
     appearance: none;
-    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    background-color: rgba(52,142,246,1);
     border: 0;
-    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #257adc;
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
@@ -45,27 +33,31 @@
     position: relative;
     text-align: left;
     text-decoration: none;
-    transition: box-shadow .15s,transform .15s;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     white-space: nowrap;
-    will-change: box-shadow,transform;
     font-size: 18px;
+    font-family: 'Nunito';
+    font-weight: 600;
 }
 
 .bar-button:focus {
-  box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #257adc;
 }
 
 .bar-button:hover {
-  box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
-  transform: translateY(-2px);
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #257adc;
 }
 
 .bar-button:active {
-  box-shadow: #3c4fe0 0 3px 7px inset;
-  transform: translateY(2px);
+    background-color: rgba(37,122,220,1);
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
 }
 
 
@@ -84,8 +76,22 @@
 .deleteSlide {
     padding-left: 16px;
     padding-right: 16px;
-    color: black;
-    background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
+    color: #000;
+    background-color: rgba(247,250,252,1);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #dfe3e9;
+}
+
+.deleteSlide:hover {
+    color: #000;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #dfe3e9;
+}
+
+.deleteSlide:active {
+    color: #000;
+    background-color: #dfe3e9;
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
 }
 
 @media (max-width: 800px) {
@@ -106,29 +112,27 @@
     }
 }
 
-.deleteSlide:hover {
-    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
-}
-
-.deleteSlide:active {
-    box-shadow: #D5D9D8 0 3px 7px inset;
-}
-
 .showButton {
     color: black;
     margin-left: auto;
     padding-left: 0;
     padding-left: 16px;
     padding-right: 16px;
-    background-image: radial-gradient(100% 100% at 100% 0, #DAD9DF 0, #D5D9D8 100%);
+    background-color: rgba(247,250,252,1);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #dfe3e9;
 }
 
 .showButton:hover {
-    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(45, 35, 66, .4) 0 -3px 0 inset;
+    color: #000;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 4px 0px #dfe3e9;
 }
 
 .showButton:active {
-    box-shadow: #D5D9D8 0 3px 7px inset;
+    color: #000;
+    background-color: #dfe3e9;
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
 }
 
 .showButtonIcon {
@@ -175,6 +179,9 @@
     /* top: 50%; */
     position: relative;
     display: grid;
+}
+
+.invitationPopupWrapper {
     grid-template-areas: "link qr";
     grid-template-columns: 50% 50%;
     padding-right: 60px;
@@ -236,8 +243,8 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 6px;
     border-radius: 20px;
@@ -254,6 +261,6 @@
 .crossIcon {
     background-image: url('./close.png');
     background-size: contain;
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
 }

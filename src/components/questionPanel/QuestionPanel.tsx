@@ -13,6 +13,9 @@ const QuestionPanel = (props: QuestionPanelProps) => {
     const params = useParams();
     const hash = params.hash;
 
+    useEffect(() => {
+        setQuestions(props.questions);
+    }, [props.questions])
 
     useEffect(() => {
         const likes = document.querySelectorAll(".questionLikeIcon");

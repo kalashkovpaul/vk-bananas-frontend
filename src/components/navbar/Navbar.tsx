@@ -153,6 +153,7 @@ const Navbar = () => {
                 </div>
                 <NavLink className='ourLogo' to='/'>
                     <div className="logoImg"/>
+                    KindaSlides
                 </NavLink>
                 <div className="navbarMenu">
                     <NavLink className='menuBtn' to='/presentation/1'>Презентации</NavLink>

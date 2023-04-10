@@ -22,3 +22,15 @@
     height: 0px;
     position: relative;
 }
+
+.uploadFileButton:hover {
+    color: #fff;
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0px 3px 0px #257adc;
+}
+
+.uploadFileButton:active {
+    background-color: rgba(37,122,220,1);
+    transform: translateY(0.25rem);
+    box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
+}

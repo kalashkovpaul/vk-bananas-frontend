@@ -51,7 +51,7 @@ const PresentationBar = (props: PresBarProps) => {
                 open={open}
                 onClose={closeModal}
             >
-                <div className="popupWrapper">
+                <div className="popupWrapper invitationPopupWrapper">
                     <div className="crossWrapper" onClick={() => {
                         setOpen(o => !o);
                     }}>

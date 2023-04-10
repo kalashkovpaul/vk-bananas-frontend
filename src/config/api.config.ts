@@ -1,7 +1,7 @@
-const local = "http://localhost:3001"
-const global = "http://185.241.192.112"
-const localSite = "http://localhost:3000"
-const globalSite = "http://185.241.192.112"
+const local = "http://localhost:3001";
+const global = "https://kindaslides.ru";//"http://185.241.192.112"
+const localSite = "http://localhost:3000";
+const globalSite = "https://kindaslides.ru"; //"http://185.241.192.112";
 
 export const domain = global;
 export const site = globalSite;
@@ -34,4 +34,6 @@ export const api = {
     reactionUpdate: `${prefix}/reactions/update`,
     askQuestion: `${prefix}/question/ask`,
     likeQuestion: `${prefix}/question/like`,
+    setAvatar: `${prefix}/TODO`,
+    getProfile: `${prefix}/profile`
 }

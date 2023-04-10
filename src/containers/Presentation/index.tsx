@@ -10,7 +10,7 @@ import { MetaInfo } from "../../components";
 import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { calculateMiniScale, calculateScale } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
 import ReactionBar from "../../components/reactionBar/ReactionBar";
@@ -72,8 +72,9 @@ export function useWindowSize() {
     return size;
 }
 
-const Presentation: FunctionComponent = () => {
+const Presentation: FunctionComponent = (props: any) => {
     const params = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const presId = params.id ? +params.id : 0;
     const updateTime = 1000;
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -135,7 +136,6 @@ const Presentation: FunctionComponent = () => {
     const previousSlide = usePreviousSlide(currentSlide);
 
     const onOptionChange = (index: number, value: string, color: string) => {
-        // console.log(index, value, color);
         let newoptions;
         if (value || color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
@@ -178,8 +178,8 @@ const Presentation: FunctionComponent = () => {
         })
         .then((slidedata) => {
             if (slidedata.viewMode) {
-                if (currentSlide.kind === "question"
-                    && currentSlide.idx === slidedata.slide.idx) {
+                if (cur.current?.kind === "question"
+                    && cur.current?.idx === slidedata.slide.idx) {
                         setCurrentSlide(slidedata.slide);
                     }
                 setQuestions(slidedata.questions);
@@ -234,6 +234,10 @@ const Presentation: FunctionComponent = () => {
                     if (newdata.emotions)
                         setEmotions(newdata.emotions);
                     // setCurrentIndex(0);
+                }
+                if (searchParams.get("isDemonstration")) {
+                    window.history.replaceState(`/presentation/${presId}`, "", `/presentation/${presId}`);
+                    demonstrate();
                 }
             }
         })
@@ -296,7 +300,7 @@ const Presentation: FunctionComponent = () => {
                 quizId: quizId,
                 idx: index,
                 option: "",
-                votes: 0,
+                votes: 1,
                 color: "#0FD400"
             }),
             headers: {
@@ -420,7 +424,7 @@ const Presentation: FunctionComponent = () => {
     }
 
     const showGo = (index: number) => {
-        if (isDemonstration.current) {
+        if (isDemonstration.current && data.slides[index]?.kind !== "userQuestion") {
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
             })

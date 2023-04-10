@@ -38,6 +38,11 @@ export const CustomBar = (props: CustomBarProps) => {
     plugins: {
       legend: {
         position: 'top' as const,
+        labels: {
+          font: {
+            family: 'Nunito',
+          }
+        }
       },
     },
     transitions: {
@@ -55,6 +60,11 @@ export const CustomBar = (props: CustomBarProps) => {
         },
         border: {
           color: slide.graphColor,
+        },
+        ticks: {
+          font: {
+            family: 'Nunito',
+          }
         }
       },
       y: {
@@ -63,6 +73,11 @@ export const CustomBar = (props: CustomBarProps) => {
         },
         border: {
           color: slide.graphColor,
+        },
+        ticks: {
+          font: {
+            family: 'Nunito',
+          }
         }
       }
     }
@@ -74,6 +89,11 @@ export const CustomBar = (props: CustomBarProps) => {
     plugins: {
       legend: {
         position: 'top' as const,
+        labels: {
+          font: {
+            family: 'Nunito',
+          }
+        }
       },
     },
     transitions: {
@@ -92,6 +112,11 @@ export const CustomBar = (props: CustomBarProps) => {
         },
         border: {
           color: slide.graphColor,
+        },
+        ticks: {
+          font: {
+            family: 'Nunito',
+          }
         }
       },
       y: {
@@ -102,6 +127,11 @@ export const CustomBar = (props: CustomBarProps) => {
         },
         border: {
           color: slide.graphColor,
+        },
+        ticks: {
+          font: {
+            family: 'Nunito',
+          }
         }
       },
     }
@@ -125,24 +155,16 @@ export const CustomBar = (props: CustomBarProps) => {
         mode: 'nearest' as const
     },
     maintainAspectRatio: false,
-    // plugins: {
-    //   legend: {
-    //     position: 'top' as const,
-    //     labels: {
-    //       font: {
-    //         size: 30
-    //       }
-    //     }
-    //   },
-    //   tooltip: {
-    //     titleFont: {
-    //       size: 30
-    //     },
-    //     bodyFont: {
-    //       size: 30
-    //     }
-    //   }
-    // },
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          font: {
+            family: 'Nunito',
+          }
+        }
+      },
+    },
   }
 
   let pieData = {
