@@ -11,8 +11,7 @@ import type { shortPres } from "../../types";
 
 const Profile = () => {
     const {userData, setUserData} = useContext(UserContext);
-    console.log(userData);
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(userData?.img || "");
+    const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(userData?.imgsrc || "");
     const hiddenFileInput = React.useRef<HTMLButtonElement>(null);
     const [presentations, setPres] = useState<any[]>([]);
     const copyTime = 1000;
@@ -73,8 +72,8 @@ const Profile = () => {
 
 
     useEffect(() => {
-        if (userData?.img)
-            setImagePreviewUrl(`${domain}${userData.img}`);
+        if (userData?.imgsrc)
+            setImagePreviewUrl(`${domain}${userData.imgsrc}`);
     }, [userData])
 
     const ImgUpload =({imageSrc=""}) =>

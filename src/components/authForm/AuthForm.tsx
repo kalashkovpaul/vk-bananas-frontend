@@ -202,6 +202,7 @@ const AuthForm = (props: AuthProps) => {
             }
         })
         .catch(e => {
+            addSubmitError("Неправильный email или пароль!");
             console.error(e);
         });
     }
@@ -229,6 +230,7 @@ const AuthForm = (props: AuthProps) => {
             }
         })
         .catch(e => {
+            addSubmitError("Пользователь с таким email уже существует!");
             console.error(e);
         });
     }

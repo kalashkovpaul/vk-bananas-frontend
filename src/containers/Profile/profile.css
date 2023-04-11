@@ -13,7 +13,7 @@
     display: grid;
     grid-template-areas: "avatar userdata";
     grid-auto-flow: column;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 220px;
     margin: 20px;
 }
 
@@ -148,6 +148,97 @@
     align-items: center;
     cursor: pointer;
 }
+
+@media (max-width: 1350px) {
+    .explanation {
+        grid-template-columns: 32% 10% 12% 16% 26%;
+    }
+
+    .presItem {
+        grid-template-columns: 32% 10% 12% 16% 22% 4%;
+    }
+}
+
+@media (max-width: 1300px) {
+    .profilePage {
+        grid-template-columns: 10% 80% 10%;
+        grid-template-rows: 242px;
+    }
+}
+
+@media (max-width: 990px) {
+    .profilePage {
+        grid-template-columns: 5% 90% 50%;
+        /* grid-template-areas:
+            "profile"
+            "presData";
+        grid-template-columns: 100%; */
+        /* grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px); */
+    }
+}
+
+@media (max-width: 880px) {
+    .profilePage {
+        grid-template-columns: 5% 90% 50%;
+        /* grid-template-areas:
+            "profile"
+            "presData";
+        grid-template-columns: 100%; */
+        /* grid-template-rows: 60px minmax(200px 800px) minmax(200px 400px); */
+    }
+
+    .explanation {
+        grid-template-columns: 22% 10% 12% 16% 36%;
+    }
+
+    .presItem {
+        grid-template-columns: 22% 10% 12% 16% 32% 4%;
+    }
+}
+
+@media (max-width: 600px) {
+    .profilePage {
+        grid-template-rows: 410px;
+    }
+
+    .profileData {
+        width: 100%;
+        grid-area: profile;
+        display: grid;
+        grid-template-areas:
+            "avatar"
+            "userdata";
+        grid-auto-flow: column;
+        grid-template-columns: 100%;
+        grid-template-rows: 220px;
+        margin: 20px;
+        justify-self: center;
+        justify-items: center;
+    }
+
+    .userData {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .presItemDemonstrate {
+        display: none;
+    }
+
+    .explanation {
+        grid-template-areas: "name code creation";
+        grid-template-columns: 50% 20% 30%;
+        grid-template-rows: 100%;
+    }
+
+    .presItem {
+        grid-template-areas: "name code creation kebab";
+        grid-template-columns: 50% 20% 25% 5%;
+        grid-template-rows: 100%;
+    }
+}
+
 
 .presItem:hover {
     box-shadow: 0 25px 20px -20px rgba(0,0,0,.2);

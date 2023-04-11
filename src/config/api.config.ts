@@ -3,8 +3,8 @@ const global = "https://kindaslides.ru";//"http://185.241.192.112"
 const localSite = "http://localhost:3000";
 const globalSite = "https://kindaslides.ru"; //"http://185.241.192.112";
 
-export const domain = global;
-export const site = globalSite;
+export const domain = local;
+export const site = localSite;
 
 const apiVersion = "/api/v1"
 
