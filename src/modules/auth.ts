@@ -2,11 +2,11 @@ import { api } from "../config/api.config";
 import type { authcheckResponse, userData } from "../types";
 
 class Auth {
-    public user: userData | null;
+    public user: userData | {username: ""};
     public setUser: Function = () => {};
 
     constructor() {
-        this.user = null;
+        this.user = {username: ""};
         if (navigator.onLine) {
             this.getUserFromServer().catch((e) => {
                 console.log("Unexpected auth error: ", e);

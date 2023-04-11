@@ -7,12 +7,13 @@ import { useLocation, Route, Routes } from 'react-router-dom';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { authModule } from './modules/auth';
 
-export const UserContext = createContext(null as any);
+export const UserContext = createContext(authModule.user as any);
 
 const App: FunctionComponent = () => {
   useScrollToTop();
   const location = useLocation();
   const [userData, setUserData] = useState(authModule.user);
+
 
   return (
     <UserContext.Provider value={{userData: userData, setUserData: setUserData}}>

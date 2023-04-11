@@ -84,7 +84,7 @@
 .userData {
     grid-area: userdata;
     margin: 20px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .userDataName {
@@ -102,11 +102,11 @@
     font-size: 24px;
     font-weight: 800;
     margin: 8px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .explanation {
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
     display: grid;
     grid-template-areas: "name empty code creation demonstrate";
     grid-template-columns: 30% 16% 12% 18% 20%;
@@ -140,7 +140,7 @@
     background-color: #fff;
     box-shadow: 0 0 transparent, 0 0 transparent, 0px 1px 3px 0px rgba(211,215,225,0.81);
     display: grid;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
     grid-template-areas: "name empty code creation demonstrate kebab";
     grid-template-columns: 36% 10% 12% 16% 22% 4%;
     transition: .5s;
@@ -151,11 +151,11 @@
 
 @media (max-width: 1350px) {
     .explanation {
-        grid-template-columns: 32% 10% 12% 16% 26%;
+        grid-template-columns: 36% 10% 12% 16% 26%;
     }
 
     .presItem {
-        grid-template-columns: 32% 10% 12% 16% 22% 4%;
+        grid-template-columns: 36% 10% 12% 16% 22% 4%;
     }
 }
 
@@ -188,56 +188,14 @@
     }
 
     .explanation {
-        grid-template-columns: 22% 10% 12% 16% 36%;
+        grid-template-columns: 26% 10% 12% 16% 36%;
     }
 
     .presItem {
-        grid-template-columns: 22% 10% 12% 16% 32% 4%;
+        grid-template-columns: 26% 10% 12% 16% 32% 4%;
     }
 }
 
-@media (max-width: 600px) {
-    .profilePage {
-        grid-template-rows: 410px;
-    }
-
-    .profileData {
-        width: 100%;
-        grid-area: profile;
-        display: grid;
-        grid-template-areas:
-            "avatar"
-            "userdata";
-        grid-auto-flow: column;
-        grid-template-columns: 100%;
-        grid-template-rows: 220px;
-        margin: 20px;
-        justify-self: center;
-        justify-items: center;
-    }
-
-    .userData {
-        margin: 0;
-        width: 100%;
-        text-align: center;
-    }
-
-    .presItemDemonstrate {
-        display: none;
-    }
-
-    .explanation {
-        grid-template-areas: "name code creation";
-        grid-template-columns: 50% 20% 30%;
-        grid-template-rows: 100%;
-    }
-
-    .presItem {
-        grid-template-areas: "name code creation kebab";
-        grid-template-columns: 50% 20% 25% 5%;
-        grid-template-rows: 100%;
-    }
-}
 
 
 .presItem:hover {
@@ -343,7 +301,7 @@
 .changePresLabel {
     width: 80%;
     font-size: 24px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 700;
     color: black;
 }
@@ -357,6 +315,25 @@
     border-radius: 8px;
     width: 70%;
 }
+
+@media (max-width: 1280px) {
+    .changePresLabel {
+        display: flex;
+        flex-direction: column;
+        width: 64%;
+    }
+    .changePresInput {
+        margin: 0;
+        width: 100%;
+    }
+
+    .buttonsArea {
+        flex-direction: column;
+        flex-flow: column-reverse;
+    }
+}
+
+
 
 .changePresInput:focus {
     outline: none;
@@ -427,4 +404,85 @@
     background-color: #257adc;
     transform: translateY(0.25rem);
     box-shadow: 0 0 transparent,0 0 transparent,0 0 transparent;
+}
+
+@media (max-width: 600px) {
+    .profilePage {
+        grid-template-rows: 410px;
+    }
+
+    .profileData {
+        width: 100%;
+        grid-area: profile;
+        display: grid;
+        grid-template-areas:
+            "avatar"
+            "userdata";
+        grid-auto-flow: column;
+        grid-template-columns: 100%;
+        grid-template-rows: 220px;
+        margin: 20px;
+        justify-self: center;
+        justify-items: center;
+    }
+
+    .userData {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .presItemDemonstrate {
+        display: none;
+    }
+
+    .presItem:hover .presItemDemonstrate {
+        opacity: 0;
+    }
+
+    .explanation {
+        grid-template-areas: "name code creation";
+        grid-template-columns: 50% 20% 30%;
+        grid-template-rows: 100%;
+    }
+
+    .presItem {
+        grid-template-areas: "name code creation kebab";
+        grid-template-columns: 47% 20% 25% 8%;
+        grid-template-rows: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .presItemDemonstrate {
+        display: none;
+    }
+
+    .presItem:hover .presItemDemonstrate {
+        opacity: 0;
+    }
+
+    .explanation {
+        grid-template-areas: "name code empty";
+        grid-template-columns: 70% 20% 10%;
+        grid-template-rows: 100%;
+    }
+
+    .explanationCreationDate {
+        display: none;
+    }
+
+    .presItemCreationDate {
+        display: none;
+    }
+
+    .presItem {
+        grid-template-areas: "name code kebab";
+        grid-template-columns: 70% 20% 10%;
+        grid-template-rows: 100%;
+    }
+
+    [role="tooltip"].popup-content {
+        display: none;
+    }
 }

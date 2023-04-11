@@ -51,6 +51,11 @@ const Navbar = () => {
         authModule.setUserFunction(setUserData);
     }, [])
 
+    useEffect(() => {
+        if (userData.username)
+            addEventListenerToVerticalMenu();
+    }, [userData.username]);
+
     const onJoin = () => {
         const input = document.getElementById("joinInput") as HTMLInputElement;
         if (input) {
@@ -90,7 +95,7 @@ const Navbar = () => {
         }).catch(e => {
             console.error(e);
         });
-        authModule.user = null;
+        authModule.user = {username: ""};
         window.localStorage.removeItem("user");
     }
 
@@ -142,34 +147,32 @@ const Navbar = () => {
                 </div>
             </div>}
             <div className="navbarWrapper">
-                <div className="verticalMenu">
+                {userData?.username && <div className="verticalMenu">
                     <div className='verticalMenuBtn'>
                         <div className='burgerLeft' />
                         <div className='burgerRight' />
                     </div>
                     <div className='verticalMenuContainer'>
-                        <NavLink className='menuBtn' to='/presentation/1'>Презентации</NavLink>
+                        <NavLink className="menuBtn" to='/profile'> Профиль </NavLink>
                     </div>
-                </div>
+                </div>}
                 <NavLink className='ourLogo' to='/'>
                     <div className="logoImg"/>
                     KindaSlides
                 </NavLink>
-                <div className="navbarMenu">
-                    <NavLink className='menuBtn' to='/presentation/1'>Презентации</NavLink>
-                    {userData?.username &&
+                {userData?.username && <div className="navbarMenu">
                     <div className="profileMenu">
                         <NavLink className="menuBtn" to='/profile'> Профиль </NavLink>
-                    </div>}
-                </div>
+                    </div>
+                </div>}
 
                 {userData?.username ?
                     <div className="navbarLogin" onClick={(e) => {
                         e.preventDefault();
-                        setUserData(null);
+                        setUserData({username: ""});
                         onLogout();
                     }}>
-                        <div className="navbarLoginBtn">Выйти</div>
+                        <NavLink to="/" className="navbarLoginBtn">Выйти</NavLink>
                     </div> :
                     <div className="navbarLogin">
                         <NavLink className="navbarLoginBtn" to="/login">Войти</NavLink>

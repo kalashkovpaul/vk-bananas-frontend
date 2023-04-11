@@ -3,7 +3,7 @@
     max-width: calc(50% - 200px);
     background-color: white;
     overflow-y: scroll;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 @media (max-width: 1000px) {
@@ -36,7 +36,7 @@
     outline:none;
     border: solid 1px black;
     border-radius: 4px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .questionInput:focus {
@@ -63,7 +63,7 @@
     outline:none;
     border: solid 1px black;
     border-radius: 4px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .optionInput:focus {
@@ -91,7 +91,7 @@
     background: #70AD81;
     border: none;
     border-radius: 9999px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
     color: #fff;
     font-weight: 700;
     box-shadow: 0 0 transparent,0 0 transparent,0px 4px 0px #708D81;

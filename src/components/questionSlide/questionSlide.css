@@ -1,3 +1,11 @@
+.questionSlide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .questionBoxes {
     margin-top: 70px;
     display: grid;
@@ -47,6 +55,136 @@
 
 .slideBox:fullscreen .questionBoxes{
     margin-top: 100px;
+}
+
+.singleUserQuestionBig {
+    width: 60%;
+    text-align: center;
+    font-size: 24px;
+}
+
+.singleUserQuestionBigText {
+    color: #000;
+    background-image: linear-gradient(#000, #000);
+    background-repeat: no-repeat;
+    background-position: bottom 10px left;
+    background-size: 0% 3px;
+    transition: background-size 500ms ease-in-out;
+}
+
+.singleUserQuestionBigText:hover {
+    color: #000;
+}
+
+.singleUserQuestionBigText.strike {
+    color: #000;
+    background-size: 100% 3px;
+}
+
+.slideBox:-webkit-full-screen .singleUserQuestionBigText {
+    background-size: 0% 6px;
+    background-position: bottom 20px left;
+}
+
+.slideBox:fullscreen .singleUserQuestionBigText{
+    background-size: 0% 6px;
+    background-position: bottom 20px left;
+}
+
+.slideBox:-webkit-full-screen .singleUserQuestionBigText.strike {
+    background-size: 100% 6px;
+}
+
+.slideBox:fullscreen .singleUserQuestionBigText.strike{
+    background-size: 100% 6px;
+}
+
+.slideBox:-webkit-full-screen .singleUserQuestionBig {
+    font-size: 48px;
+}
+
+.slideBox:fullscreen .singleUserQuestionBig{
+    font-size: 48px;
+}
+
+.prevArrow {
+    background-image: url('./left-arrow.png');
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.prevArrow:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.prevArrow:active {
+    filter: drop-shadow(3px 2px 2px rgb(0 0 0 / 0.4));
+}
+
+.slideBox:-webkit-full-screen .prevArrow {
+    width: 40px;
+    height: 40px;
+}
+
+.slideBox:fullscreen .prevArrow{
+    width: 40px;
+    height: 40px;
+}
+
+.nextArrow {
+    background-image: url('./right-arrow.png');
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.nextArrow:hover {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+}
+
+.nextArrow:active {
+    filter: drop-shadow(3px 2px 2px rgb(0 0 0 / 0.4));
+}
+
+.slideBox:-webkit-full-screen .nextArrow {
+    width: 40px;
+    height: 40px;
+}
+
+.slideBox:fullscreen .nextArrow{
+    width: 40px;
+    height: 40px;
+}
+
+.clue {
+    position: absolute;
+    bottom: 20px;
+    opacity: 0;
+    transition: 0.5s;
+    font-size: 12px;
+}
+
+.slideBox:-webkit-full-screen .clue {
+    font-size: 20px;
+}
+
+.slideBox:fullscreen .clue{
+    font-size: 20px;
+}
+
+.visible {
+    opacity: 1;
 }
 
 

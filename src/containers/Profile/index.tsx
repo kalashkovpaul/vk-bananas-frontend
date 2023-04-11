@@ -113,13 +113,13 @@ const Profile = () => {
                 </div>
             </div>
             <div className="profilePresentationData">
-                <div className="presentationsTitle">Мои презентации:</div>
-                <div className="explanation">
+                <div className="presentationsTitle">Мои презентации: {presentations.length ? "" : "добавьте первую презентацию!"}</div>
+                {presentations.length ? <div className="explanation">
                     <div className="explanationName">Название</div>
                     <div className="explanationCode">Код доступа</div>
                     <div className="explanationCreationDate">Дата создания</div>
-                </div>
-                {presentations?.map(pres => {
+                </div> : null}
+                {presentations.length ? presentations?.map(pres => {
                     return (
                         <div key={pres.idx} className="presItem" onClick={() => {
                             const link = document.getElementById(`hiddenLink${pres.idx}`);
@@ -154,6 +154,9 @@ const Profile = () => {
                                     search: "?isDemonstration=1"
                                 }}
                                 className="presItemDemonstrate"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                }}
                             >
                                 <div className="playIconSmall"/>
                                 Демонстрировать
@@ -167,7 +170,7 @@ const Profile = () => {
                             }}/>
                         </div>
                     );
-                })}
+                }) : null}
             </div>
             <Popup
                 position={"center center"}

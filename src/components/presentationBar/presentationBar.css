@@ -38,7 +38,7 @@
     touch-action: manipulation;
     white-space: nowrap;
     font-size: 18px;
-    font-family: 'Nunito';
+    font-family: 'Nunito', 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 600;
 }
 
@@ -189,13 +189,17 @@
 
 @media (max-width: 1270px) {
     [data-popup="modal"] .popup-content {
-        width: 400px;
+        width: 360px;
     }
     [data-popup="modal"] .popupWrapper {
         grid-template-columns: 100%;
         grid-template-areas:
             "link"
             "qr";
+    }
+
+    .invitationPopupWrapper {
+        padding-right: 20px;
     }
 }
 
