@@ -131,12 +131,12 @@ const QuestionSlide = (props: QuestionSlideProps) => {
                         onClick={e => {
                             e.preventDefault();
                             e.stopPropagation();
-                            if (isStrike) {
+                            if (isStrike && qstate.length) {
                                 setQstate(qstate.filter((q, i) => {
                                     return i !== curQuestionIndex;
                                 }));
                                 setIsPopup(false);
-                                if (curQuestionIndex === qstate.length)
+                                if (curQuestionIndex === qstate.length - 1)
                                     setQIndex(curQuestionIndex - 1);
                                 setToggle(false);
                                 setTimeout(() => {
@@ -145,8 +145,8 @@ const QuestionSlide = (props: QuestionSlideProps) => {
                             }
                         }}
                     >
-                        {toggle && curQuestionIndex < qstate.length &&
-                            qstate[curQuestionIndex]?.question}
+                        {toggle && (qstate.length ? curQuestionIndex < qstate.length ?
+                            qstate[curQuestionIndex]?.question : "Вопросов больше нет" : "Вопросов больше нет")}
                     </a>
                 </div>
             </CSSTransition>
@@ -168,11 +168,11 @@ const QuestionSlide = (props: QuestionSlideProps) => {
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (curQuestionIndex < questions.length - 1) {
+                    if (curQuestionIndex < qstate.length - 1) {
                         setQIndex(curQuestionIndex + 1);
                     }
                 }}
-                style={curQuestionIndex < questions.length - 1 ? {
+                style={curQuestionIndex < qstate.length - 1 ? {
                     opacity: 1
                 } : {}}
             />

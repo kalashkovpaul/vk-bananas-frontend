@@ -104,7 +104,7 @@ const Presentation: FunctionComponent = (props: any) => {
     const [slideHeight, setSlideHeight] = useState(0);
     const [miniSlideWidth, setMiniSlideWidth] = useState(0);
     const [miniSlideHeight, setMiniSlideHeight] = useState(0);
-    const [timerId, setTimerId] = useState<number>(0);
+    const [timerId, setTimerId] = useState(0);
     const [emotions, setEmotions] = useState({
         like: 0,
         love: 0,
@@ -148,7 +148,7 @@ const Presentation: FunctionComponent = (props: any) => {
             } else if (value) {
                 newoptions[index] = {
                     option: value,
-                    votes: 0,
+                    votes: 1,
                     color: color,
                     idx: index,
                 }
@@ -424,6 +424,10 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     const showGo = (index: number) => {
+        if (timerId === 0) {
+            const id = window.setInterval(checkDemonstration, updateTime);
+            setTimerId(id);
+        }
         if (isDemonstration.current && data.slides[index]?.kind !== "userQuestion") {
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
@@ -532,7 +536,7 @@ const Presentation: FunctionComponent = (props: any) => {
                         {currentSlide?.kind === "question" && currentSlide.type ?
                             <CustomBar
                                 width={slideWidth - 180}
-                                height={slideHeight - 140}
+                                height={slideHeight - 160}
                                 kind={currentSlide.type}
                                 slide={currentSlide}/>
                             : null}

@@ -71,6 +71,7 @@
 }
 
 .emotionBtn .emotionIcon {
+    -webkit-tap-highlight-color: transparent;
     width: 36px;
     height: 36px;
     cursor: pointer;

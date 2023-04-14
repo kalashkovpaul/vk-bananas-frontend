@@ -4,7 +4,7 @@ import { useLocation, useParams } from "react-router-dom";
 import PollForm from "../../components/pollForm/PollForm";
 import { api, domain } from "../../config/api.config";
 import { type Emotions, type SingleSlideData } from "../../types";
-import { calculateDemonstrationScale, } from "../../utils/utils";
+import { calculateDemonstrationScale, debounce, } from "../../utils/utils";
 import { useWindowSize } from "../Presentation";
 import { CustomBar } from "../Presentation/CustomBar";
 import './demonstration.css';
@@ -138,6 +138,8 @@ const Demonstration: FunctionComponent = () => {
         });
     }
 
+    const debounced = debounce(updateReactions, 400);
+
     const askQuestion = (idx: number, question: string) => {
         fetch(`${api.askQuestion}`, {
             method: 'PUT',
@@ -215,7 +217,7 @@ const Demonstration: FunctionComponent = () => {
                                 onClick={() => {
                                     const newEmotions = {...emotions, like: emotions.like + 1};
                                     setEmotions(newEmotions);
-                                    updateReactions(newEmotions);
+                                    debounced(newEmotions);
                                 }}/>
                                 {emotions?.like}
                             </div>
@@ -224,7 +226,7 @@ const Demonstration: FunctionComponent = () => {
                                     onClick={() => {
                                         const newEmotions = {...emotions, love: emotions.love + 1}
                                         setEmotions(newEmotions);
-                                        updateReactions(newEmotions);
+                                        debounced(newEmotions);
                                     }}/>
                                 {emotions?.love}
                             </div>
@@ -233,7 +235,7 @@ const Demonstration: FunctionComponent = () => {
                                     onClick={() => {
                                         const newEmotions = {...emotions, laughter: emotions.laughter + 1}
                                         setEmotions(newEmotions);
-                                        updateReactions(newEmotions);
+                                        debounced(newEmotions);
                                     }}/>
                                 {emotions?.laughter}
                             </div>
@@ -242,7 +244,7 @@ const Demonstration: FunctionComponent = () => {
                                     onClick={() => {
                                         const newEmotions = {...emotions, surprise: emotions.surprise + 1}
                                         setEmotions(newEmotions);
-                                        updateReactions(newEmotions);
+                                        debounced(newEmotions);
                                     }}/>
                                 {emotions?.surprise}
                             </div>
@@ -251,7 +253,7 @@ const Demonstration: FunctionComponent = () => {
                                     onClick={() => {
                                         const newEmotions = {...emotions, sad: emotions.sad + 1}
                                         setEmotions(newEmotions);
-                                        updateReactions(newEmotions);
+                                        debounced(newEmotions);
                                     }}/>
                                 {emotions?.sad}
                             </div>

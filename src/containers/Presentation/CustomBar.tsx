@@ -33,6 +33,11 @@ export const CustomBar = (props: CustomBarProps) => {
   root?.style.setProperty('--graph-width', `${width}px`);
   root?.style.setProperty('--graph-height', `${height}px`);
 
+  useEffect(() => {
+    root?.style.setProperty('--graph-width', `${width}px`);
+    root?.style.setProperty('--graph-height', `${height}px`);
+  }, [width, height]);
+
   const verticalOptions = {
     responsive: true,
     plugins: {

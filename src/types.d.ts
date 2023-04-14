@@ -140,7 +140,7 @@ export type userQuestion = {
 
 export type shortPres = {
     name: string,
-    idx: number,
+    id: number,
     code: string,
     hash: string,
 }

@@ -15,12 +15,13 @@ const Profile = () => {
     const hiddenFileInput = React.useRef<HTMLButtonElement>(null);
     const [presentations, setPres] = useState<any[]>([]);
     const copyTime = 1000;
+    const maxPresNameLength = 120;
     const [isCodeCopied, setCodeCopied] = useState(false);
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
     const [curPres, setCurPres] = useState<shortPres>({
         name: "",
-        idx: 0,
+        id: 0,
         code: "",
         hash: "",
     })
@@ -65,7 +66,9 @@ const Profile = () => {
             return res.json()
         })
         .then((data) => {
-            setUserData({...userData, img: data.path});
+            setUserData({...userData, imgsrc: data.path});
+            setImagePreviewUrl(`${domain}${data.path}`);
+            localStorage.setItem("user", JSON.stringify({...userData, imgsrc: data.path}));
         })
         .catch((err) => console.error(err));
     };
@@ -74,7 +77,35 @@ const Profile = () => {
     useEffect(() => {
         if (userData?.imgsrc)
             setImagePreviewUrl(`${domain}${userData.imgsrc}`);
-    }, [userData])
+    }, [userData]);
+
+    const savePres = (id: number, name: string) => {
+        fetch(`${api.setPresName}/${id}/name`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                name: name,
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const deletePres = (id: number) => {
+        fetch(`${api.deletePres}/${id}/delete`, {
+            method: 'POST',
+            body: JSON.stringify({
+
+            }),
+            headers: {
+
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
 
     const ImgUpload =({imageSrc=""}) =>
         <label htmlFor="photo-upload" className="customFileUpload fas">
@@ -87,8 +118,8 @@ const Profile = () => {
                 const reader = new FileReader();
                 const file = e.target.files[0];
                 let fileType = (file.name.match(/\.[0-9a-z]+$/i) as any)[0];
-                if (fileType !== '.png' && fileType !== '.jpg') {
-                    createError("Ошибка", "Изображение должно иметь расширение png или jpg");
+                if (fileType !== '.png' && fileType !== '.jpg' && fileType !== '.jpeg' && fileType !== '.svg') {
+                    createError("Ошибка", "Изображение должно иметь расширение png, jpg или jpeg");
                     return;
                 }
                 reader.onloadend = () => {
@@ -121,11 +152,11 @@ const Profile = () => {
                 </div> : null}
                 {presentations.length ? presentations?.map(pres => {
                     return (
-                        <div key={pres.idx} className="presItem" onClick={() => {
-                            const link = document.getElementById(`hiddenLink${pres.idx}`);
+                        <div key={pres.id} className="presItem" onClick={() => {
+                            const link = document.getElementById(`hiddenLink${pres.id}`);
                             link?.click();
                         }}>
-                            <NavLink className="hiddenLink" id={`hiddenLink${pres.idx}`} to={`/presentation/${pres.idx}`}/>
+                            <NavLink className="hiddenLink" id={`hiddenLink${pres.id}`} to={`/presentation/${pres.id}`}/>
                             <div className="presItemName">{pres.name}</div>
                             <Popup
                                 on="hover"
@@ -150,7 +181,7 @@ const Profile = () => {
                             <div className="presItemCreationDate">{pres.creationDate || "Недавно"}</div>
                             <NavLink
                                 to={{
-                                    pathname: `/presentation/${pres.idx}`,
+                                    pathname: `/presentation/${pres.id}`,
                                     search: "?isDemonstration=1"
                                 }}
                                 className="presItemDemonstrate"
@@ -199,15 +230,16 @@ const Profile = () => {
                                 onChange={(e) => {
                                     setCurPres({...curPres, name: e.target.value})
                                 }}
+                                maxLength={maxPresNameLength}
                             />
                         </label>
                         <div className="buttonsArea">
                             <div
                                 className="deletePresButton"
                                 onClick={(e) => {
-                                    // TODO sendDelete
+                                    deletePres(curPres.id);
                                     setPres(presentations.filter(pres => {
-                                        return pres.idx !== curPres.idx;
+                                        return pres.id !== curPres.id;
                                     }));
                                     setOpen(o => !o);
                                 }}
@@ -216,9 +248,9 @@ const Profile = () => {
                                 type="submit"
                                 className="savePresButton"
                                 onClick={(e) => {
-                                    // TODO sendChange
+                                    savePres(curPres.id, curPres.name)
                                     setPres(presentations.map(pres => {
-                                        if (pres.idx === curPres.idx)
+                                        if (pres.id === curPres.id)
                                             return curPres;
                                         return pres;
                                     }));

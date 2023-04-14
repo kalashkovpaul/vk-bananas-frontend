@@ -34,6 +34,8 @@ export const api = {
     reactionUpdate: `${prefix}/reactions/update`,
     askQuestion: `${prefix}/question/ask`,
     likeQuestion: `${prefix}/question/like`,
-    setAvatar: `${prefix}/TODO`,
-    getProfile: `${prefix}/profile`
+    setAvatar: `${prefix}/profile/avatar`,
+    getProfile: `${prefix}/profile`,
+    setPresName: `${prefix}/presentation`,
+    deletePres: `${prefix}/presentation`,
 }
