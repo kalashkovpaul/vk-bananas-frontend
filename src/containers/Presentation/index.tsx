@@ -114,16 +114,17 @@ const Presentation: FunctionComponent = (props: any) => {
     });
     const [questions, setQuestions] = useState<any[]>(fakeQuestions);
 
-    const isDemonstration = useRef(false);
+    const [isDemonstration, setIsDemonstration] = useState(false);
+    // const isDemonstration = useRef(false);
 
     useEffect(() => {
-        const {width, height} = calculateScale(isDemonstration.current as any, screenWidth, screenHeight, data.width, data.height);
+        const {width, height} = calculateScale(isDemonstration as any, screenWidth, screenHeight, data.width, data.height);
         setSlideWidth(width);
         setSlideHeight(height);
         const {mWidth, mHeight} = calculateMiniScale(screenWidth, screenHeight, data.width, data.height);
         setMiniSlideWidth(mWidth);
         setMiniSlideHeight(mHeight);
-    }, [isDemonstration.current, screenWidth, screenHeight, data]);
+    }, [isDemonstration, screenWidth, screenHeight, data]);
 
     const usePreviousSlide = (value: any) => {
         const prevSlideRef = useRef<any>(value);
@@ -199,7 +200,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 // slideRef.current.style.width = `${currentSlide.width}px`;
                 // slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
-                slideRef.current.style.backgroundColor = "#CECECE";
+                slideRef.current.style.backgroundColor = "#fff";
             } else {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
@@ -208,7 +209,7 @@ const Presentation: FunctionComponent = (props: any) => {
         } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion") && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
-            if (currentIndex === previousSlide.idx && !isDemonstration.current)
+            if (currentIndex === previousSlide.idx && !isDemonstration)
                 onSlideChange();
         }
     }, [currentSlide]);
@@ -244,6 +245,11 @@ const Presentation: FunctionComponent = (props: any) => {
         .catch(e => {
             console.error(e);
         });
+        // document.addEventListener("keydown", (e) => {
+        //     if (e.key === "Escape") {
+        //         isDemonstration.current = false;
+        //     }
+        // });
     }, []);
 
 
@@ -424,11 +430,11 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     const showGo = (index: number) => {
-        if (timerId === 0) {
-            const id = window.setInterval(checkDemonstration, updateTime);
-            setTimerId(id);
-        }
-        if (isDemonstration.current && data.slides[index]?.kind !== "userQuestion") {
+        // if (timerId === 0) {
+        //     const id = window.setInterval(checkDemonstration, updateTime);
+        //     setTimerId(id);
+        // }
+        if (isDemonstration && data.slides[index]?.kind !== "userQuestion") {
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
             })
@@ -464,8 +470,12 @@ const Presentation: FunctionComponent = (props: any) => {
         setPresData({...data, slides: newslides});
     }
 
+    useEffect(() => {
+        console.log("Timer: ", timerId);
+    }, [timerId]);
+
     useEffect(() =>{
-        if (isDemonstration.current) {
+        if (isDemonstration) {
             window.screen.orientation.lock("landscape").then().catch(e => {});
             showGo(currentIndex);
             if (timerId === 0) {
@@ -477,24 +487,24 @@ const Presentation: FunctionComponent = (props: any) => {
             window.screen.orientation.unlock();
             showStop();
             document.getElementById("popup-root")?.remove();
-            clearInterval(timerId);
+            console.log(timerId);
+            window.clearInterval(timerId);
             setTimerId(0);
-            const {width, height} = calculateScale(isDemonstration.current as any, screenWidth, screenHeight, data.width, data.height);
-            setSlideWidth(width);
-            setSlideHeight(height);
         }
-    }, [isDemonstration.current]);
+    }, [isDemonstration]);
 
     const screenChangeHandler = (e: any) => {
         document.getElementById("popup-root")?.remove();
-        if (!isDemonstration.current) {
-            // createQuestionSlide();
-        } else {
-            // if (currentIndex === data.slides.length)
-            //     console.log("HERE");
-            // deleteQuestionSlide();
-        }
-        isDemonstration.current = !isDemonstration.current;
+        // if (!isDemonstration.current) {
+        //     // createQuestionSlide();
+        // } else {
+        //     // if (currentIndex === data.slides.length)
+        //     //     console.log("HERE");
+        //     // deleteQuestionSlide();
+        // }
+        // if (isDemonstration.current)
+        //     isDemonstration.current = false;
+        setIsDemonstration(!!document.fullscreenElement);
     }
 
     useEffect(() => {
@@ -526,7 +536,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 <div className="slideBox" style={{
                         height: `${slideHeight + 50}px`,
                     }}>
-                    {isDemonstration.current &&
+                    {isDemonstration &&
                         <InvitationBar code={data.code} hash={data.hash}/>}
                     <div className="slide" style={{
                         height: `${slideHeight}px`,
@@ -535,10 +545,14 @@ const Presentation: FunctionComponent = (props: any) => {
                         {/* TODO: reactionBar */}
                         {currentSlide?.kind === "question" && currentSlide.type ?
                             <CustomBar
-                                width={slideWidth - 180}
-                                height={slideHeight - 160}
+                                width={slideHeight * 1.4 }
+                                height={slideHeight * 0.7}
+                                top={slideHeight*0.15}
+                                left={(slideWidth - slideHeight*1.4) / 2}
                                 kind={currentSlide.type}
-                                slide={currentSlide}/>
+                                slide={currentSlide}
+
+                            />
                             : null}
                         {currentSlide?.kind === "userQuestion" &&
                             <QuestionSlide
@@ -548,7 +562,7 @@ const Presentation: FunctionComponent = (props: any) => {
                                 slide={currentSlide}
                             />}
                     </div>
-                    {isDemonstration.current &&
+                    {isDemonstration &&
                         <ReactionBar emotions={emotions}/>}
                 </div>
                 <QuizEditor

@@ -83,6 +83,8 @@ type CustomBarProps = {
     kind: BarKind,
     width: number,
     height: number,
+    top: number,
+    left: number,
 };
 
 type UpdateModeType = "default" | "resize" | "reset" | "none" | "hide" | "show" | "active" | undefined;

@@ -26,7 +26,7 @@ ChartJS.register(
 const labels = [''];
 
 export const CustomBar = (props: CustomBarProps) => {
-  const {slide, kind, width, height} = props;
+  const {slide, kind, width, height, top, left} = props;
   const [updateMode, setUpdateMode] = useState<UpdateModeType>("default");
   const chartRef = useRef<any>(null);
   const root = document.querySelector(':root') as HTMLDivElement;
@@ -36,10 +36,13 @@ export const CustomBar = (props: CustomBarProps) => {
   useEffect(() => {
     root?.style.setProperty('--graph-width', `${width}px`);
     root?.style.setProperty('--graph-height', `${height}px`);
-  }, [width, height]);
+    root?.style.setProperty('--graph-top', `${top}px`);
+    root?.style.setProperty('--graph-left', `${left}px`);
+  }, [width, height, top, left]);
 
   const verticalOptions = {
     responsive: true,
+    events: [],
     plugins: {
       legend: {
         position: 'top' as const,
@@ -89,6 +92,7 @@ export const CustomBar = (props: CustomBarProps) => {
   };
 
   const horizontalOptions = {
+    events: [],
     indexAxis: 'y' as const,
     responsive: true,
     plugins: {
@@ -155,6 +159,7 @@ export const CustomBar = (props: CustomBarProps) => {
   };
 
   let pieOptions = {
+    events: [],
     responsive: true,
     interaction: {
         mode: 'nearest' as const
@@ -267,7 +272,7 @@ export const CustomBar = (props: CustomBarProps) => {
       />}
       {kind === "pie" &&
       <Pie
-        className="piechart"
+        className="chart"
         ref={chartRef}
         options={pieOptions}
         data={pieData}
@@ -280,7 +285,7 @@ export const CustomBar = (props: CustomBarProps) => {
       />}
       {kind === "doughnut" &&
       <Doughnut
-        className="piechart"
+        className="chart"
         ref={chartRef}
         options={pieOptions}
         data={pieData}

@@ -61,11 +61,13 @@
     margin: 20px;
     width: 700px;
     height: 400px;
-    background-color: #9A8873;
+    background-color: #fff;
     flex-direction: column;
     /* border-radius: 20px; */
     box-shadow: rgba(0, 0, 0, 0.36) 0px 8px 20px 4px;
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 
@@ -102,23 +104,25 @@
 :root {
     --graph-width: 600px;
     --graph-height: 300px;
+    --graph-top: 80px;
+    --graph-left: 40px;
 }
 
 .chart {
     width: var(--graph-width) !important;
     height: var(--graph-height) !important;
     position: absolute;
-    top: 80px;
-    left: 40px;
+    top: var(--graph-top) !important;
+    left: var(--graph-left) !important;
 }
 
-.slideBox:-webkit-full-screen .chart {
+/* .slideBox:-webkit-full-screen .chart {
     top: 130px;
 }
 
 .slideBox:fullscreen .chart {
     top: 130px;
-}
+} */
 
 .piechart {
     width: var(--graph-width) !important;
