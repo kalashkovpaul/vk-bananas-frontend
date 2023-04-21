@@ -7,6 +7,7 @@ import './navbar.css';
 import { UserContext } from '../../App';
 import { api } from '../../config/api.config';
 import { authModule } from '../../modules/auth';
+import { csrf } from '../../utils/utils';
 
 const Navbar = () => {
     const {userData, setUserData} = useContext(UserContext);
@@ -56,18 +57,21 @@ const Navbar = () => {
             addEventListenerToVerticalMenu();
     }, [userData.username]);
 
-    const onJoin = () => {
+    const onJoin = async () => {
         const input = document.getElementById("joinInput") as HTMLInputElement;
         if (input) {
             const value = input.value;
             if (value && value.length === 4) {
                 console.log("JOIN: ", value);
+                const token = await csrf();
                 fetch(`${api.getHash}/${value}`, {
                     method: 'GET',
                     // body: JSON.stringify({
                     //     code: value
                     // }),
-                    // headers: {
+                    headers: {
+                        "X-CSRF-Token": token as string,
+                    }
                     //     'content-type': 'application/json'
                     // }
                 }).then((response) => {
@@ -85,12 +89,14 @@ const Navbar = () => {
         }
     }
 
-    const onLogout = () => {
+    const onLogout = async () => {
+        const token = await csrf();
         fetch(`${api.logout}`, {
             method: 'PUT',
             body: JSON.stringify({
             }),
             headers: {
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);

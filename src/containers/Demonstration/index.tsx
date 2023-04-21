@@ -4,7 +4,7 @@ import { useLocation, useParams } from "react-router-dom";
 import PollForm from "../../components/pollForm/PollForm";
 import { api, domain } from "../../config/api.config";
 import { type Emotions, type SingleSlideData } from "../../types";
-import { calculateDemonstrationScale, debounce, } from "../../utils/utils";
+import { calculateDemonstrationScale, csrf, debounce, } from "../../utils/utils";
 import { useWindowSize } from "../Presentation";
 import { CustomBar } from "../Presentation/CustomBar";
 import './demonstration.css';
@@ -23,6 +23,15 @@ const demEmptySlide: SingleSlideData = {
     background: "",
     fontColor: "",
     graphColor: "",
+    timer: 0,
+}
+
+const emptyEmotions = {
+    like: 0,
+    love: 0,
+    laughter: 0,
+    surprise: 0,
+    sad: 0,
 }
 
 const Demonstration: FunctionComponent = () => {
@@ -48,14 +57,35 @@ const Demonstration: FunctionComponent = () => {
         sad: 0,
     });
 
+    const emotionsRef = useRef(emptyEmotions);
+
+    useEffect(() => {
+        emotionsRef.current = emotions;
+    }, [emotions]);
+
     const [isQuestionsPage, setQuestionsPage] = useState(false);
     const isQuestionRef = useRef(false);
     const [questions, setQuestions] = useState<any[]>([]);
     const panelRef = useRef(null);
 
-    const getInfo = () => {
+
+    const setNewEmotions = (receivedEmotions: Emotions) => {
+        let newEmotions = {...emptyEmotions};
+        newEmotions.like = Math.max(receivedEmotions.like, emotionsRef.current.like);
+        newEmotions.love = Math.max(receivedEmotions.love, emotionsRef.current.love);
+        newEmotions.surprise = Math.max(receivedEmotions.surprise, emotionsRef.current.surprise);
+        newEmotions.laughter = Math.max(receivedEmotions.laughter, emotionsRef.current.laughter);
+        newEmotions.sad = Math.max(receivedEmotions.sad, emotionsRef.current.sad);
+        setEmotions(newEmotions);
+    }
+
+    const getInfo = async () => {
+        const token = await csrf();
         fetch(`${api.getDemonstration}/${hash}`, {
             method: 'GET',
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
         }).then(data => {
             return data ? data.json() : {} as any
         })
@@ -65,7 +95,7 @@ const Demonstration: FunctionComponent = () => {
                 setHeight(slidedata.height);
                 setUrl(slidedata.url);
                 setViewMode(slidedata.viewMode)
-                setEmotions(slidedata.emotions);
+                setNewEmotions(slidedata.emotions);
                 setCurrentSlide(slidedata.slide);
             }
             setQuestions(slidedata.questions);
@@ -117,13 +147,14 @@ const Demonstration: FunctionComponent = () => {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
             }
-        } else if (currentSlide?.kind === "question" && slideRef.current) {
+        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
         }
     }, [currentSlide]);
 
-    const updateReactions = (reactions: Emotions) => {
+    const updateReactions = async (reactions: Emotions) => {
+        const token = await csrf();
         fetch(`${api.reactionUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -131,7 +162,7 @@ const Demonstration: FunctionComponent = () => {
                 emotions: reactions
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
@@ -140,7 +171,8 @@ const Demonstration: FunctionComponent = () => {
 
     const debounced = debounce(updateReactions, 400);
 
-    const askQuestion = (idx: number, question: string) => {
+    const askQuestion = async (idx: number, question: string) => {
+        const token = await csrf();
         fetch(`${api.askQuestion}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -152,7 +184,7 @@ const Demonstration: FunctionComponent = () => {
                 }
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
@@ -216,8 +248,9 @@ const Demonstration: FunctionComponent = () => {
                                 <div className="emotionIcon likeIcon clickable"
                                 onClick={() => {
                                     const newEmotions = {...emotions, like: emotions.like + 1};
+                                    const emotionsToSend = {...emptyEmotions, like: 1};
                                     setEmotions(newEmotions);
-                                    debounced(newEmotions);
+                                    debounced(emotionsToSend);
                                 }}/>
                                 {emotions?.like}
                             </div>
@@ -225,17 +258,19 @@ const Demonstration: FunctionComponent = () => {
                                 <div className="emotionIcon loveIcon clickable"
                                     onClick={() => {
                                         const newEmotions = {...emotions, love: emotions.love + 1}
+                                        const emotionsToSend = {...emptyEmotions, love: 1}
                                         setEmotions(newEmotions);
-                                        debounced(newEmotions);
+                                        debounced(emotionsToSend);
                                     }}/>
                                 {emotions?.love}
                             </div>
                             <div className="emotion emotionBtn">
                                 <div className="emotionIcon laughterIcon clickable"
                                     onClick={() => {
-                                        const newEmotions = {...emotions, laughter: emotions.laughter + 1}
+                                        const newEmotions = {...emotions, laughter: emotions.laughter + 1};
+                                        const emotionsToSend = {...emptyEmotions, laughter: 1}
                                         setEmotions(newEmotions);
-                                        debounced(newEmotions);
+                                        debounced(emotionsToSend);
                                     }}/>
                                 {emotions?.laughter}
                             </div>
@@ -243,17 +278,19 @@ const Demonstration: FunctionComponent = () => {
                                 <div className="emotionIcon surpriseIcon clickable"
                                     onClick={() => {
                                         const newEmotions = {...emotions, surprise: emotions.surprise + 1}
+                                        const emotionsToSend = {...emptyEmotions, surprise: 1}
                                         setEmotions(newEmotions);
-                                        debounced(newEmotions);
+                                        debounced(emotionsToSend);
                                     }}/>
                                 {emotions?.surprise}
                             </div>
                             <div className="emotion emotionBtn">
                                 <div className="emotionIcon sadIcon clickable"
                                     onClick={() => {
-                                        const newEmotions = {...emotions, sad: emotions.sad + 1}
+                                        const newEmotions = {...emotions, sad: emotions.sad + 1};
+                                        const emotionsToSend = {...emptyEmotions, sad: 1}
                                         setEmotions(newEmotions);
-                                        debounced(newEmotions);
+                                        debounced(emotionsToSend);
                                     }}/>
                                 {emotions?.sad}
                             </div>

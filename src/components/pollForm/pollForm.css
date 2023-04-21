@@ -83,6 +83,7 @@ input[type="radio"] {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 input[type="radio"]::before {
@@ -96,6 +97,10 @@ input[type="radio"]::before {
     box-shadow: inset 1em 1em #4f9bf3;
 }
 
+.quizEditor input[type="radio"]::before {
+    box-shadow: inset 1em 1em rgba(51,193,115,1);
+}
+
 .disabledPoll input[type="radio"]::before {
     box-shadow: inset 1em 1em #d3d7e1;
 }
@@ -106,6 +111,10 @@ input[type="radio"]:checked::before {
 
 input[type="radio"]:checked {
     border-color: #4f9bf3;
+}
+
+input[type="radio"]:checked.inEditor {
+    border-color: rgba(51,193,115,1);
 }
 
 .disabledPoll input[type="radio"]:checked {

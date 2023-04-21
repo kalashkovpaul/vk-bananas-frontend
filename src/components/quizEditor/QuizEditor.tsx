@@ -68,6 +68,13 @@ const QuizEditor = (props: QuizEditorProps) => {
         })
     }
 
+    const handleTimerChange = (e: any) => {
+        setCurrentSlide({
+            ...currentSlide,
+            timer: +e.target?.value
+        })
+    }
+
     const [optionElemList, setElemList] = React.useState([] as any);
 
     const addVariant = () => {
@@ -76,10 +83,12 @@ const QuizEditor = (props: QuizEditorProps) => {
         if (tIndex) {
             setElemList(optionElemList.concat(
             <OptionInput
-                withColor={currentSlide.type !== "cloud"}
+                withColor={currentSlide.kind !== "quiz"}
                 key={maxIndex}
                 index={maxIndex}
                 onChange={onOptionUpdate}
+                withCheckbox={currentSlide.kind === "quiz"}
+                checked={false}
             />));
             setMaxIndex(maxIndex + 1);
             onOptionCreate(tIndex);
@@ -91,9 +100,9 @@ const QuizEditor = (props: QuizEditorProps) => {
 
     useEffect(() => {
         if (currentSlide?.idx === previousIndex
-            && currentSlide?.type === previousQKind)
+            && (currentSlide?.kind === "question" && currentSlide?.type === previousQKind))
             return;
-        if (currentSlide?.kind === "question" && currentSlide?.votes.length) {
+        if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && currentSlide?.votes.length) {
             let lst: Array<JSX.Element> = [];
             setElemList(lst);
             let i = 0;
@@ -104,14 +113,16 @@ const QuizEditor = (props: QuizEditorProps) => {
                     value={option.option}
                     color={option.color}
                     onChange={onOptionUpdate}
-                    withColor={currentSlide.type !== "cloud"}
+                    withColor={currentSlide.kind !== "quiz"}
+                    withCheckbox={currentSlide.kind === "quiz"}
+                    checked={currentSlide.kind === "quiz" && option?.isCorrect}
                 />)
                 i++;
             });
             setMaxIndex(i);
             setElemList(lst);
         } else {
-            if (currentSlide?.kind === "question") {
+            if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz")) {
                 setElemList([<OptionInput key={100} index={0} onChange={onOptionUpdate}/>]);
                 setMaxIndex(1);
             }
@@ -122,7 +133,7 @@ const QuizEditor = (props: QuizEditorProps) => {
         <div
             className="quizEditor"
         >
-            {currentSlide?.kind === "question" && <div className="questionWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="questionWrapper">
                 <div className="questionTitle">
                     Ваш вопрос:
                 </div>
@@ -134,7 +145,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                         onChange={handleNameChange}
                         placeholder="Как настроение?"
                         value={currentSlide?.question}
-                        maxLength={44}
+                        maxLength={currentSlide?.kind === "quiz" ? 100 : 44}
                     />
                     <ColorPicker
                         background={currentSlide?.fontColor}
@@ -142,9 +153,9 @@ const QuizEditor = (props: QuizEditorProps) => {
                     />
                 </div>
             </div>}
-            {currentSlide?.kind === "question" && <div className="optionsWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="optionsWrapper">
                 <div className="optionsTitle">
-                    Варианты ответа:
+                    {currentSlide?.kind === "question" ? "Варианты ответа:" : "Варианты ответа (и правильные ли они):"}
                 </div>
                 <div id="optionsVariants" ref={optionsVariantsRef}>
                     {optionElemList}
@@ -155,7 +166,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                     </div>
                 </button>
             </div>}
-            {currentSlide?.kind === "question" && <div className="backgroundWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="backgroundWrapper">
                 <div className="questionTitle">
                     Цвет слайда:
                 </div>
@@ -203,6 +214,24 @@ const QuizEditor = (props: QuizEditorProps) => {
                     position={"up"}
                     onChange={handleGraphColorChange}
                 />
+            </div>}
+            {currentSlide?.kind === "quiz" &&
+            <div className="timerWrapper">
+                <div className="questionTitle">
+                    Время (в секундах):
+                </div>
+                <div className="timerInputWrapper">
+                    <input
+                        className="questionInput timerInput"
+                        type="number"
+                        min="0"
+                        name="timer"
+                        onChange={handleTimerChange as any}
+                        placeholder="60"
+                        value={currentSlide?.timer}
+                        maxLength={3}
+                    />
+                </div>
             </div>}
         </div>
     );

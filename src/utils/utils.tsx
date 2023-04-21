@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { Alert } from "../components";
+import { api } from "../config/api.config";
 
 let el = document.getElementById("alertWrapper");
 let root = el ? createRoot(el) : null;
@@ -112,3 +113,23 @@ export function debounce(func: Function, timeout = 300){
         timer = window.setTimeout(() => { func(args); }, timeout);
     };
 }
+
+let CSRFToken: string | undefined = undefined;
+
+export const csrf = async () => {
+    if (CSRFToken === undefined) {
+        const headers = {
+            "Content-Type": 'application/json',
+        }
+        const response = await fetch(api.csrf, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-store',
+            credentials: 'include',
+            headers: headers,
+        });
+        CSRFToken = (response.headers.get('X-Csrf-Token') || undefined) as string;
+        // console.log(CSRFToken, response.headers.get('X-Csrf-Token'));
+    }
+    return CSRFToken;
+};

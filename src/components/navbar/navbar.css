@@ -160,7 +160,7 @@
     grid-area: menu;
     align-items: center;
     justify-items: center;
-    grid-template-columns: repeat(4, minmax(120px, 240px));
+    grid-template-columns: repeat(4, minmax(120px, 400px));
     grid-template-areas: "A1 A2 A3 A4";
     font-size: 20px;
 }

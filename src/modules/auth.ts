@@ -1,5 +1,6 @@
 import { api } from "../config/api.config";
 import type { authcheckResponse, userData } from "../types";
+import { csrf } from "../utils/utils";
 
 class Auth {
     public user: userData | {username: ""};
@@ -20,10 +21,14 @@ class Auth {
     }
 
     checkAuth = async () => {
+        const token = await csrf();
         const response = await fetch(`${api.checkAuth}`, {
             method: 'GET',
             credentials: 'include',
-            body: null
+            body: null,
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
         });
         try {
             return response.json();
@@ -34,10 +39,14 @@ class Auth {
 
 
     getCurrentUser = async (id: string) => {
+        const token = await csrf();
         const response = await fetch(`${api.getUser}/${id}`, {
             method: 'GET',
             credentials: 'include',
-            body: null
+            body: null,
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
         });
         try {
             return response.json();

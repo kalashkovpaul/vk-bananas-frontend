@@ -3,6 +3,7 @@ import './questionPanel.css';
 import type { userQuestion } from "../../types";
 import { useParams } from "react-router-dom";
 import { api } from "../../config/api.config";
+import { csrf } from "../../utils/utils";
 
 type QuestionPanelProps = {
     questions: userQuestion[];
@@ -29,7 +30,8 @@ const QuestionPanel = (props: QuestionPanelProps) => {
         })
     }, []);
 
-    const likeQuestion = (idx: number) => {
+    const likeQuestion = async (idx: number) => {
+        const token = await csrf();
         fetch(`${api.likeQuestion}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -37,7 +39,7 @@ const QuestionPanel = (props: QuestionPanelProps) => {
                 idx: idx,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);

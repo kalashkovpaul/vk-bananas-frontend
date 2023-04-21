@@ -15,7 +15,7 @@ export const prefix = `${domain}${apiVersion}`;
 export const api = {
     presCreate: `${prefix}/presentation/create`,
     getPres: `${prefix}/presentation`,
-    quizCreate: `${prefix}/quiz/create`,
+    pollCreate: `${prefix}/quiz/create`,
     quizDelete: `${prefix}/quiz/delete`,
     quizUpdate: `${prefix}/quiz/update`,
     voteCreate: `${prefix}/quiz/vote/create`,
@@ -38,4 +38,6 @@ export const api = {
     getProfile: `${prefix}/profile`,
     setPresName: `${prefix}/presentation`,
     deletePres: `${prefix}/presentation`,
+    quizCreate: `${prefix}/quiz/create`,
+    csrf: `${prefix}/csrf`,
 }

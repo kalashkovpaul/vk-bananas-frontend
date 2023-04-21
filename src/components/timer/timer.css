@@ -1,0 +1,37 @@
+:root {
+    --timer-color: hsl(120, 100%, 50%);
+}
+
+.path--background {
+    fill: var(--timer-color);
+    stroke: #fff;
+    stroke-width: 0px;
+    cursor: pointer;
+}
+
+.pulse {
+    fill: rgb(255, 74, 74) !important;
+ }
+
+.path--foreground {
+    fill: #eee;
+    stroke: #eee;
+    stroke-width: 2px;
+}
+
+#timer {
+    width: 100px;
+    margin: auto;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.label {
+    font: 26px "Nunito" !important;
+    font-weight: 900;
+    text-anchor: middle;
+    fill: #000;
+    /* rgb(34, 213, 201); */
+}

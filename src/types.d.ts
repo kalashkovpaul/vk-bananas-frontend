@@ -14,6 +14,8 @@ export type OptionProps = {
     value?: string;
     color?: string;
     onChange: Function;
+    withCheckbox?: boolean;
+    checked?: boolean;
 }
 
 export type OptionData = {
@@ -21,13 +23,14 @@ export type OptionData = {
     option: string;
     votes: number;
     color: string;
+    isCorrect?: boolean;
 }
 
 export type SingleSlideData = {
     idx: number;
     name: string;
     quizId: number;
-    kind: "slide" | "question" | "userQuestion";
+    kind: "slide" | "question" | "userQuestion" | "quiz";
     type: "" | BarKind;
     question: string;
     votes: Array<OptionData>;
@@ -35,6 +38,7 @@ export type SingleSlideData = {
     fontColor: string;
     graphColor: string;
     fontSize: string;
+    timer: number;
 }
 
 export type Emotions = {

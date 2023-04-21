@@ -15,16 +15,39 @@ let presData = {
     slides: [
         {
             idx: 0,
-            name: "green.png",
-            kind: "slide",
+            name: "",
+            kind: "quiz",
             type: "",
-            quizId: 0,
+            quizId: 5,
             fontSize: "",
-            question: "",
-            votes: [],
-            background: "",
-            fontColor: "",
+            question: "Кто завязал гордиев узел?",
+            votes: [
+                {
+                    idx: 0,
+                    option: "Гордий",
+                    votes: 1,
+                    color: "red",
+                    isCorrect: false,
+                },
+                {
+                    idx: 1,
+                    option: "Не Гордий",
+                    votes: 1,
+                    color: "blue",
+                    isCorrect: false,
+                },
+                {
+                    idx: 2,
+                    option: "Гэндальф",
+                    votes: 1,
+                    color: "violet",
+                    isCorrect: false,
+                },
+            ],
+            background: "white",
+            fontColor: "black",
             graphColor: "",
+            timer: 55,
         },
         {
             idx: 1,
@@ -34,6 +57,7 @@ let presData = {
             question: "Как настроение?",
             quizId: 0,
             fontSize: "",
+            timer: 0,
             votes: [
                 {
                     idx: 0,
@@ -102,6 +126,7 @@ let presData = {
             question: "Какое приветствие лучше всех?",
             quizId: 0,
             fontSize: "",
+            timer: 0,
             votes: [
                 {
                     idx: 0,
@@ -138,6 +163,7 @@ let presData = {
             background: "",
             fontColor: "",
             graphColor: "",
+            timer: 0,
         },
         // {
         //     idx: 4,
@@ -404,6 +430,14 @@ const startServer = (app) => {
             status: true,
         });
     });
+
+    app.get('/api/v1/csrf', (req, res) => {
+        res.set("X-Csrf-Token", "mockedCSRFToken");
+        res.json({
+
+        });
+    });
+
     app.post("/api/v1/presentation/create", function (req, res) {
         res.json({
             presId: presId
@@ -539,7 +573,7 @@ const startServer = (app) => {
                 },
                 {
                     name: "РК2",
-                    idx: 4,
+                    id: 4,
                     code: "1234",
                     hash: "a1b2c3d4"
                 },
@@ -557,7 +591,7 @@ const startServer = (app) => {
                 },
                 {
                     name: "РК2",
-                    idx: 7,
+                    id: 7,
                     code: "1234",
                     hash: "a1b2c3d4"
                 },

@@ -4,6 +4,7 @@ import './pollForm.css';
 // import Poll from './poll';//'react-polls';//'./poll';
 import { LeafPoll } from 'react-leaf-polls'
 import { api } from "../../config/api.config";
+import { csrf } from "../../utils/utils";
 
 type PollFormProps = {
     currentSlide: SingleSlideData;
@@ -74,7 +75,8 @@ const PollForm = (props: PollFormProps) => {
         }
     }, [isDisabled]);
 
-    const voteHandler = () => {
+    const voteHandler = async () => {
+        const token = await csrf();
         fetch(`${api.votePoll}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -82,7 +84,7 @@ const PollForm = (props: PollFormProps) => {
                 idx: choice,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);

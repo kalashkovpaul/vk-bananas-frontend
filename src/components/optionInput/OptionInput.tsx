@@ -4,7 +4,7 @@ import ColorPicker from "../colorPicker/ColorPicker";
 import './optionInput.css'
 
 const OptionInput = (props: OptionProps) => {
-    const {withColor=true, index, value, color='#0FD400', onChange} = props;
+    const {withColor=true, index, value, color='#0FD400', onChange, withCheckbox=false, checked=false} = props;
     const [option, setOption] = useState<string>(value ? value : "");
     const [curColor, setCurColor] = useState<string>(color ? color : "");
     const [trueIndex, setTrueIndex] = useState<number>(index);
@@ -40,6 +40,17 @@ const OptionInput = (props: OptionProps) => {
                     setCurColor(newColor);
                     onChange(trueIndex, option, newColor);
                 }}
+            />}
+            {withCheckbox && <input
+                type="radio"
+                value={option}
+                name={`option_${index}`}
+                checked={checked}
+                onClick={(e) => {
+                    onChange(trueIndex, option, curColor, !checked);
+                }}
+                onChange={(e) => {}}
+                className="pollSingleOptionInput inEditor"
             />}
             <div className="cross" onClick={() => {
                 let child = document.getElementById(`option-${index}`);

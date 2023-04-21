@@ -3,7 +3,7 @@ import './profile.css'
 import { UserContext } from "../../App";
 import { api, domain, site } from "../../config/api.config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { copyLink, createError } from "../../utils/utils";
+import { copyLink, createError, csrf } from "../../utils/utils";
 import UploadFileButton from "../../components/uploadFileButton/UploadFileButton";
 import { NavLink } from "react-router-dom";
 import Popup from "reactjs-popup";
@@ -26,11 +26,12 @@ const Profile = () => {
         hash: "",
     })
 
-    useEffect(() => {
+    const getProfile = async () => {
+        const token = await csrf();
         fetch(`${api.getProfile}`, {
             method: 'GET',
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).then(data => {
             return data ? data.json() : {} as any
@@ -41,11 +42,15 @@ const Profile = () => {
         .catch(e => {
             console.error(e);
         });
+    }
+
+    useEffect(() => {
+        getProfile();
     }, []);
 
     const onImageSubmit = () => {};
 
-    const upload = (file: File) => {
+    const upload = async (file: File) => {
         if (!file) {
           return;
         }
@@ -53,11 +58,12 @@ const Profile = () => {
         let formData = new FormData();
         formData.append('avatar', file);
 
+        const token = await csrf();
         fetch(api.setAvatar, {
             method: 'POST',
             body: formData,
-
             headers: {
+                "X-CSRF-Token": token as string,
                 // 'content-type': 'multipart/form-data',//file.type,
                 // // 'boundary': 'presentation',
                 // 'content-length': `${file.size}`,
@@ -79,28 +85,30 @@ const Profile = () => {
             setImagePreviewUrl(`${domain}${userData.imgsrc}`);
     }, [userData]);
 
-    const savePres = (id: number, name: string) => {
+    const savePres = async (id: number, name: string) => {
+        const token = await csrf();
         fetch(`${api.setPresName}/${id}/name`, {
             method: 'PUT',
             body: JSON.stringify({
                 name: name,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
         });
     }
 
-    const deletePres = (id: number) => {
+    const deletePres = async (id: number) => {
+        const token = await csrf();
         fetch(`${api.deletePres}/${id}/delete`, {
             method: 'POST',
             body: JSON.stringify({
 
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);

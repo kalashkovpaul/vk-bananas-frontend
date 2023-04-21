@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { FunctionComponent } from "react";
 import './presentation.css';
+import './quiz.sass';
 import Sidebar from "../../components/sidebar/Sidebar";
 import QuizEditor from "../../components/quizEditor/QuizEditor";
 import type { OptionData, PresData, SingleSlideData } from "../../types";
@@ -11,11 +12,12 @@ import { CustomBar } from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
 import { useParams, useSearchParams } from "react-router-dom";
-import { calculateMiniScale, calculateScale } from "../../utils/utils";
+import { calculateMiniScale, calculateScale, csrf } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
 import ReactionBar from "../../components/reactionBar/ReactionBar";
 import QuestionSlide from "../../components/questionSlide/QuestionSlide";
 import { fakeQuestions } from "./fakeData";
+import Timer from "../../components/timer/Timer";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -29,6 +31,7 @@ const emptySlide: SingleSlideData = {
     background: "",
     fontColor: "",
     graphColor: "",
+    timer: 0,
 }
 
 const newQuestionSlide: SingleSlideData = {
@@ -43,9 +46,10 @@ const newQuestionSlide: SingleSlideData = {
     background: "white",
     fontColor: "black",
     graphColor: "black",
+    timer: 0,
 }
 
-const newSlide: SingleSlideData = {
+const newPoll: SingleSlideData = {
     idx: 0,
     name: "",
     kind: "question",
@@ -57,6 +61,22 @@ const newSlide: SingleSlideData = {
     background: "white",
     fontColor: "black",
     graphColor: "black",
+    timer: 0,
+}
+
+const newQuiz: SingleSlideData = {
+    idx: 0,
+    name: "",
+    kind: "quiz",
+    type: "",
+    quizId: 0,
+    fontSize: "",
+    question: "",
+    votes: [],
+    background: "white",
+    fontColor: "black",
+    graphColor: "black",
+    timer: 0,
 }
 
 export function useWindowSize() {
@@ -115,7 +135,6 @@ const Presentation: FunctionComponent = (props: any) => {
     const [questions, setQuestions] = useState<any[]>(fakeQuestions);
 
     const [isDemonstration, setIsDemonstration] = useState(false);
-    // const isDemonstration = useRef(false);
 
     useEffect(() => {
         const {width, height} = calculateScale(isDemonstration as any, screenWidth, screenHeight, data.width, data.height);
@@ -136,7 +155,7 @@ const Presentation: FunctionComponent = (props: any) => {
 
     const previousSlide = usePreviousSlide(currentSlide);
 
-    const onOptionChange = (index: number, value: string, color: string) => {
+    const onOptionChange = (index: number, value: string, color: string, isCorrect=false) => {
         let newoptions;
         if (value || color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
@@ -146,12 +165,14 @@ const Presentation: FunctionComponent = (props: any) => {
             if (newoptions[index]) {
                 newoptions[index].option = value;
                 newoptions[index].color = color;
+                newoptions[index].isCorrect = isCorrect;
             } else if (value) {
                 newoptions[index] = {
                     option: value,
                     votes: 1,
                     color: color,
                     idx: index,
+                    isCorrect: isCorrect,
                 }
             }
             onOptionUpdate(newoptions);
@@ -171,15 +192,19 @@ const Presentation: FunctionComponent = (props: any) => {
         });
     };
 
-    const checkDemonstration = () => {
+    const checkDemonstration = async () => {
+        const token = await csrf();
         fetch(`${api.getDemonstration}/${data.hash}`, {
             method: 'GET',
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
         }).then(data => {
             return data ? data.json() : {} as any
         })
         .then((slidedata) => {
             if (slidedata.viewMode) {
-                if (cur.current?.kind === "question"
+                if ((cur.current?.kind === "question")
                     && cur.current?.idx === slidedata.slide.idx) {
                         setCurrentSlide(slidedata.slide);
                     }
@@ -197,8 +222,6 @@ const Presentation: FunctionComponent = (props: any) => {
         if (currentSlide?.kind === "slide" && slideRef.current) {
             if (currentSlide?.name) {
                 slideRef.current.style.backgroundImage = `url(${domain}${data.url}${currentSlide.name})`;
-                // slideRef.current.style.width = `${currentSlide.width}px`;
-                // slideRef.current.style.height = `${currentSlide.height}px`;
             } else if (currentSlide.idx >=0) {
                 slideRef.current.style.backgroundColor = "#fff";
             } else {
@@ -206,7 +229,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 slideRef.current.style.boxShadow = "none";
             }
 
-        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion") && slideRef.current) {
+        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion" || currentSlide?.kind === "quiz") && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
             if (currentIndex === previousSlide.idx && !isDemonstration)
@@ -214,11 +237,12 @@ const Presentation: FunctionComponent = (props: any) => {
         }
     }, [currentSlide]);
 
-    useEffect(() => {
+    const getPresentation = async() => {
+        const token = await csrf();
         fetch(`${api.getPres}/${presId}`, {
             method: 'GET',
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).then(data => {
             return data ? data.json() : {} as any
@@ -234,7 +258,6 @@ const Presentation: FunctionComponent = (props: any) => {
                     setPresData(newdata);
                     if (newdata.emotions)
                         setEmotions(newdata.emotions);
-                    // setCurrentIndex(0);
                 }
                 if (searchParams.get("isDemonstration")) {
                     window.history.replaceState(`/presentation/${presId}`, "", `/presentation/${presId}`);
@@ -245,11 +268,10 @@ const Presentation: FunctionComponent = (props: any) => {
         .catch(e => {
             console.error(e);
         });
-        // document.addEventListener("keydown", (e) => {
-        //     if (e.key === "Escape") {
-        //         isDemonstration.current = false;
-        //     }
-        // });
+    }
+
+    useEffect(() => {
+        getPresentation();
     }, []);
 
 
@@ -269,7 +291,8 @@ const Presentation: FunctionComponent = (props: any) => {
         }
     }, [currentIndex]);
 
-    const onSlideDelete = () => {
+    const onSlideDelete = async () => {
+        const token = await csrf();
         let newSlides: Array<SingleSlideData> = [];
         data?.slides.forEach((slide) => {
             if (slide.idx < currentIndex) {
@@ -287,7 +310,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 quizId: currentSlide.quizId
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
@@ -299,7 +322,8 @@ const Presentation: FunctionComponent = (props: any) => {
         });
     };
 
-    const onOptionCreate = (index: number, quizId: number = currentSlide.quizId) => {
+    const onOptionCreate = async (index: number, quizId: number = currentSlide.quizId) => {
+        const token = await csrf();
         fetch(`${api.voteCreate}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -307,17 +331,19 @@ const Presentation: FunctionComponent = (props: any) => {
                 idx: index,
                 option: "",
                 votes: 1,
+                isCorrect: false,
                 color: "#0FD400"
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
         });
     }
 
-    const onOptionDelete = (index: number) => {
+    const onOptionDelete = async (index: number) => {
+        const token = await csrf();
         fetch(`${api.voteDelete}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -325,14 +351,15 @@ const Presentation: FunctionComponent = (props: any) => {
                 idx: index,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
         });
     }
 
-    const onOptionUpdate = (newoptions: Array<OptionData>) => {
+    const onOptionUpdate = async (newoptions: Array<OptionData>) => {
+        const token = await csrf();
         fetch(`${api.voteUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -340,14 +367,15 @@ const Presentation: FunctionComponent = (props: any) => {
                 votes: newoptions,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
         });
     }
 
-    const onSlideChange = () => {
+    const onSlideChange = async () => {
+        const token = await csrf();
         fetch(`${api.quizUpdate}`, {
             method: 'PUT',
             body: JSON.stringify({
@@ -362,7 +390,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 graphColor: currentSlide.graphColor,
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).catch(e => {
             console.error(e);
@@ -370,6 +398,7 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     useEffect(() => {
+        console.log(data);
         if (currentIndex < data.slides.length) {
             setCurrentSlide(data.slides[currentIndex]);
         } else if (data.slides.length === 0) {
@@ -378,35 +407,79 @@ const Presentation: FunctionComponent = (props: any) => {
     }, [data]);
 
 
-    const onCreateSlide = () => {
+    const onCreatePoll = async () => {
         let newSlides: Array<SingleSlideData> = [];
         data.slides.forEach((slide) => {
             if (slide.idx < currentIndex) {
                 newSlides.push(slide);
             } else if (slide.idx === currentIndex) {
                 newSlides.push(slide);
-                newSlides.push({...newSlide, idx: currentIndex + 1})
+                newSlides.push({...newPoll, idx: currentIndex + 1})
             } else {
                 newSlides.push({...slide, idx: slide.idx + 1});
             }
         });
 
+        const token = await csrf();
+        fetch(`${api.pollCreate}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                presId: presId,
+                idx: currentIndex + 1,
+                type: newPoll.type,
+                question: newPoll.question,
+                votes: [],
+                background: newPoll.background,
+                fontColor: newPoll.fontColor,
+                fontSize: newPoll.fontSize,
+                graphColor: newPoll.graphColor
+            }),
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((response) => {
+            newSlides[currentIndex + 1].quizId = response?.quizId;
+            setPresData({
+                ...data,
+                slides: newSlides
+            });
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const onCreateQuiz = async () => {
+        let newSlides: Array<SingleSlideData> = [];
+        data.slides.forEach((slide) => {
+            if (slide.idx < currentIndex) {
+                newSlides.push(slide);
+            } else if (slide.idx === currentIndex) {
+                newSlides.push(slide);
+                newSlides.push({...newQuiz, idx: currentIndex + 1})
+            } else {
+                newSlides.push({...slide, idx: slide.idx + 1});
+            }
+        });
+
+        const token = await csrf();
         fetch(`${api.quizCreate}`, {
             method: 'POST',
             body: JSON.stringify({
-                creatorId: 1,
                 presId: presId,
                 idx: currentIndex + 1,
-                type: newSlide.type, // ???
-                question: newSlide.question,
+                type: newQuiz.type,
+                question: newQuiz.question,
                 votes: [],
-                background: newSlide.background,
-                fontColor: newSlide.fontColor,
-                fontSize: newSlide.fontSize, //???
-                graphColor: newSlide.graphColor
+                background: newQuiz.background,
+                fontColor: newQuiz.fontColor,
+                fontSize: newQuiz.fontSize,
+                graphColor: newQuiz.graphColor
             }),
             headers: {
-
+                "X-CSRF-Token": token as string,
             }
         }).then(data => {
             return data ? data.json() : {} as any
@@ -429,14 +502,14 @@ const Presentation: FunctionComponent = (props: any) => {
         }
     }
 
-    const showGo = (index: number) => {
-        // if (timerId === 0) {
-        //     const id = window.setInterval(checkDemonstration, updateTime);
-        //     setTimerId(id);
-        // }
+    const showGo = async (index: number) => {
         if (isDemonstration && data.slides[index]?.kind !== "userQuestion") {
+            const token = await csrf();
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
+                headers: {
+                    "X-CSRF-Token": token as string,
+                }
             })
             .catch(e => {
                 console.error(e);
@@ -444,9 +517,13 @@ const Presentation: FunctionComponent = (props: any) => {
         }
     }
 
-    const showStop = () => {
+    const showStop = async () => {
+        const token = await csrf();
         fetch(`${api.showStop}/${presId}/show/stop`, {
             method: 'PUT',
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
         })
         .catch(e => {
             console.error(e);
@@ -470,10 +547,6 @@ const Presentation: FunctionComponent = (props: any) => {
         setPresData({...data, slides: newslides});
     }
 
-    useEffect(() => {
-        console.log("Timer: ", timerId);
-    }, [timerId]);
-
     useEffect(() =>{
         if (isDemonstration) {
             window.screen.orientation.lock("landscape").then().catch(e => {});
@@ -487,7 +560,6 @@ const Presentation: FunctionComponent = (props: any) => {
             window.screen.orientation.unlock();
             showStop();
             document.getElementById("popup-root")?.remove();
-            console.log(timerId);
             window.clearInterval(timerId);
             setTimerId(0);
         }
@@ -495,15 +567,6 @@ const Presentation: FunctionComponent = (props: any) => {
 
     const screenChangeHandler = (e: any) => {
         document.getElementById("popup-root")?.remove();
-        // if (!isDemonstration.current) {
-        //     // createQuestionSlide();
-        // } else {
-        //     // if (currentIndex === data.slides.length)
-        //     //     console.log("HERE");
-        //     // deleteQuestionSlide();
-        // }
-        // if (isDemonstration.current)
-        //     isDemonstration.current = false;
         setIsDemonstration(!!document.fullscreenElement);
     }
 
@@ -519,9 +582,11 @@ const Presentation: FunctionComponent = (props: any) => {
         <div className="presentation view-wrapper">
             <PresentationBar
                 onDelete={onSlideDelete}
-                onCreate={onCreateSlide}
+                onCreatePoll={onCreatePoll}
+                onCreateQuiz={onCreateQuiz}
                 onDemonstrate={demonstrate}
                 hash={data.hash}
+                code={data.code}
             />
             <div className="contents">
                 <MetaInfo {...getRouteMetaInfo('About')} />
@@ -547,7 +612,7 @@ const Presentation: FunctionComponent = (props: any) => {
                             <CustomBar
                                 width={slideHeight * 1.4 }
                                 height={slideHeight * 0.7}
-                                top={slideHeight*0.15}
+                                top={slideHeight*0.2}
                                 left={(slideWidth - slideHeight*1.4) / 2}
                                 kind={currentSlide.type}
                                 slide={currentSlide}
@@ -561,6 +626,14 @@ const Presentation: FunctionComponent = (props: any) => {
                                 questions={questions}
                                 slide={currentSlide}
                             />}
+                        {currentSlide?.kind === "quiz" &&
+                            <>
+                                <div className="quizQuestion" style={{color: currentSlide.fontColor,}}>
+                                    {currentSlide.question}
+                                </div>
+                                <Timer limit={currentSlide.timer}/>
+                            </>
+                        }
                     </div>
                     {isDemonstration &&
                         <ReactionBar emotions={emotions}/>}

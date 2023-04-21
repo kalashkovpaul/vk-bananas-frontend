@@ -106,6 +106,8 @@
     --graph-height: 300px;
     --graph-top: 80px;
     --graph-left: 40px;
+
+    --timer-length: 10;
 }
 
 .chart {
@@ -161,3 +163,17 @@
     }
 }
 
+
+.quizQuestion {
+    font-size: 34px;
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    height: 60%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Nunito", "Open Sans", "Helvetica Neue", sans-serif;
+}

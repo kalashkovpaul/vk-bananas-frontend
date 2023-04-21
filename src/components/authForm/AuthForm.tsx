@@ -9,6 +9,7 @@ import { authModule } from "../../modules/auth";
 import type { authInputElements, input, loginData, registerData } from "../../types";
 import './authForm.css';
 import { inputElements } from "./inputs";
+import { csrf } from "../../utils/utils";
 
 type AuthProps = {
     kind: "login" | "signup"
@@ -179,17 +180,18 @@ const AuthForm = (props: AuthProps) => {
     };
 
 
-    const submitLogin = (inputsData: loginData) => {
+    const submitLogin = async (inputsData: loginData) => {
         if (!inputsData || hasErrors(inputsData)) {
             return;
         }
-
+        const token = await csrf();
         fetch(`${api.login}`, {
             method: 'POST',
             body: JSON.stringify(inputsData),
             credentials: "include",
             headers: {
-                'content-type': 'application/json'
+                "X-CSRF-Token": token as string,
+                'content-type': 'application/json',
             }
         }).then((response) => response.json())
         .then((response) => {
@@ -207,16 +209,18 @@ const AuthForm = (props: AuthProps) => {
         });
     }
 
-    const submitRegister = (inputsData: registerData) => {
+    const submitRegister = async (inputsData: registerData) => {
         if (!inputsData || hasErrors(inputsData)) {
             return;
         }
+        const token = await csrf();
 
         fetch(`${api.register}`, {
             method: 'POST',
             body: JSON.stringify(inputsData),
             credentials: "include",
             headers: {
+                "X-CSRF-Token": token as string,
                 'content-type': 'application/json'
             }
         }).then((response) => response.json())

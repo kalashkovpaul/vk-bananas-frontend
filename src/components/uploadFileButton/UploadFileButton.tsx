@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Alert from "../Alert";
 import ReactDOM from 'react-dom';
 import { createRoot } from "react-dom/client";
-import { createError, createSuccess } from "../../utils/utils";
+import { createError, createSuccess, csrf } from "../../utils/utils";
 import {BarLoader} from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api.config";
@@ -54,7 +54,7 @@ const UploadFileButton = () => {
       hiddenFileInput?.current?.click();
     };
 
-    const upload = (file: File) => {
+    const upload = async (file: File) => {
         setLoading(true);
         if (!file) {
           return;
@@ -76,11 +76,13 @@ const UploadFileButton = () => {
         let formData = new FormData();
         formData.append('presentation', file);
 
+        const token = await csrf();
         fetch(api.presCreate, {
             method: 'POST',
             body: formData,
 
             headers: {
+                "X-CSRF-Token": token as string,
                 // 'content-type': 'multipart/form-data',//file.type,
                 // // 'boundary': 'presentation',
                 // 'content-length': `${file.size}`,
