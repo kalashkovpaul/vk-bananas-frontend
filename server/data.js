@@ -21,33 +21,37 @@ let presData = {
             quizId: 5,
             fontSize: "",
             question: "Кто завязал гордиев узел?",
+            runout: true,
             votes: [
                 {
                     idx: 0,
                     option: "Гордий",
                     votes: 1,
                     color: "red",
-                    isCorrect: false,
+                    correct: false,
                 },
                 {
                     idx: 1,
                     option: "Не Гордий",
                     votes: 1,
                     color: "blue",
-                    isCorrect: false,
+                    correct: false,
                 },
                 {
                     idx: 2,
                     option: "Гэндальф",
                     votes: 1,
                     color: "violet",
-                    isCorrect: false,
+                    correct: false,
                 },
             ],
             background: "white",
             fontColor: "black",
             graphColor: "",
-            timer: 55,
+            answerTime: 10,
+            cost: 100,
+            answerAfter: true,
+            extrapts: false,
         },
         {
             idx: 1,
@@ -57,7 +61,9 @@ let presData = {
             question: "Как настроение?",
             quizId: 0,
             fontSize: "",
-            timer: 0,
+            answerTime: 0,
+            cost: 0,
+            answerAfter: false,
             votes: [
                 {
                     idx: 0,
@@ -126,7 +132,9 @@ let presData = {
             question: "Какое приветствие лучше всех?",
             quizId: 0,
             fontSize: "",
-            timer: 0,
+            answerTime: 0,
+            cost: 0,
+            answerAfter: false,
             votes: [
                 {
                     idx: 0,
@@ -163,7 +171,7 @@ let presData = {
             background: "",
             fontColor: "",
             graphColor: "",
-            timer: 0,
+            answerTime: 0,
         },
         // {
         //     idx: 4,
@@ -527,6 +535,33 @@ const startServer = (app) => {
         });
     });
 
+    app.get("/api/v1/competition/1/result", function (req, res) {
+        res.status(200).json({
+            top: [
+                {
+                    name: "Конь Юлий",
+                    points: 400,
+                },
+                {
+                    name: "Йафск",
+                    points: 500,
+                },
+                {
+                    name: "Лия",
+                    points: 300,
+                },
+                {
+                    name: "Гоблин Боблин",
+                    points: 300,
+                },
+                {
+                    name: "Крестьянин",
+                    points: 100,
+                },
+            ]
+        });
+    });
+
     let index = 1;
     // let e = emotions;
     app.get("/api/v1/presentation/view/a1b2c3d4", function(req, res) {
@@ -542,7 +577,7 @@ const startServer = (app) => {
             height: presData.height,
             url: presData.url,
             emotions: emotions,
-            slide: presData.slides[0],
+            slide: presData.slides[1],
             questions: userQuestions,
         });
     });

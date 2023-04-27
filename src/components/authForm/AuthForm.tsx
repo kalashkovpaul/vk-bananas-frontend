@@ -306,8 +306,8 @@ const AuthForm = (props: AuthProps) => {
         <div className={kind === "login" ? "loginWrapper" : "signupWrapper"}>
             <div className={`${kind}Invitation`}>{kind === "login" ? "Войти" : "Зарегистрироваться"}</div>
             <form className={`${kind}Form`} name={authFormName}>
-                {inputElements.emailInput}
                 {kind === "signup" && inputElements.nameInput}
+                {inputElements.emailInput}
                 {inputElements.passwordInput}
                 {kind === "signup" && inputElements.repeatePasswordInput}
                 <div className="authBtn">

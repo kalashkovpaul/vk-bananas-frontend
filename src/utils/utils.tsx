@@ -1,6 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { Alert } from "../components";
 import { api } from "../config/api.config";
+import { useEffect, useRef } from "react";
+import { PresData } from "../types";
 
 let el = document.getElementById("alertWrapper");
 let root = el ? createRoot(el) : null;
@@ -133,3 +135,47 @@ export const csrf = async () => {
     }
     return CSRFToken;
 };
+
+export const getQuizPlayer = () => {
+    return JSON.parse(window.localStorage.getItem("quizPlayer") || "{}");
+}
+
+export const setQuizPlayerToLocal = (id: number, playerName: string) => {
+    return window.localStorage.setItem("quizPlayer", JSON.stringify({
+        quizPlayerId: id,
+        quizPlayerName: playerName,
+    }));
+}
+
+export const useTraceUpdate = (props: any) => {
+    const prev = useRef(props);
+    useEffect(() => {
+      const changedProps = Object.entries(props).reduce((ps: any, [k, v]) => {
+        if (prev.current[k] !== v) {
+          ps[k] = [prev.current[k], v];
+        }
+        return ps;
+      }, {});
+      if (Object.keys(changedProps).length > 0) {
+        console.log('Changed props:', changedProps);
+      }
+      prev.current = props;
+    });
+}
+
+export const clearData = (data: PresData) => {
+    return {
+        ...data,
+        slides: data.slides.map((slide, i) => {
+            return {
+                ...slide,
+                votes: (slide.votes === null) ? [] : slide.votes.map((vote, j) => {
+                    return {
+                        ...vote,
+                        votes: 1,
+                    }
+                }),
+            }
+        })
+    };
+}

@@ -4,20 +4,22 @@ import './presentation.css';
 import './quiz.sass';
 import Sidebar from "../../components/sidebar/Sidebar";
 import QuizEditor from "../../components/quizEditor/QuizEditor";
-import type { OptionData, PresData, SingleSlideData } from "../../types";
+import { OptionData, PresData, SingleSlideData, leaderboardData } from "../../types";
 import { getRouteMetaInfo } from '../../config/routes.config';
 import { MetaInfo } from "../../components";
 
-import { CustomBar } from "./CustomBar";
+import CustomBar from "./CustomBar";
 import PresentationBar from "../../components/presentationBar/PresentationBar";
 import { api, domain } from "../../config/api.config";
 import { useParams, useSearchParams } from "react-router-dom";
-import { calculateMiniScale, calculateScale, csrf } from "../../utils/utils";
+import { calculateMiniScale, calculateScale, clearData, csrf } from "../../utils/utils";
 import InvitationBar from "../../components/invitationBar/InvitationBar";
 import ReactionBar from "../../components/reactionBar/ReactionBar";
 import QuestionSlide from "../../components/questionSlide/QuestionSlide";
 import { fakeQuestions } from "./fakeData";
 import Timer from "../../components/timer/Timer";
+import Leaderboard from "../../components/leaderbord/Leaderboard";
+import { CSSTransition } from "react-transition-group";
 
 const emptySlide: SingleSlideData = {
     idx: 0,
@@ -31,7 +33,10 @@ const emptySlide: SingleSlideData = {
     background: "",
     fontColor: "",
     graphColor: "",
-    timer: 0,
+    answerTime: 0,
+    answerAfter: false,
+    cost: 0,
+    extrapts: false,
 }
 
 const newQuestionSlide: SingleSlideData = {
@@ -46,7 +51,10 @@ const newQuestionSlide: SingleSlideData = {
     background: "white",
     fontColor: "black",
     graphColor: "black",
-    timer: 0,
+    answerTime: 0,
+    answerAfter: false,
+    cost: 0,
+    extrapts: false,
 }
 
 const newPoll: SingleSlideData = {
@@ -61,7 +69,10 @@ const newPoll: SingleSlideData = {
     background: "white",
     fontColor: "black",
     graphColor: "black",
-    timer: 0,
+    answerTime: 0,
+    answerAfter: false,
+    cost: 0,
+    extrapts: false,
 }
 
 const newQuiz: SingleSlideData = {
@@ -76,7 +87,10 @@ const newQuiz: SingleSlideData = {
     background: "white",
     fontColor: "black",
     graphColor: "black",
-    timer: 0,
+    answerTime: 60,
+    answerAfter: true,
+    cost: 100,
+    extrapts: false,
 }
 
 export function useWindowSize() {
@@ -135,6 +149,9 @@ const Presentation: FunctionComponent = (props: any) => {
     const [questions, setQuestions] = useState<any[]>(fakeQuestions);
 
     const [isDemonstration, setIsDemonstration] = useState(false);
+    const [quizMap, setQuizMap] = useState(new Map());
+    const [isLeaderboard, setLeaderboard] = useState(false);
+    const currentLeaderboardData = useRef<leaderboardData>([]);
 
     useEffect(() => {
         const {width, height} = calculateScale(isDemonstration as any, screenWidth, screenHeight, data.width, data.height);
@@ -155,7 +172,7 @@ const Presentation: FunctionComponent = (props: any) => {
 
     const previousSlide = usePreviousSlide(currentSlide);
 
-    const onOptionChange = (index: number, value: string, color: string, isCorrect=false) => {
+    const onOptionChange = (index: number, value: string, color: string, correct=false) => {
         let newoptions;
         if (value || color) {
             newoptions = JSON.parse(JSON.stringify(cur.current?.votes));
@@ -165,14 +182,14 @@ const Presentation: FunctionComponent = (props: any) => {
             if (newoptions[index]) {
                 newoptions[index].option = value;
                 newoptions[index].color = color;
-                newoptions[index].isCorrect = isCorrect;
+                newoptions[index].correct = correct;
             } else if (value) {
                 newoptions[index] = {
                     option: value,
                     votes: 1,
                     color: color,
                     idx: index,
-                    isCorrect: isCorrect,
+                    correct: correct,
                 }
             }
             onOptionUpdate(newoptions);
@@ -208,6 +225,11 @@ const Presentation: FunctionComponent = (props: any) => {
                     && cur.current?.idx === slidedata.slide.idx) {
                         setCurrentSlide(slidedata.slide);
                     }
+                if ((cur.current?.answerTime !== 0)
+                    && cur.current?.idx === slidedata.slide.idx
+                    && slidedata.slide.answerAfter && slidedata.slide.runout) {
+                        setLeaderboard(true);
+                    }
                 setQuestions(slidedata.questions);
                 setEmotions(slidedata.emotions);
             }
@@ -229,11 +251,15 @@ const Presentation: FunctionComponent = (props: any) => {
                 slideRef.current.style.boxShadow = "none";
             }
 
-        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion" || currentSlide?.kind === "quiz") && slideRef.current) {
+        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "userQuestion" || currentSlide?.answerTime !== 0) && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
             if (currentIndex === previousSlide.idx && !isDemonstration)
                 onSlideChange();
+        }
+        setLeaderboard(false);
+        if (isDemonstration && quizMap.get(currentSlide.quizId)) {
+            setLeaderboard(true);
         }
     }, [currentSlide]);
 
@@ -255,7 +281,7 @@ const Presentation: FunctionComponent = (props: any) => {
                     idx: newdata.slides.length,
                 });
                 if (newdata.slides?.length) {
-                    setPresData(newdata);
+                    setPresData(clearData(newdata));
                     if (newdata.emotions)
                         setEmotions(newdata.emotions);
                 }
@@ -272,6 +298,7 @@ const Presentation: FunctionComponent = (props: any) => {
 
     useEffect(() => {
         getPresentation();
+        clearVotes();
     }, []);
 
 
@@ -331,7 +358,7 @@ const Presentation: FunctionComponent = (props: any) => {
                 idx: index,
                 option: "",
                 votes: 1,
-                isCorrect: false,
+                correct: false,
                 color: "#0FD400"
             }),
             headers: {
@@ -388,6 +415,10 @@ const Presentation: FunctionComponent = (props: any) => {
                 fontColor: currentSlide.fontColor,
                 fontSize: currentSlide.fontSize,
                 graphColor: currentSlide.graphColor,
+                answerTime: currentSlide.answerTime,
+                answerAfter: currentSlide.answerAfter,
+                cost: currentSlide.cost,
+                extrapts: currentSlide.extrapts,
             }),
             headers: {
                 "X-CSRF-Token": token as string,
@@ -398,7 +429,6 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     useEffect(() => {
-        console.log(data);
         if (currentIndex < data.slides.length) {
             setCurrentSlide(data.slides[currentIndex]);
         } else if (data.slides.length === 0) {
@@ -432,7 +462,11 @@ const Presentation: FunctionComponent = (props: any) => {
                 background: newPoll.background,
                 fontColor: newPoll.fontColor,
                 fontSize: newPoll.fontSize,
-                graphColor: newPoll.graphColor
+                graphColor: newPoll.graphColor,
+                answerTime: 0,
+                answerAfter: false,
+                cost: 0,
+                extrapts: false,
             }),
             headers: {
                 "X-CSRF-Token": token as string,
@@ -476,7 +510,11 @@ const Presentation: FunctionComponent = (props: any) => {
                 background: newQuiz.background,
                 fontColor: newQuiz.fontColor,
                 fontSize: newQuiz.fontSize,
-                graphColor: newQuiz.graphColor
+                graphColor: newQuiz.graphColor,
+                answerTime: 60,
+                answerAfter: true,
+                cost: 100,
+                extrapts: false,
             }),
             headers: {
                 "X-CSRF-Token": token as string,
@@ -503,7 +541,9 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     const showGo = async (index: number) => {
-        if (isDemonstration && data.slides[index]?.kind !== "userQuestion") {
+        const slide = document.querySelector(".slide") as HTMLDivElement;
+        const isFullscreen = window.innerWidth - slide.offsetWidth < 100;
+        if ((isFullscreen || isDemonstration) && data.slides[index]?.kind !== "userQuestion") {
             const token = await csrf();
             fetch(`${api.showGo}/${presId}/show/go/${index}`, {
                 method: 'PUT',
@@ -549,6 +589,8 @@ const Presentation: FunctionComponent = (props: any) => {
 
     useEffect(() =>{
         if (isDemonstration) {
+            // setLeaderboard(true);
+            setLeaderboard(false);
             window.screen.orientation.lock("landscape").then().catch(e => {});
             showGo(currentIndex);
             if (timerId === 0) {
@@ -562,6 +604,8 @@ const Presentation: FunctionComponent = (props: any) => {
             document.getElementById("popup-root")?.remove();
             window.clearInterval(timerId);
             setTimerId(0);
+            setLeaderboard(false);
+            clearVotes();
         }
     }, [isDemonstration]);
 
@@ -576,6 +620,95 @@ const Presentation: FunctionComponent = (props: any) => {
             document.removeEventListener("fullscreenchange", screenChangeHandler)
         }
     }, [screenWidth, screenHeight]);
+
+    const startTimer = async () => {
+        const token = await csrf();
+        fetch(`${api.timerStart}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                quizId: currentSlide.quizId,
+                presId: presId,
+            }),
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const endTimer = async () => {
+        const token = await csrf();
+        fetch(`${api.timerEnd}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                quizId: currentSlide.quizId,
+                presId: presId,
+            }),
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    const onTimerStart = () => {
+        startTimer();
+    }
+
+    const onTimerEnd = () => {
+        endTimer();
+        if (currentSlide.answerAfter && isDemonstration) {
+            setLeaderboard(true);
+        }
+    }
+
+    const getQuizResult = async() => {
+        const token = await csrf();
+        fetch(`${api.getQuizResult}/${presId}/result`, {
+            method: 'GET',
+            headers: {
+                "X-CSRF-Token": token as string,
+            }
+        }).then(data => {
+            return data ? data.json() : {} as any
+        })
+        .then((parsed) => {
+            if (parsed?.top) {
+                setQuizMap(new Map(quizMap.set(currentSlide.quizId, parsed.top)));
+                currentLeaderboardData.current = parsed.top;
+            }
+        })
+        .catch(e => {
+            console.error(e);
+        });
+    }
+
+    useEffect(() => {
+        if (isLeaderboard) {
+            if (!quizMap.get(currentSlide.quizId)) {
+                getQuizResult();
+            }
+        }
+    }, [isLeaderboard]);
+
+    const clearVotes = () => {
+        setPresData({
+            ...data,
+            slides: data.slides.map((slide, i) => {
+                return {
+                    ...slide,
+                    votes: (slide.votes === null) ? [] : slide.votes.map((vote, j) => {
+                        return {
+                            ...vote,
+                            votes: 1,
+                        }
+                    }),
+                }
+            })
+        })
+    }
 
 
     return (
@@ -597,6 +730,7 @@ const Presentation: FunctionComponent = (props: any) => {
                     width={miniSlideWidth}
                     height={miniSlideHeight}
                     showGo={showGo}
+                    isDemonstration={isDemonstration}
                 />
                 <div className="slideBox" style={{
                         height: `${slideHeight + 50}px`,
@@ -626,12 +760,39 @@ const Presentation: FunctionComponent = (props: any) => {
                                 questions={questions}
                                 slide={currentSlide}
                             />}
-                        {currentSlide?.kind === "quiz" &&
+                        {currentSlide?.answerTime !== 0 &&
                             <>
-                                <div className="quizQuestion" style={{color: currentSlide.fontColor,}}>
+                                {!isLeaderboard && <div className="quizQuestion" style={{color: currentSlide.fontColor,}}>
                                     {currentSlide.question}
-                                </div>
-                                <Timer limit={currentSlide.timer}/>
+                                </div>}
+                                {!isLeaderboard && <Timer
+                                    limit={currentSlide.answerTime}
+                                    isDemonstration={isDemonstration}
+                                    onTimerStart={onTimerStart}
+                                    onTimerEnd={onTimerEnd}
+                                />}
+                                <CSSTransition
+                                    in={!!(isLeaderboard)}
+                                    timeout={900}
+                                    classNames={"questionPanelAnimated"}
+                                    unmountOnExit
+                                >
+                                    <Leaderboard
+                                        data={currentLeaderboardData.current}
+                                        width={slideHeight * 1.6 }
+                                        height={slideHeight * 0.8}
+                                        top={slideHeight*0.1}
+                                        left={(slideWidth - slideHeight*1.6) / 2}
+                                    />
+                                </CSSTransition>
+                                {/* {isLeaderboard && currentLeaderboardData.current &&
+                                <Leaderboard
+                                    data={currentLeaderboardData.current}
+                                    width={slideHeight * 1.6 }
+                                    height={slideHeight * 0.8}
+                                    top={slideHeight*0.1}
+                                    left={(slideWidth - slideHeight*1.6) / 2}
+                                />} */}
                             </>
                         }
                     </div>

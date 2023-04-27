@@ -48,6 +48,7 @@
     justify-self: center;
     background-size: contain;
     box-sizing: content-box;
+    z-index: 1;
 }
 
 .bottomArea {

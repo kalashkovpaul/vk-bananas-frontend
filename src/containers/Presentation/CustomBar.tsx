@@ -10,7 +10,7 @@ import {
   } from 'chart.js';
 import { Bar, Pie, Doughnut } from 'react-chartjs-2';
 import type { CustomBarProps, OptionData, UpdateModeType } from '../../types';
-import { useEffect, useRef, useState, } from 'react';
+import React, { useEffect, useRef, useState, } from 'react';
 import WordCloud from 'wordcloud';
 
 ChartJS.register(
@@ -25,7 +25,7 @@ ChartJS.register(
 
 const labels = [''];
 
-export const CustomBar = (props: CustomBarProps) => {
+const CustomBar = (props: CustomBarProps) => {
   const {slide, kind, width, height, top, left} = props;
   const [updateMode, setUpdateMode] = useState<UpdateModeType>("default");
   const chartRef = useRef<any>(null);
@@ -213,24 +213,24 @@ export const CustomBar = (props: CustomBarProps) => {
     return result;
   }
 
-  useEffect(() => {
-    // console.log(cloudData);
-    if (slide.type === "cloud") {
-      const chart = document.getElementById("cloud-chart");
-      if (chart) {
-        WordCloud(chart, {
-          list: cloudData as any,
-          weightFactor: 10  ,
-          fontFamily: "Times, serif",
-          // rotateRatio: 0,
-          // rotationSteps: 2,
-          clearCanvas: true,
-          backgroundColor: slide.background
-        });
-      }
-    }
+  // useEffect(() => {
+  //   // console.log(cloudData);
+  //   if (slide.type === "cloud") {
+  //     const chart = document.getElementById("cloud-chart");
+  //     if (chart) {
+  //       WordCloud(chart, {
+  //         list: cloudData as any,
+  //         weightFactor: 10  ,
+  //         fontFamily: "Times, serif",
+  //         // rotateRatio: 0,
+  //         // rotationSteps: 2,
+  //         clearCanvas: true,
+  //         backgroundColor: slide.background
+  //       });
+  //     }
+  //   }
 
-  });
+  // });
 
   // setInterval(() => {
   //   cloudData[1][1] = cloudData[1][1] as number + 1;
@@ -293,3 +293,5 @@ export const CustomBar = (props: CustomBarProps) => {
     </div>
   );
 }
+
+export default React.memo(CustomBar);

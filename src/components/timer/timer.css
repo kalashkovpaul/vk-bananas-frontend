@@ -19,7 +19,7 @@
     stroke-width: 2px;
 }
 
-#timer {
+.timer {
     width: 100px;
     margin: auto;
     position: absolute;
@@ -34,4 +34,20 @@
     text-anchor: middle;
     fill: #000;
     /* rgb(34, 213, 201); */
+}
+
+.slideBox:-webkit-full-screen .timer {
+    width: 200px;
+}
+
+.slideBox:fullscreen .timer {
+    width: 200px;
+}
+
+.slideBox:-webkit-full-screen .label {
+    font-size: 50px;
+}
+
+.slideBox:fullscreen .label {
+    font-size: 50px !important;
 }

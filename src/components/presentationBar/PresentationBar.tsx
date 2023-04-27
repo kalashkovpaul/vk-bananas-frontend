@@ -50,10 +50,10 @@ const PresentationBar = (props: PresBarProps) => {
                         (document.getElementById("dropdown") as HTMLInputElement).checked = false;
                     }}>
                         Добавить опрос</div>
-                    {/* <div className="dropdownOption addPoll" onClick={() => {
+                    <div className="dropdownOption addPoll" onClick={() => {
                         onCreateQuiz();
                         (document.getElementById("dropdown") as HTMLInputElement).checked = false;
-                    }}>Добавить квиз</div> */}
+                    }}>Добавить квиз</div>
                 </div>
 
             </div>

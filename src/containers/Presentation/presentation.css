@@ -7,7 +7,7 @@
 
 .contents {
     display: flex;
-    height: 638px;
+    height: 700px;
 }
 
 .slideBox {
@@ -176,4 +176,12 @@
     align-items: center;
     justify-content: center;
     font-family: "Nunito", "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.slideBox:-webkit-full-screen .quizQuestion {
+    font-size: 50px;
+}
+
+.slideBox:fullscreen .quizQuestion {
+    font-size: 50px;
 }

@@ -6,18 +6,18 @@ import './timer.css';
 // }
 
 const Timer = (props) => {
-    const {limit} = props;
+    const {limit, isDemonstration, onTimerStart, onTimerEnd} = props;
     // const limit = 30;
-    const width = 100;
-    const height = 100;
-    const arcWidth = 20;
-    const pulseBorder = 5;
+    const width = useRef(isDemonstration ? 200 : 100);
+    const height = useRef(isDemonstration ? 200 : 100);
+    const arcWidth = useRef(isDemonstration ? 40 : 20);
+    const pulseBorder = useRef(isDemonstration ? 10 : 5);
     let timePassed = 0;
 
     const root = document.querySelector(':root');
     const [isPause, setPause] = useState(false);
     const pauseRef = useRef(true);
-    const limitRef = useRef(limit);
+    const limitRef = useRef(limit > 0 ? limit : 1);
     const timerIdRef = useRef(0);
 
     const usePreviousLimit = (value) => {
@@ -28,9 +28,16 @@ const Timer = (props) => {
           return prevLimitRef.current
     };
 
+    useEffect(() => {
+        if (isPause) {
+            onTimerStart();
+        }
+    }, [isPause])
+
     const limitPrev = usePreviousLimit(limit);
 
     const scriptLoaded = () => {
+        if (!window.d3 || !window.d3.svg) return;
         const fields = [{
             value: limitRef.current,
             size: limitRef.current,
@@ -39,38 +46,38 @@ const Timer = (props) => {
             }
         }];
 
-        let nilArc = window.d3.svg.arc()
-            .innerRadius(width / 3 - 133)
-            .outerRadius(width / 3 - 133)
+        let nilArc = window.d3?.svg.arc()
+            .innerRadius(width.current / 3 - 133)
+            .outerRadius(width.current / 3 - 133)
             .startAngle(0)
             .endAngle(2 * Math.PI);
 
-        let arc = window.d3.svg.arc()
-            .innerRadius(width / 2 - arcWidth)
-            .outerRadius(width / 2)
+        let arc = window.d3?.svg.arc()
+            .innerRadius(width.current / 2 - arcWidth.current)
+            .outerRadius(width.current / 2)
             .startAngle(0)
             .endAngle(function(d) {
               return ((d.value / d.size) * 2 * Math.PI);
             });
 
-        let svg = window.d3.select("#timer").append("svg")
-            .attr("width", width)
-            .attr("height", height);
+        let svg = window.d3?.select(".timer").append("svg")
+            .attr("width", width.current)
+            .attr("height", height.current);
 
-        let field = svg.selectAll(".field")
+        let field = svg?.selectAll(".field")
             .data(fields)
             .enter().append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+            .attr("transform", "translate(" + width.current / 2 + "," + height.current / 2 + ")")
             .attr("class", "field");
 
-        let back = field.append("path")
+        let back = field?.append("path")
             .attr("class", "path path--background")
             .attr("d", arc);
 
-        let path = field.append("path")
+        let path = field?.append("path")
             .attr("class", "path path--foreground");
 
-        let label = field.append("text")
+        let label = field?.append("text")
             .attr("class", "label")
             .attr("dy", ".35em");
 
@@ -81,8 +88,9 @@ const Timer = (props) => {
         }
 
         (function update() {
+            try {
             if (pauseRef.current) {
-                label.text(function(d) {
+                label?.text(function(d) {
                     return d.size - d.value || limitRef.current;
                 });
                 if (timePassed <= limitRef.current)
@@ -92,17 +100,17 @@ const Timer = (props) => {
 
             root?.style.setProperty('--timer-color', getColor(timePassed < limitRef.current / 2 ?  0 : timePassed / limitRef.current / 2));
             field
-                .each(function(d) {
+                ?.each(function(d) {
                     d.previous = d.value;
                     d.value = d.update(timePassed);
                 });
 
-            path.transition()
+            path?.transition()
                 .ease("elastic")
                 .duration(500)
                 .attrTween("d", arcTween);
 
-            if ((limitRef.current - timePassed) <= pulseBorder)
+            if ((limitRef.current - timePassed) <= pulseBorder.current)
                 pulseText();
             else
                 label
@@ -110,21 +118,29 @@ const Timer = (props) => {
                     return d.size - d.value;
                 });
 
-            if (timePassed <= limitRef.current)
+            if (timePassed <= limitRef.current )
                 timerIdRef.current = window.setTimeout(update, 1000 - (timePassed % 1000));
             else {
                 destroyTimer();
                 setTimeout(() => {
+                    onTimerEnd();
+                }, 1000);
+                setTimeout(() => {
+                    onTimerEnd();
                     timePassed = 0;
                     pauseRef.current = true;
-                    document.getElementById("timer").innerHTML = "";
+                    let timer = document.querySelector(".timer");
+                    if (timer)
+                        timer.innerHTML = "";
                     root?.style.setProperty('--timer-color', "hsl(120, 100%, 50%)");
                     scriptLoaded();
-                }, 2000);
+                }, 4000);
             }
             // else
                 // destroyTimer();
-
+            } catch (e) {
+                console.log("?");
+            }
         })();
 
         function pulseText() {
@@ -188,19 +204,39 @@ const Timer = (props) => {
 
     useEffect(() => {
         pauseRef.current = true;
-        limitRef.current = limit;
+        limitRef.current = limit > 0 ? limit : 1;
         window.clearTimeout(timerIdRef.current);
 
         if (limit === limitPrev) return;
         timePassed = 0;
-        document.getElementById("timer").innerHTML = "";
+        let timer = document.querySelector(".timer");
+        if (timer)
+            timer.innerHTML = "";
         root?.style.setProperty('--timer-color', "hsl(120, 100%, 50%)");
         scriptLoaded();
-        console.log(limit);
     }, [limit]);
 
     useEffect(() => {
-        document.getElementById("timer").innerHTML = "";
+        width.current = isDemonstration ? 200 : 100;
+        height.current = isDemonstration ? 200 : 100;
+        arcWidth.current = isDemonstration ? 40 : 20;
+        pulseBorder.current = isDemonstration ? 10 : 5;
+        pauseRef.current = true;
+        limitRef.current = limit > 0 ? limit : 1;
+        window.clearTimeout(timerIdRef.current);
+
+        timePassed = 0;
+        let timer = document.querySelector(".timer");
+        if (timer)
+            timer.innerHTML = "";
+        root?.style.setProperty('--timer-color', "hsl(120, 100%, 50%)");
+        scriptLoaded();
+    }, [isDemonstration]);
+
+    useEffect(() => {
+        let timer = document.querySelector(".timer");
+        if (timer)
+            timer.innerHTML = "";
         if (document.getElementById("d3")) {
             scriptLoaded();
             return;
@@ -216,7 +252,9 @@ const Timer = (props) => {
 
 
     return (
-        <div id="timer" onClick={() => {
+        <div className="timer" onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             setPause(o => !o);
             pauseRef.current = !pauseRef.current;
         }}>

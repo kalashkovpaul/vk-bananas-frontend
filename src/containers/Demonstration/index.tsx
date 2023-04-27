@@ -6,7 +6,6 @@ import { api, domain } from "../../config/api.config";
 import { type Emotions, type SingleSlideData } from "../../types";
 import { calculateDemonstrationScale, csrf, debounce, } from "../../utils/utils";
 import { useWindowSize } from "../Presentation";
-import { CustomBar } from "../Presentation/CustomBar";
 import './demonstration.css';
 import QuestionPanel from "../../components/questionPanel/QuestionPanel";
 import { CSSTransition } from "react-transition-group";
@@ -14,7 +13,7 @@ import { CSSTransition } from "react-transition-group";
 const demEmptySlide: SingleSlideData = {
     idx: 0,
     name: "",
-    kind: "slide",
+    kind: "empty",
     type: "",
     quizId: 0,
     fontSize: "",
@@ -23,7 +22,10 @@ const demEmptySlide: SingleSlideData = {
     background: "",
     fontColor: "",
     graphColor: "",
-    timer: 0,
+    answerTime: 0,
+    answerAfter: false,
+    cost: 0,
+    extrapts: false,
 }
 
 const emptyEmotions = {
@@ -94,8 +96,11 @@ const Demonstration: FunctionComponent = () => {
                 setWidth(slidedata.width);
                 setHeight(slidedata.height);
                 setUrl(slidedata.url);
-                setViewMode(slidedata.viewMode)
+                setViewMode(slidedata.viewMode);
                 setNewEmotions(slidedata.emotions);
+                if (!slidedata.viewMode) {
+                    setEmotions(emptyEmotions);
+                }
                 setCurrentSlide(slidedata.slide);
             }
             setQuestions(slidedata.questions);
@@ -147,7 +152,7 @@ const Demonstration: FunctionComponent = () => {
                 slideRef.current.style.backgroundColor = "transparent";
                 slideRef.current.style.boxShadow = "none";
             }
-        } else if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && slideRef.current) {
+        } else if ((currentSlide?.kind === "question" || currentSlide?.answerTime !== 0) && slideRef.current) {
             slideRef.current.style.backgroundColor = currentSlide.background;
             slideRef.current.style.backgroundImage = `none`;
         }
@@ -212,17 +217,18 @@ const Demonstration: FunctionComponent = () => {
                         <NavLink className="invitationLogoImg" to="/"/>
                         <div className="invitationLogoText">Kinda Slides</div>
                     </div>
-                    <CSSTransition
-                        in={!isQuestionsPage && currentSlide?.kind !== "question" && viewMode}
+                    {currentSlide?.kind === "slide" &&  <CSSTransition
+                        in={!isQuestionsPage && currentSlide?.kind === "slide" && viewMode}
                         timeout={900}
                         classNames={"questionPanelAnimated"}
+                        unmountOnExit
                     >
                         <div className="demonstrationSlide" style={{
                                 height: `${slideHeight}px`,
                                 width: `${slideWidth}px`
                             }} ref={slideRef}>
                         </div>
-                    </CSSTransition>
+                    </CSSTransition>}
                     {/* {!isQuestionsPage && currentSlide?.kind !== "question" && viewMode &&
                     <div className="demonstrationSlide" style={{
                                 height: `${slideHeight}px`,
@@ -239,9 +245,17 @@ const Demonstration: FunctionComponent = () => {
                             Данная презентация сейчас не демонстрируется!
                         </div>
                     </CSSTransition>
-                    {!isQuestionsPage && currentSlide?.kind === "question" && currentSlide.type ?
+                    <CSSTransition
+                        in={!!(!isQuestionsPage && ((currentSlide?.kind === "question" && currentSlide.type) || currentSlide?.answerTime !== 0))}
+                        timeout={900}
+                        classNames={"questionPanelAnimated"}
+                        unmountOnExit
+                    >
+                        <PollForm hash={hash as string} currentSlide={currentSlide}/>
+                    </CSSTransition>
+                    {/* {!isQuestionsPage && ((currentSlide?.kind === "question" && currentSlide.type) || currentSlide?.answerTime !== 0) ?
                         <PollForm currentSlide={currentSlide}/>
-                        : null}
+                        : null} */}
                     <div className="bottomArea">
                         <div className="reactions">
                             <div className="emotion emotionBtn">

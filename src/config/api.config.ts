@@ -5,6 +5,7 @@ const globalSite = "https://kindaslides.ru"; //"http://185.241.192.112";
 
 export const domain = global;
 export const site = globalSite;
+//GENERATE_SOURCEMAP=false
 
 const apiVersion = "/api/v1"
 
@@ -40,4 +41,8 @@ export const api = {
     deletePres: `${prefix}/presentation`,
     quizCreate: `${prefix}/quiz/create`,
     csrf: `${prefix}/csrf`,
-}
+    registerQuizPlayer: `${prefix}/competition/voter/register`,
+    getQuizResult: `${prefix}/competition`,
+    timerStart: `${prefix}/competition/start`,
+    timerEnd: `${prefix}/competition/stop`,
+} 

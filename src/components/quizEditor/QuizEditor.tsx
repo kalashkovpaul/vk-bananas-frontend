@@ -69,9 +69,31 @@ const QuizEditor = (props: QuizEditorProps) => {
     }
 
     const handleTimerChange = (e: any) => {
+        if (+e.target.value > 999) {return;}
         setCurrentSlide({
             ...currentSlide,
-            timer: +e.target?.value
+            answerTime: +e.target?.value ? +e.target.value : 1
+        })
+    }
+
+    const handleAnswerAfter = (value: boolean) => {
+        setCurrentSlide({
+            ...currentSlide,
+            answerAfter: value
+        })
+    }
+
+    const handleCost = (e: any) => {
+        setCurrentSlide({
+            ...currentSlide,
+            cost: +e.target?.value
+        })
+    }
+
+    const handleExtrapts = (value: boolean) => {
+        setCurrentSlide({
+            ...currentSlide,
+            extrapts: value
         })
     }
 
@@ -83,11 +105,11 @@ const QuizEditor = (props: QuizEditorProps) => {
         if (tIndex) {
             setElemList(optionElemList.concat(
             <OptionInput
-                withColor={currentSlide.kind !== "quiz"}
+                withColor={currentSlide.answerTime === 0}
                 key={maxIndex}
                 index={maxIndex}
                 onChange={onOptionUpdate}
-                withCheckbox={currentSlide.kind === "quiz"}
+                withCheckbox={currentSlide.answerTime !== 0}
                 checked={false}
             />));
             setMaxIndex(maxIndex + 1);
@@ -102,7 +124,7 @@ const QuizEditor = (props: QuizEditorProps) => {
         if (currentSlide?.idx === previousIndex
             && (currentSlide?.kind === "question" && currentSlide?.type === previousQKind))
             return;
-        if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && currentSlide?.votes.length) {
+        if ((currentSlide?.kind === "question" || currentSlide?.answerTime !== 0) && currentSlide?.votes.length) {
             let lst: Array<JSX.Element> = [];
             setElemList(lst);
             let i = 0;
@@ -113,17 +135,26 @@ const QuizEditor = (props: QuizEditorProps) => {
                     value={option.option}
                     color={option.color}
                     onChange={onOptionUpdate}
-                    withColor={currentSlide.kind !== "quiz"}
-                    withCheckbox={currentSlide.kind === "quiz"}
-                    checked={currentSlide.kind === "quiz" && option?.isCorrect}
+                    withColor={currentSlide.answerTime === 0}
+                    withCheckbox={currentSlide.answerTime !== 0}
+                    checked={currentSlide.answerTime !== 0 && option?.correct}
                 />)
                 i++;
             });
             setMaxIndex(i);
             setElemList(lst);
         } else {
-            if ((currentSlide?.kind === "question" || currentSlide?.kind === "quiz")) {
-                setElemList([<OptionInput key={100} index={0} onChange={onOptionUpdate}/>]);
+            if ((currentSlide?.kind === "question" || currentSlide?.answerTime !== 0)) {
+                setElemList([
+                    <OptionInput
+                        key={100}
+                        index={0}
+                        onChange={onOptionUpdate}
+                        withColor={currentSlide.answerTime === 0}
+                        withCheckbox={currentSlide.answerTime !== 0}
+                        // checked={currentSlide.answerTime !== 0 && option?.correct}
+                        />
+                ]);
                 setMaxIndex(1);
             }
         }
@@ -133,7 +164,7 @@ const QuizEditor = (props: QuizEditorProps) => {
         <div
             className="quizEditor"
         >
-            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="questionWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.answerTime !== 0) && <div className="questionWrapper">
                 <div className="questionTitle">
                     Ваш вопрос:
                 </div>
@@ -145,7 +176,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                         onChange={handleNameChange}
                         placeholder="Как настроение?"
                         value={currentSlide?.question}
-                        maxLength={currentSlide?.kind === "quiz" ? 100 : 44}
+                        maxLength={currentSlide?.answerTime !== 0 ? 100 : 44}
                     />
                     <ColorPicker
                         background={currentSlide?.fontColor}
@@ -153,7 +184,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                     />
                 </div>
             </div>}
-            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="optionsWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.answerTime !== 0) && <div className="optionsWrapper">
                 <div className="optionsTitle">
                     {currentSlide?.kind === "question" ? "Варианты ответа:" : "Варианты ответа (и правильные ли они):"}
                 </div>
@@ -166,7 +197,7 @@ const QuizEditor = (props: QuizEditorProps) => {
                     </div>
                 </button>
             </div>}
-            {(currentSlide?.kind === "question" || currentSlide?.kind === "quiz") && <div className="backgroundWrapper">
+            {(currentSlide?.kind === "question" || currentSlide?.answerTime !== 0) && <div className="backgroundWrapper">
                 <div className="questionTitle">
                     Цвет слайда:
                 </div>
@@ -215,22 +246,64 @@ const QuizEditor = (props: QuizEditorProps) => {
                     onChange={handleGraphColorChange}
                 />
             </div>}
-            {currentSlide?.kind === "quiz" &&
+            {currentSlide?.answerTime !== 0 &&
             <div className="timerWrapper">
                 <div className="questionTitle">
-                    Время (в секундах):
+                    Время (в секундах, запуск по нажатию):
                 </div>
                 <div className="timerInputWrapper">
                     <input
                         className="questionInput timerInput"
                         type="number"
-                        min="0"
+                        min="1"
                         name="timer"
                         onChange={handleTimerChange as any}
                         placeholder="60"
-                        value={currentSlide?.timer}
+                        value={currentSlide?.answerTime}
+                        maxLength={2}
+                    />
+                </div>
+            </div>}
+            {currentSlide?.answerTime !== 0 &&
+            <div className="leaderboardAfterWrapper">
+                <div className="questionTitle">
+                    Отображать доску результатов после опроса
+                </div>
+                <div className="leaderboardAfterToggle">
+                    <input className="tgl tgl-ios" id="cb2" type="checkbox" defaultChecked={currentSlide.answerAfter} onChange={(e) => {
+                        handleAnswerAfter(e.target.checked);
+                    }}/>
+                    <label className="tgl-btn" htmlFor="cb2"></label>
+                </div>
+            </div>}
+            {currentSlide?.answerTime !== 0 &&
+            <div className="costWrapper">
+                <div className="questionTitle">
+                    Количество очков за правильный ответ:
+                </div>
+                <div className="costInputWrapper">
+                    <input
+                        className="questionInput costInput"
+                        type="number"
+                        min="0"
+                        name="cost"
+                        onChange={handleCost as any}
+                        placeholder="60"
+                        value={currentSlide?.cost}
                         maxLength={3}
                     />
+                </div>
+            </div>}
+            {currentSlide?.answerTime !== 0 &&
+            <div className="leaderboardAfterWrapper">
+                <div className="questionTitle">
+                    Начислять больше очков за быстрый ответ
+                </div>
+                <div className="leaderboardAfterToggle">
+                    <input className="tgl tgl-ios" id="cb3" type="checkbox" defaultChecked={currentSlide?.extrapts} onChange={(e) => {
+                        handleExtrapts(e.target.checked);
+                    }}/>
+                    <label className="tgl-btn" htmlFor="cb3"></label>
                 </div>
             </div>}
         </div>

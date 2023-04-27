@@ -23,14 +23,14 @@ export type OptionData = {
     option: string;
     votes: number;
     color: string;
-    isCorrect?: boolean;
+    correct?: boolean;
 }
 
 export type SingleSlideData = {
     idx: number;
     name: string;
     quizId: number;
-    kind: "slide" | "question" | "userQuestion" | "quiz";
+    kind: "slide" | "question" | "userQuestion" | "quiz" | "empty";
     type: "" | BarKind;
     question: string;
     votes: Array<OptionData>;
@@ -38,7 +38,11 @@ export type SingleSlideData = {
     fontColor: string;
     graphColor: string;
     fontSize: string;
-    timer: number;
+    answerTime: number;
+    answerAfter: boolean;
+    cost: number;
+    extrapts: boolean;
+    runout?: boolean;
 }
 
 export type Emotions = {
@@ -150,4 +154,11 @@ export type shortPres = {
     code: string,
     hash: string,
 }
+
+export type singleUserResult = {
+    name: string;
+    points: number;
+}
+
+export type leaderboardData = Array<singleUserResult>;
 

@@ -10,10 +10,11 @@ type SidebarProps = {
     width: number;
     height: number;
     showGo: Function;
+    isDemonstration: boolean;
 }
 
 const Sidebar = (props: SidebarProps) => {
-    const {data, setCurrentIndex, currentSlide, width, height, showGo} = props;
+    const {data, setCurrentIndex, currentSlide, width, height, showGo, isDemonstration} = props;
     const [curIndex, setLocalCurIndex] = useState<number>(0);
     const [slides, setSlides]= useState<Array<React.ReactElement>>([]);
 
