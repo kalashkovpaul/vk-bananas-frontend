@@ -12,7 +12,7 @@ const Timer = (props) => {
     const height = useRef(isDemonstration ? 200 : 100);
     const arcWidth = useRef(isDemonstration ? 40 : 20);
     const pulseBorder = useRef(isDemonstration ? 10 : 5);
-    let timePassed = 0;
+    const timePassed = useRef(0);
 
     const root = document.querySelector(':root');
     const [isPause, setPause] = useState(false);
@@ -42,7 +42,7 @@ const Timer = (props) => {
             value: limitRef.current,
             size: limitRef.current,
             update: function() {
-                return timePassed = timePassed + 1;
+                return timePassed.current = timePassed.current + 1;
             }
         }];
 
@@ -89,28 +89,34 @@ const Timer = (props) => {
 
         (function update() {
             try {
+            // console.log(timePassed.current);
             if (pauseRef.current) {
                 label?.text(function(d) {
                     return d.size - d.value || limitRef.current;
                 });
-                if (timePassed <= limitRef.current)
-                    timerIdRef.current = window.setTimeout(update, 1000);
+                if (timePassed.current <= limitRef.current && !timerIdRef.current) {
+                    timerIdRef.current = window.setInterval(update, 1000);
+                }
+                // timerIdRef.current = 0;
                 return;
             }
 
-            root?.style.setProperty('--timer-color', getColor(timePassed < limitRef.current / 2 ?  0 : timePassed / limitRef.current / 2));
+            root?.style.setProperty('--timer-color', getColor(timePassed.current < limitRef.current / 2 ?  0 : timePassed.current / limitRef.current / 2));
+            console.log(1);
             field
                 ?.each(function(d) {
                     d.previous = d.value;
-                    d.value = d.update(timePassed);
+                    d.value = d.update(timePassed.current);
                 });
+
+            console.log(2);
 
             path?.transition()
                 .ease("elastic")
                 .duration(500)
                 .attrTween("d", arcTween);
-
-            if ((limitRef.current - timePassed) <= pulseBorder.current)
+            console.log(3);
+            if ((limitRef.current - timePassed.current) <= pulseBorder.current)
                 pulseText();
             else
                 label
@@ -118,8 +124,10 @@ const Timer = (props) => {
                     return d.size - d.value;
                 });
 
-            if (timePassed <= limitRef.current )
-                timerIdRef.current = window.setTimeout(update, 1000 - (timePassed % 1000));
+            if (timePassed.current <= limitRef.current) {
+
+            }
+            //     timerIdRef.current = window.setTimeout(update, 1000 - (timePassed % 1000));
             else {
                 destroyTimer();
                 setTimeout(() => {
@@ -127,7 +135,7 @@ const Timer = (props) => {
                 }, 1000);
                 setTimeout(() => {
                     onTimerEnd();
-                    timePassed = 0;
+                    timePassed.current = 0;
                     pauseRef.current = true;
                     let timer = document.querySelector(".timer");
                     if (timer)
@@ -136,6 +144,7 @@ const Timer = (props) => {
                     scriptLoaded();
                 }, 4000);
             }
+            // timerIdRef.current = 0;
             // else
                 // destroyTimer();
             } catch (e) {
@@ -147,7 +156,7 @@ const Timer = (props) => {
             back.classed("pulse", true);
             label.classed("pulse", true);
 
-            if ((limitRef.current - timePassed) >= 0) {
+            if ((limitRef.current - timePassed.current) >= 0) {
                 label.style("font-size", "120px")
                 .attr("transform", "translate(0," + +6 + ")")
                 .text(function(d) {
@@ -206,9 +215,10 @@ const Timer = (props) => {
         pauseRef.current = true;
         limitRef.current = limit > 0 ? limit : 1;
         window.clearTimeout(timerIdRef.current);
+        timerIdRef.current = 0;
 
         if (limit === limitPrev) return;
-        timePassed = 0;
+        timePassed.current = 0;
         let timer = document.querySelector(".timer");
         if (timer)
             timer.innerHTML = "";
@@ -224,8 +234,9 @@ const Timer = (props) => {
         pauseRef.current = true;
         limitRef.current = limit > 0 ? limit : 1;
         window.clearTimeout(timerIdRef.current);
+        timerIdRef.current = 0;
 
-        timePassed = 0;
+        timePassed.current = 0;
         let timer = document.querySelector(".timer");
         if (timer)
             timer.innerHTML = "";
@@ -233,10 +244,24 @@ const Timer = (props) => {
         scriptLoaded();
     }, [isDemonstration]);
 
+    const addListener = () => {
+        const timer = document.querySelector(".timer");
+        if (!timer.getAttribute('listener')) {
+            timer.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setPause(o => !o);
+                pauseRef.current = !pauseRef.current;
+            });
+            timer.setAttribute('listener', 'true');
+        }
+    }
+
     useEffect(() => {
         let timer = document.querySelector(".timer");
         if (timer)
             timer.innerHTML = "";
+        addListener();
         if (document.getElementById("d3")) {
             scriptLoaded();
             return;
@@ -246,18 +271,15 @@ const Timer = (props) => {
         script.async = true;
         script.id = "d3";
         script.onload = () => scriptLoaded();
-
         document.body.appendChild(script);
+        return () => {
+            window.clearTimeout(timerIdRef.current);
+        }
     }, []);
 
 
     return (
-        <div className="timer" onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setPause(o => !o);
-            pauseRef.current = !pauseRef.current;
-        }}>
+        <div className="timer">
 
         </div>
     );

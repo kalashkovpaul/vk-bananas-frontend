@@ -45,4 +45,4 @@ export const api = {
     getQuizResult: `${prefix}/competition`,
     timerStart: `${prefix}/competition/start`,
     timerEnd: `${prefix}/competition/stop`,
-} 
+}
