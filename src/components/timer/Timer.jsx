@@ -89,7 +89,6 @@ const Timer = (props) => {
 
         (function update() {
             try {
-            // console.log(timePassed.current);
             if (pauseRef.current) {
                 label?.text(function(d) {
                     return d.size - d.value || limitRef.current;
@@ -102,20 +101,17 @@ const Timer = (props) => {
             }
 
             root?.style.setProperty('--timer-color', getColor(timePassed.current < limitRef.current / 2 ?  0 : timePassed.current / limitRef.current / 2));
-            console.log(1);
             field
                 ?.each(function(d) {
                     d.previous = d.value;
                     d.value = d.update(timePassed.current);
                 });
 
-            console.log(2);
 
             path?.transition()
                 .ease("elastic")
                 .duration(500)
                 .attrTween("d", arcTween);
-            console.log(3);
             if ((limitRef.current - timePassed.current) <= pulseBorder.current)
                 pulseText();
             else

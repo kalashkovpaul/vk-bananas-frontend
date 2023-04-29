@@ -130,8 +130,8 @@ const QuizEditor = (props: QuizEditorProps) => {
             let i = 0;
             currentSlide.votes.forEach((option) => {
                 lst.push(<OptionInput
-                    key={i}
-                    index={i}
+                    key={option.idx}
+                    index={option.idx}
                     value={option.option}
                     color={option.color}
                     onChange={onOptionUpdate}

@@ -118,7 +118,7 @@
     font-size: 16px;
     line-height: 20px;
     height: 20px;
-    /* color: $error; */
+    color: #E32524;
 }
 
 .signupForm .authInputHeadError {
@@ -180,7 +180,7 @@
     vertical-align: middle;
     /* font-family: $main_font; */
     font-size: 18px;
-    /* color: $error; */
+    color: #E32524;
 }
 
 .authBtnInput {

@@ -150,6 +150,7 @@ const Presentation: FunctionComponent = (props: any) => {
 
     const [isDemonstration, setIsDemonstration] = useState(false);
     const [quizMap, setQuizMap] = useState(new Map());
+    const [isShowResult, setShowResult] = useState(false);
     const [isLeaderboard, setLeaderboard] = useState(false);
     const currentLeaderboardData = useRef<leaderboardData>([]);
 
@@ -228,7 +229,8 @@ const Presentation: FunctionComponent = (props: any) => {
                 if ((cur.current?.answerTime !== 0)
                     && cur.current?.idx === slidedata.slide.idx
                     && slidedata.slide.answerAfter && slidedata.slide.runout) {
-                        setLeaderboard(true);
+                        // setLeaderboard(true);
+                        setShowResult(true);
                     }
                 setQuestions(slidedata.questions);
                 setEmotions(slidedata.emotions);
@@ -257,9 +259,11 @@ const Presentation: FunctionComponent = (props: any) => {
             if (currentIndex === previousSlide.idx && !isDemonstration)
                 onSlideChange();
         }
+        setShowResult(false);
         setLeaderboard(false);
         if (isDemonstration && quizMap.get(currentSlide.quizId)) {
-            setLeaderboard(true);
+            // setLeaderboard(true);
+            setShowResult(true);
         }
     }, [currentSlide]);
 
@@ -588,8 +592,8 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     useEffect(() =>{
+        setShowResult(false);
         if (isDemonstration) {
-            // setLeaderboard(true);
             setLeaderboard(false);
             window.screen.orientation.lock("landscape").then().catch(e => {});
             showGo(currentIndex);
@@ -657,10 +661,19 @@ const Presentation: FunctionComponent = (props: any) => {
         startTimer();
     }
 
+    useEffect(() => {
+        if (isShowResult) {
+            // setTimeout(() => {
+            //     setLeaderboard(true);
+            // }, 1000);
+        }
+    }, [isShowResult]);
+
     const onTimerEnd = () => {
         endTimer();
         if (currentSlide.answerAfter && isDemonstration) {
-            setLeaderboard(true);
+            // setLeaderboard(true);
+            setShowResult(true);
         }
     }
 
@@ -765,6 +778,42 @@ const Presentation: FunctionComponent = (props: any) => {
                                 {!isLeaderboard && <div className="quizQuestion" style={{color: currentSlide.fontColor,}}>
                                     {currentSlide.question}
                                 </div>}
+                                {!isLeaderboard && <div
+                                    className="quizVoteWrapper"
+                                    style={{
+                                        gridTemplateColumns: currentSlide.votes.length < 4 ? `repeat(auto-fill, minmax(75px, ${100 / currentSlide.votes.length}%))` : ""
+                                    }}
+                                >
+                                    {
+                                        currentSlide.votes.map((vote, i) => {
+                                            return i < 8 ? (
+                                                <div key={vote.idx} className="quizVote">
+                                                    <div className="quizVoteText">{vote.option}</div>
+                                                    {((isShowResult || !isDemonstration) && vote.correct) && <svg className="voteIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                                            <circle className="path circle" fill="none" stroke="#008F00" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                                                            <polyline className="path check" fill="none" stroke="#008F00" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                                        </svg>}
+                                                    {!((isShowResult || !isDemonstration)) && <div style={{
+                                                        width: "30px",
+                                                        height: "30px",
+                                                    }}/>}
+                                                    {((isShowResult || !isDemonstration) && !vote.correct) && <svg className="voteIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                                        <circle className="path circle" fill="none" stroke="#FF1600" strokeWidth="6" strokeMiterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                                                        <line className="path line" fill="none" stroke="#FF1600" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                                                        <line className="path line" fill="none" stroke="#FF1600" strokeWidth="6" strokeLinecap="round" strokeMiterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+                                                    </svg>}
+                                                </div>
+                                            ) : null;
+                                        })
+                                    }
+                                </div>}
+                                {isShowResult && !isLeaderboard && <div className="toLeaderboard effect-underline" onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    setLeaderboard(true);
+                                }}>
+                                    К результатам
+                                </div>}
                                 {!isLeaderboard && <Timer
                                     limit={currentSlide.answerTime}
                                     isDemonstration={isDemonstration}
@@ -785,14 +834,6 @@ const Presentation: FunctionComponent = (props: any) => {
                                         left={(slideWidth - slideHeight*1.6) / 2}
                                     />
                                 </CSSTransition>
-                                {/* {isLeaderboard && currentLeaderboardData.current &&
-                                <Leaderboard
-                                    data={currentLeaderboardData.current}
-                                    width={slideHeight * 1.6 }
-                                    height={slideHeight * 0.8}
-                                    top={slideHeight*0.1}
-                                    left={(slideWidth - slideHeight*1.6) / 2}
-                                />} */}
                             </>
                         }
                     </div>

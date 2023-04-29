@@ -71,6 +71,7 @@
 .profileImg {
     width: auto;
     height: 100%;
+    object-fit: cover;
 }
 
 #profileSubmit {

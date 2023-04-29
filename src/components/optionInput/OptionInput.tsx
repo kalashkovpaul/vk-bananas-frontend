@@ -9,7 +9,6 @@ const OptionInput = (props: OptionProps) => {
     const [curColor, setCurColor] = useState<string>(color ? color : "");
     const [trueIndex, setTrueIndex] = useState<number>(index);
     useEffect(() => {
-        // console.log(value, color)
         setOption(value ? value : "");
         setCurColor(color ? color : color);
     }, [value, color]);
@@ -17,8 +16,10 @@ const OptionInput = (props: OptionProps) => {
     useEffect(() => {
         let child = document.getElementById(`option-${index}`);
         let parent = child?.parentNode;
-        let tIndex = Array.prototype.indexOf.call(parent?.children, child);
-        setTrueIndex(tIndex);
+        if (parent && child) {
+            let tIndex = Array.prototype.indexOf.call(parent?.children, child);
+            setTrueIndex(tIndex);
+        }
     }, [index]);
 
     return (
@@ -52,12 +53,17 @@ const OptionInput = (props: OptionProps) => {
                 onChange={(e) => {}}
                 className="pollSingleOptionInput inEditor"
             />}
-            <div className="cross" onClick={() => {
+            <div className="cross" onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
                 let child = document.getElementById(`option-${index}`);
+                if (!child) return;
                 let parent = child?.parentNode;
                 let tIndex = Array.prototype.indexOf.call(parent?.children, child);
-                setTrueIndex(tIndex);
-                child?.remove();
+                // console.log(child);
+                // parent?.removeChild(child);
+                // child?.remove();
+                // setTrueIndex(tIndex);
                 onChange(tIndex, undefined, undefined)
             }}/>
         </div>

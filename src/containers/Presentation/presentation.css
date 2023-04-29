@@ -170,7 +170,7 @@
     top: 20%;
     left: 10%;
     width: 80%;
-    height: 60%;
+    height: 40%;
     text-align: center;
     display: flex;
     align-items: center;
@@ -185,3 +185,137 @@
 .slideBox:fullscreen .quizQuestion {
     font-size: 50px;
 }
+
+.quizVoteWrapper {
+    font-size: 20px;
+    color: #000;
+    position: absolute;
+    top: 55%;
+    width: 80%;
+    left: 10%;
+    display: grid;
+    /* grid-gap: 20px; */
+    grid-template-columns: repeat(auto-fill, minmax(75px, 25%));
+    /* row-gap: 20px; */
+    grid-template-rows: repeat(auto, 50px);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.slideBox:-webkit-full-screen .quizVoteWrapper {
+    font-size: 30px;
+}
+
+.slideBox:fullscreen .quizVoteWrapper {
+    font-size: 30px;
+}
+
+.quizVoteText {
+    width: 75%;
+    text-align: center;
+    overflow: hidden;
+}
+
+@-webkit-keyframes dash {
+    0% {
+      stroke-dashoffset: 1000;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+}
+
+@keyframes dash {
+    0% {
+      stroke-dashoffset: 1000;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+}
+
+@-webkit-keyframes dash-check {
+    0% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: 900;
+    }
+}
+
+@keyframes dash-check {
+    0% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: 900;
+    }
+}
+
+.quizVote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.voteIcon {
+    width: 20%;
+}
+
+.path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+}
+
+.path.circle {
+    -webkit-animation: dash 0.9s ease-in-out;
+    animation: dash 0.9s ease-in-out;
+}
+
+.path.line {
+    stroke-dashoffset: 1000;
+    -webkit-animation: dash 0.9s 0.35s ease-in-out forwards;
+    animation: dash 0.9s 0.35s ease-in-out forwards;
+}
+
+.path.check {
+    stroke-dashoffset: -100;
+    -webkit-animation: dash-check 0.9s 0.35s ease-in-out forwards;
+    animation: dash-check 0.9s 0.35s ease-in-out forwards;
+}
+
+.toLeaderboard {
+    position: absolute;
+    font-size: 34px;
+    color: #000;
+    right: 5%;
+    bottom: 5%;
+    cursor: pointer;
+}
+
+
+
+  /*effect-underline*/
+.toLeaderboard.effect-underline:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    display: inline-block;
+    height: 1em;
+    width: 100%;
+    border-bottom: 2px solid;
+    margin-top: 10px;
+    opacity: 0;
+    -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+    transition: opacity 0.35s, transform 0.35s;
+    -webkit-transform: scale(0,1);
+    transform: scale(0,1);
+  }
+
+.toLeaderboard.effect-underline:hover:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+
