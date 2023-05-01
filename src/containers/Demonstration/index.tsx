@@ -351,6 +351,7 @@ const Demonstration: FunctionComponent = () => {
                             <div className="invitationWrapper">
                                 <div className="askQuestionBtn goBackBtn" onClick={() => {
                                     setQuestionsPage(false);
+                                    isQuestionRef.current = false;
                                 }}>
                                     <div className="goBackBtnIcon"/>
                                 </div>
@@ -364,7 +365,7 @@ const Demonstration: FunctionComponent = () => {
                                     }
                                 }
                                 setQuestionsPage(false);
-                                isQuestionRef.current = !isQuestionRef.current;
+                                isQuestionRef.current = false;
                             }}>Спросить</div>
                             </div>
                         </div>

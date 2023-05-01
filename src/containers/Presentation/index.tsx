@@ -609,6 +609,7 @@ const Presentation: FunctionComponent = (props: any) => {
             window.clearInterval(timerId);
             setTimerId(0);
             setLeaderboard(false);
+            setShowResult(false);
             clearVotes();
         }
     }, [isDemonstration]);
@@ -673,6 +674,7 @@ const Presentation: FunctionComponent = (props: any) => {
         endTimer();
         if (currentSlide.answerAfter && isDemonstration) {
             // setLeaderboard(true);
+            console.log("Took");
             setShowResult(true);
         }
     }

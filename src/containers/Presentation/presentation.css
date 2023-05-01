@@ -143,8 +143,6 @@
 }
 
 #cloud-chart {
-    /* width: 600px !important;
-    height: 300px !important; */
     position: absolute;
     top: 100px;
     left: 40px;
@@ -162,7 +160,6 @@
         display: none;
     }
 }
-
 
 .quizQuestion {
     font-size: 34px;
@@ -194,9 +191,7 @@
     width: 80%;
     left: 10%;
     display: grid;
-    /* grid-gap: 20px; */
     grid-template-columns: repeat(auto-fill, minmax(75px, 25%));
-    /* row-gap: 20px; */
     grid-template-rows: repeat(auto, 50px);
     align-items: center;
     justify-content: space-between;
@@ -212,8 +207,15 @@
 
 .quizVoteText {
     width: 75%;
-    text-align: center;
+    height: 3em;
     overflow: hidden;
+    word-break: break-all;
+    text-align: center;
+   display: -webkit-box;
+   /* -webkit-line-clamp: 2; */
+    /* line-clamp: 2; */
+   -webkit-box-orient: vertical;
+   -webkit-box-pack: center;
 }
 
 @-webkit-keyframes dash {
@@ -259,7 +261,15 @@
 }
 
 .voteIcon {
-    width: 20%;
+    width: 30px;
+}
+
+.slideBox:-webkit-full-screen .voteIcon {
+    width: 50px;
+}
+
+.slideBox:fullscreen .voteIcon {
+    width: 50px;
 }
 
 .path {
@@ -292,8 +302,6 @@
     bottom: 5%;
     cursor: pointer;
 }
-
-
 
   /*effect-underline*/
 .toLeaderboard.effect-underline:after {

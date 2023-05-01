@@ -20,6 +20,15 @@ const Timer = (props) => {
     const limitRef = useRef(limit > 0 ? limit : 1);
     const timerIdRef = useRef(0);
 
+    const nilArcRef = useRef(null);
+    const arcRef = useRef(null);
+    const svgRef = useRef(null);
+    const fieldRef = useRef(null);
+    const backRef = useRef(null);
+    const pathRef = useRef(null);
+    const labelRef = useRef(null);
+    const isEndedRef = useRef(false);
+
     const usePreviousLimit = (value) => {
         const prevLimitRef = useRef(value);
           useEffect(() => {
@@ -37,6 +46,7 @@ const Timer = (props) => {
     const limitPrev = usePreviousLimit(limit);
 
     const scriptLoaded = () => {
+        isEndedRef.current = false;
         if (!window.d3 || !window.d3.svg) return;
         const fields = [{
             value: limitRef.current,
@@ -46,13 +56,13 @@ const Timer = (props) => {
             }
         }];
 
-        let nilArc = window.d3?.svg.arc()
+        nilArcRef.current = window.d3?.svg.arc()
             .innerRadius(width.current / 3 - 133)
             .outerRadius(width.current / 3 - 133)
             .startAngle(0)
             .endAngle(2 * Math.PI);
 
-        let arc = window.d3?.svg.arc()
+        arcRef.current = window.d3?.svg.arc()
             .innerRadius(width.current / 2 - arcWidth.current)
             .outerRadius(width.current / 2)
             .startAngle(0)
@@ -60,24 +70,24 @@ const Timer = (props) => {
               return ((d.value / d.size) * 2 * Math.PI);
             });
 
-        let svg = window.d3?.select(".timer").append("svg")
+        svgRef.current = window.d3?.select(".timer").append("svg")
             .attr("width", width.current)
             .attr("height", height.current);
 
-        let field = svg?.selectAll(".field")
+        fieldRef.current = svgRef.current?.selectAll(".field")
             .data(fields)
             .enter().append("g")
             .attr("transform", "translate(" + width.current / 2 + "," + height.current / 2 + ")")
             .attr("class", "field");
 
-        let back = field?.append("path")
+        backRef.current = fieldRef.current?.append("path")
             .attr("class", "path path--background")
-            .attr("d", arc);
+            .attr("d", arcRef.current);
 
-        let path = field?.append("path")
+        pathRef.current = fieldRef.current?.append("path")
             .attr("class", "path path--foreground");
 
-        let label = field?.append("text")
+        labelRef.current = fieldRef.current?.append("text")
             .attr("class", "label")
             .attr("dy", ".35em");
 
@@ -87,35 +97,37 @@ const Timer = (props) => {
             return ["hsl(", hue, ",100%,50%)"].join("");
         }
 
-        (function update() {
+        function update() {
             try {
-            if (pauseRef.current) {
-                label?.text(function(d) {
-                    return d.size - d.value || limitRef.current;
-                });
-                if (timePassed.current <= limitRef.current && !timerIdRef.current) {
-                    timerIdRef.current = window.setInterval(update, 1000);
+                if (pauseRef.current) {
+                    labelRef.current?.text(function(d) {
+                        return d.size - d.value || limitRef.current;
+                    });
+                    if (timePassed.current <= limitRef.current && !timerIdRef.current) {
+                        timerIdRef.current = window.setInterval(update, 1000);
+                    }
+                    // timerIdRef.current = 0;
+                    return;
                 }
-                // timerIdRef.current = 0;
-                return;
-            }
 
             root?.style.setProperty('--timer-color', getColor(timePassed.current < limitRef.current / 2 ?  0 : timePassed.current / limitRef.current / 2));
-            field
+
+            fieldRef.current
                 ?.each(function(d) {
                     d.previous = d.value;
                     d.value = d.update(timePassed.current);
                 });
 
 
-            path?.transition()
+            pathRef.current?.transition()
                 .ease("elastic")
                 .duration(500)
                 .attrTween("d", arcTween);
+
             if ((limitRef.current - timePassed.current) <= pulseBorder.current)
                 pulseText();
             else
-                label
+                labelRef.current
                 .text(function(d) {
                     return d.size - d.value;
                 });
@@ -127,10 +139,13 @@ const Timer = (props) => {
             else {
                 destroyTimer();
                 setTimeout(() => {
-                    onTimerEnd();
+                    if (!isEndedRef.current) {
+                        isEndedRef.current = true;
+                        onTimerEnd();
+                    }
                 }, 1000);
                 setTimeout(() => {
-                    onTimerEnd();
+                    // onTimerEnd();
                     timePassed.current = 0;
                     pauseRef.current = true;
                     let timer = document.querySelector(".timer");
@@ -146,21 +161,21 @@ const Timer = (props) => {
             } catch (e) {
                 console.log("?");
             }
-        })();
+        };
 
         function pulseText() {
-            back.classed("pulse", true);
-            label.classed("pulse", true);
+            backRef.current.classed("pulse", true);
+            labelRef.current.classed("pulse", true);
 
             if ((limitRef.current - timePassed.current) >= 0) {
-                label.style("font-size", "120px")
+                labelRef.current.style("font-size", "120px")
                 .attr("transform", "translate(0," + +6 + ")")
                 .text(function(d) {
                     return d.size - d.value;
                 });
             }
 
-            label.transition()
+            labelRef.current.transition()
                 .ease("elastic")
                 .duration(900)
                 .style("font-size", "90px")
@@ -168,31 +183,31 @@ const Timer = (props) => {
         }
 
         function destroyTimer() {
-            label.transition()
+            labelRef.current.transition()
                 .ease("back")
                 .duration(500)
                 .style("opacity", "0")
                 .style("font-size", "5")
                 .attr("transform", "translate(0," + 0 + ")")
                 .each("end", function() {
-                    field.selectAll("text").remove()
+                    fieldRef.current.selectAll("text").remove()
                 });
 
-            path.transition()
+            pathRef.current.transition()
                 .ease("bounce")
                 .duration(700)
-                .attr("d", nilArc);
+                .attr("d", nilArcRef.current);
 
-            back.transition()
+            backRef.current.transition()
                 .ease("bounce")
                 .duration(700)
-                .attr("d", nilArc)
+                .attr("d", nilArcRef.current)
                 .each("end", function() {
-                    field.selectAll("path").remove()
+                    fieldRef.current.selectAll("path").remove()
                 });
 
             setTimeout(() => {
-                svg.remove();
+                svgRef.current.remove();
             }, 700);
         }
 
@@ -202,9 +217,11 @@ const Timer = (props) => {
                 value: c.previous
             }, b);
             return function(t) {
-                return arc(i(t));
+                return arcRef.current(i(t));
             };
         }
+
+        update();
     }
 
     useEffect(() => {
@@ -260,16 +277,18 @@ const Timer = (props) => {
         addListener();
         if (document.getElementById("d3")) {
             scriptLoaded();
-            return;
+            // return;
+        } else {
+            const script = document.createElement("script");
+            script.src = "//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js";
+            script.async = true;
+            script.id = "d3";
+            script.onload = () => scriptLoaded();
+            document.body.appendChild(script);
         }
-        const script = document.createElement("script");
-        script.src = "//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js";
-        script.async = true;
-        script.id = "d3";
-        script.onload = () => scriptLoaded();
-        document.body.appendChild(script);
         return () => {
             window.clearTimeout(timerIdRef.current);
+            timer.removeAttribute('listener');
         }
     }, []);
 
