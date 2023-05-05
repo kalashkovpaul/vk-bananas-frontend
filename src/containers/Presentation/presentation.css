@@ -209,7 +209,7 @@
     width: 75%;
     height: 3em;
     overflow: hidden;
-    word-break: break-all;
+    word-break: break-word;
     text-align: center;
    display: -webkit-box;
    /* -webkit-line-clamp: 2; */

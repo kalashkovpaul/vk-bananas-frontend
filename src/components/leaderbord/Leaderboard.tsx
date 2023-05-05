@@ -64,7 +64,6 @@ const Leaderboard = (props: LeaderboardProps) => {
     };
 
     mapData();
-    console.log(barDataRef.current);
 
     const horizontalOptions = {
         events: [],

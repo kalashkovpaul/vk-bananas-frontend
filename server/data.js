@@ -535,6 +535,10 @@ const startServer = (app) => {
         });
     });
 
+    app.get("/api/v1/csrf", function (req, res) {
+        res.status(200).json({});
+    })
+
     app.get("/api/v1/competition/1/result", function (req, res) {
         res.status(200).json({
             top: [
@@ -542,22 +546,22 @@ const startServer = (app) => {
                     name: "Конь Юлий",
                     points: 400,
                 },
-                {
-                    name: "Йафск",
-                    points: 500,
-                },
-                {
-                    name: "Лия",
-                    points: 300,
-                },
-                {
-                    name: "Гоблин Боблин",
-                    points: 300,
-                },
-                {
-                    name: "Крестьянин",
-                    points: 100,
-                },
+                // {
+                //     name: "Йафск",
+                //     points: 500,
+                // },
+                // {
+                //     name: "Лия",
+                //     points: 300,
+                // },
+                // {
+                //     name: "Гоблин Боблин",
+                //     points: 300,
+                // },
+                // {
+                //     name: "Крестьянин",
+                //     points: 100,
+                // },
             ]
         });
     });

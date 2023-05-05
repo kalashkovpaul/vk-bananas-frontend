@@ -6,7 +6,7 @@ import './timer.css';
 // }
 
 const Timer = (props) => {
-    const {limit, isDemonstration, onTimerStart, onTimerEnd} = props;
+    const {limit, isDemonstration, onTimerStart, onTimerEnd, shouldDestroy} = props;
     // const limit = 30;
     const width = useRef(isDemonstration ? 200 : 100);
     const height = useRef(isDemonstration ? 200 : 100);
@@ -28,6 +28,7 @@ const Timer = (props) => {
     const pathRef = useRef(null);
     const labelRef = useRef(null);
     const isEndedRef = useRef(false);
+    const shouldDestroyRef = useRef(false);
 
     const usePreviousLimit = (value) => {
         const prevLimitRef = useRef(value);
@@ -37,11 +38,15 @@ const Timer = (props) => {
           return prevLimitRef.current
     };
 
+    // useEffect(() => {
+    //     if (isPause) {
+    //         onTimerStart();
+    //     }
+    // }, [isPause]);
+
     useEffect(() => {
-        if (isPause) {
-            onTimerStart();
-        }
-    }, [isPause])
+        shouldDestroyRef.current = shouldDestroy;
+    }, [shouldDestroy]);
 
     const limitPrev = usePreviousLimit(limit);
 
@@ -137,24 +142,19 @@ const Timer = (props) => {
             }
             //     timerIdRef.current = window.setTimeout(update, 1000 - (timePassed % 1000));
             else {
-                destroyTimer();
-                setTimeout(() => {
-                    if (!isEndedRef.current) {
-                        isEndedRef.current = true;
-                        onTimerEnd();
-                    }
-                }, 1000);
+                shouldDestroyRef.current = true;
                 setTimeout(() => {
                     // onTimerEnd();
                     timePassed.current = 0;
                     pauseRef.current = true;
                     let timer = document.querySelector(".timer");
                     if (timer)
-                        timer.innerHTML = "";
+                    timer.innerHTML = "";
                     root?.style.setProperty('--timer-color', "hsl(120, 100%, 50%)");
                     scriptLoaded();
                 }, 4000);
             }
+            destroyTimer();
             // timerIdRef.current = 0;
             // else
                 // destroyTimer();
@@ -183,6 +183,14 @@ const Timer = (props) => {
         }
 
         function destroyTimer() {
+            if (!shouldDestroyRef.current) return;
+
+            setTimeout(() => {
+                if (!isEndedRef.current) {
+                    isEndedRef.current = true;
+                    onTimerEnd();
+                }
+            }, 1000);
             labelRef.current.transition()
                 .ease("back")
                 .duration(500)
@@ -229,6 +237,7 @@ const Timer = (props) => {
         limitRef.current = limit > 0 ? limit : 1;
         window.clearTimeout(timerIdRef.current);
         timerIdRef.current = 0;
+        shouldDestroyRef.current = false;
 
         if (limit === limitPrev) return;
         timePassed.current = 0;
@@ -248,7 +257,7 @@ const Timer = (props) => {
         limitRef.current = limit > 0 ? limit : 1;
         window.clearTimeout(timerIdRef.current);
         timerIdRef.current = 0;
-
+        shouldDestroyRef.current = false;
         timePassed.current = 0;
         let timer = document.querySelector(".timer");
         if (timer)
@@ -263,7 +272,14 @@ const Timer = (props) => {
             timer.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setPause(o => !o);
+                if (pauseRef.current) {
+                    onTimerStart();
+                    setTimeout(() => {
+                        setPause(false);
+                    });
+                } else {
+                    setPause(o => !o);
+                }
                 pauseRef.current = !pauseRef.current;
             });
             timer.setAttribute('listener', 'true');

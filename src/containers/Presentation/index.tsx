@@ -153,6 +153,8 @@ const Presentation: FunctionComponent = (props: any) => {
     const [isShowResult, setShowResult] = useState(false);
     const [isLeaderboard, setLeaderboard] = useState(false);
     const currentLeaderboardData = useRef<leaderboardData>([]);
+    const isStarted = useRef<boolean>(false);
+    const [shouldDestroy, setShouldDestroy] = useState<boolean>(false);
 
     useEffect(() => {
         const {width, height} = calculateScale(isDemonstration as any, screenWidth, screenHeight, data.width, data.height);
@@ -228,9 +230,10 @@ const Presentation: FunctionComponent = (props: any) => {
                     }
                 if ((cur.current?.answerTime !== 0)
                     && cur.current?.idx === slidedata.slide.idx
-                    && slidedata.slide.answerAfter && slidedata.slide.runout) {
+                    && isStarted.current && slidedata.slide.runout) {
                         // setLeaderboard(true);
-                        setShowResult(true);
+                        // setShowResult(true);
+                        setShouldDestroy(true);
                     }
                 setQuestions(slidedata.questions);
                 setEmotions(slidedata.emotions);
@@ -593,6 +596,8 @@ const Presentation: FunctionComponent = (props: any) => {
 
     useEffect(() =>{
         setShowResult(false);
+        isStarted.current = false;
+        setShouldDestroy(false);
         if (isDemonstration) {
             setLeaderboard(false);
             window.screen.orientation.lock("landscape").then().catch(e => {});
@@ -659,6 +664,7 @@ const Presentation: FunctionComponent = (props: any) => {
     }
 
     const onTimerStart = () => {
+        isStarted.current = true;
         startTimer();
     }
 
@@ -672,6 +678,7 @@ const Presentation: FunctionComponent = (props: any) => {
 
     const onTimerEnd = () => {
         endTimer();
+        isStarted.current = false;
         if (currentSlide.answerAfter && isDemonstration) {
             // setLeaderboard(true);
             console.log("Took");
@@ -821,6 +828,7 @@ const Presentation: FunctionComponent = (props: any) => {
                                     isDemonstration={isDemonstration}
                                     onTimerStart={onTimerStart}
                                     onTimerEnd={onTimerEnd}
+                                    shouldDestroy={shouldDestroy}
                                 />}
                                 <CSSTransition
                                     in={!!(isLeaderboard)}
